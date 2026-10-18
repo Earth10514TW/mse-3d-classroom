@@ -1761,11 +1761,53 @@
     const P = peaks('FCC', 0.3615, LAM).filter(p => p.ok.length && p.tt < T1);
     const inten = t => P.reduce((s, p) => s + p.I * Math.exp(-(((t - p.tt) / 0.45) ** 2)), 0);
     const name = p => p.ok.map(f => '(' + f.join('') + ')').join(' ');
+    const NL = 50, nearest = tt => P.reduce((a, b) => Math.abs(b.tt - tt) < Math.abs(a.tt - tt) ? b : a);
+    const lagOf = (p, tt) => 2 * p.d * Math.sin(tt / 2 * D2R) / LAM;
+    // Zoom into one grain whose planes lie parallel to the sample surface: the planes of the nearest peak, drawn as in 9-3
+    function zoom(x, W, y0, y1, tt, cx, cy, hit) {
+      const th = tt / 2 * D2R, s = Math.sin(th), c = Math.cos(th), p = nearest(tt), ratio = lagOf(p, tt), phi = 2 * Math.PI * ratio;
+      const stack = y1 - y0 > 260, pad = 12;
+      const L = { x: pad, y: y0 + 10, w: stack ? W - 2 * pad : Math.round(W * 0.52) - pad, h: stack ? Math.round((y1 - y0) * 0.56) - 14 : y1 - y0 - 20 };
+      const V = stack ? { x: pad, y: L.y + L.h + 10, w: W - 2 * pad, h: y1 - L.y - L.h - 20 } : { x: L.x + L.w + 14, y: L.y, w: W - L.x - L.w - 14 - pad, h: L.h };
+      x.strokeStyle = T.line; x.lineWidth = 1; x.beginPath(); x.moveTo(0, y0 + 0.5); x.lineTo(W, y0 + 0.5); x.stroke();
+      // zoom cue from the sample down to the window
+      x.save(); x.globalAlpha = 0.6; x.strokeStyle = T.muted; x.setLineDash([3, 4]);
+      x.beginPath(); x.arc(cx, cy, 26, 0, 7); x.moveTo(cx - 18, cy + 19); x.lineTo(L.x, L.y); x.moveTo(cx + 18, cy + 19); x.lineTo(L.x + L.w, L.y); x.stroke(); x.restore();
+      x.strokeStyle = T.line; x.strokeRect(L.x + 0.5, L.y + 0.5, L.w, L.h);
+      x.save(); x.beginPath(); x.rect(L.x + 1, L.y + 1, L.w - 2, L.h - 2); x.clip();
+      const sc = Math.min(260, (L.h - 52) / 2 / 0.2087), dp = p.d * sc, ya = L.y + 42, yb = ya + dp, ox = L.x + L.w * 0.56;
+      for (let y = ya; y < L.y + L.h - 4; y += dp) {
+        x.strokeStyle = T.grid; x.beginPath(); x.moveTo(L.x, y); x.lineTo(L.x + L.w, y); x.stroke();
+        x.fillStyle = COL.corner; x.globalAlpha = 0.85; for (let ax = ox % 18; ax < L.x + L.w; ax += 18) { x.beginPath(); x.arc(ax, y, 3.3, 0, 7); x.fill(); } x.globalAlpha = 1;
+      }
+      const Lr = L.w + L.h, ray = py => { x.beginPath(); x.moveTo(ox - c * Lr, py - s * Lr); x.lineTo(ox, py); x.lineTo(ox + c * Lr, py - s * Lr); x.stroke(); };
+      x.strokeStyle = T.accent; x.lineWidth = 1.6; ray(ya); ray(yb);
+      const ds = p.d * s * sc;
+      x.strokeStyle = T.hi; x.lineWidth = 3.5; x.beginPath(); x.moveTo(ox - c * ds, yb - s * ds); x.lineTo(ox, yb); x.lineTo(ox + c * ds, yb - s * ds); x.stroke();
+      x.strokeStyle = T.ink; x.lineWidth = 1.2; x.beginPath(); x.arc(ox, ya, 22, Math.PI, Math.PI + th); x.stroke();
+      x.fillStyle = T.ink; x.font = FONT(700, 13); x.textAlign = 'center'; x.fillText('θ', ox - 33 * Math.cos(th / 2), ya - 33 * Math.sin(th / 2) + 5);
+      const mx = L.x + 16; x.lineWidth = 1.1; x.beginPath(); x.moveTo(mx, ya); x.lineTo(mx, yb); x.moveTo(mx - 4, ya); x.lineTo(mx + 4, ya); x.moveTo(mx - 4, yb); x.lineTo(mx + 4, yb); x.stroke();
+      x.textAlign = 'left'; x.font = MFONT(600, 12); x.fillText('d', mx + 7, (ya + yb) / 2 + 4);
+      x.restore();
+      // the waves from the layers, under a title naming the planes
+      x.textAlign = 'left'; x.fillStyle = T.ink; x.font = MFONT(600, 11.5); x.fillText(`${name(p)}  d = ${p.d.toFixed(4)} nm`, V.x, V.y + 11);
+      x.fillStyle = T.muted; x.font = FONT(500, 11); x.fillText(tx('One grain, planes parallel to the surface', '一顆晶粒，晶面平行於樣品表面'), V.x, V.y + 27);
+      V.y += 34; V.h -= 34;
+      const rh = V.h / 3, amp = Math.min(9, rh * 0.26), lw = 78, x0 = V.x + lw, x1 = V.x + V.w;
+      const wave = (yc, ph, col, a, w) => { x.strokeStyle = col; x.lineWidth = w; x.beginPath(); for (let px = x0; px <= x1; px += 2) { const yy = yc - a * Math.sin((px - x0) / 10 - ph); px === x0 ? x.moveTo(px, yy) : x.lineTo(px, yy); } x.stroke(); };
+      const sh = Math.sin(phi / 2), A = Math.abs(sh) < 1e-9 ? 1 : Math.abs(Math.sin(NL * phi / 2) / (NL * sh));
+      x.font = FONT(500, 11.5); x.fillStyle = T.muted; x.textAlign = 'left';
+      x.fillText(tx('Layer 1', '第 1 層'), V.x, V.y + rh * 0.5 + 4); wave(V.y + rh * 0.5, 0, T.accent, amp, 1.4);
+      x.fillText(tx('Layer 2', '第 2 層'), V.x, V.y + rh * 1.5 + 4); wave(V.y + rh * 1.5, phi, T.accent, amp, 1.4);
+      x.fillStyle = T.ink; x.fillText(tx(`All ${NL} layers`, `${NL} 層相加`), V.x, V.y + rh * 2.5 + 4);
+      wave(V.y + rh * 2.5, phi / 2, hit ? T.ok : T.hi, Math.max(0.6, amp * 1.7 * A), 2.4);
+      return { p, ratio };
+    }
     let draw, raf = 0;
     function paint(x, W, H) {
       const tt = +sl.value, th = tt / 2 * D2R, t2 = tt * D2R, hit = P.find(p => Math.abs(p.tt - tt) < 0.36), I = inten(tt), lit = I > 2;
       x.clearRect(0, 0, W, H); x.fillStyle = T.stage; x.fillRect(0, 0, W, H);
-      const gH = Math.round(H * 0.57), cx = W / 2, cy = gH - 52, R = Math.min(W * 0.4, gH - 98);
+      const gH = 250, pY = H - 190, cx = W / 2, cy = gH - 52, R = Math.min(W * 0.4, gH - 98);
       // the circle the detector rides on, and the straight-through direction
       x.strokeStyle = T.grid; x.lineWidth = 1; x.beginPath(); x.arc(cx, cy, R, Math.PI, 2 * Math.PI); x.stroke();
       x.fillStyle = T.muted; x.font = MFONT(400, 10); x.textAlign = 'center';
@@ -1793,9 +1835,10 @@
       x.fillStyle = T.muted; x.font = FONT(500, 12);
       x.fillText(tx('Detector', '偵測器'), Math.max(34, Math.min(W - 34, dx)), dy - 16);
       x.textAlign = 'left'; x.fillText(tx('X-ray tube', 'X 光管'), Math.max(8, cx - R - 8), cy + 26); x.fillText(tx('Sample', '樣品'), cx + 30, cy + 34);
+      const z = zoom(x, W, gH, pY, tt, cx, cy, hit);
       // the pattern recorded so far
-      x.strokeStyle = T.line; x.lineWidth = 1; x.beginPath(); x.moveTo(0, gH + 0.5); x.lineTo(W, gH + 0.5); x.stroke();
-      const ml = 16, mr = 16, pt = gH + 46, pb = H - 38, X = t => ml + (t - T0) / (T1 - T0) * (W - ml - mr), Y = v => pb - v / 100 * (pb - pt);
+      x.strokeStyle = T.line; x.lineWidth = 1; x.beginPath(); x.moveTo(0, pY + 0.5); x.lineTo(W, pY + 0.5); x.stroke();
+      const ml = 16, mr = 16, pt = pY + 46, pb = H - 38, X = t => ml + (t - T0) / (T1 - T0) * (W - ml - mr), Y = v => pb - v / 100 * (pb - pt);
       x.font = MFONT(400, 11); x.textAlign = 'center';
       for (let t = 40; t <= 120; t += 20) { x.strokeStyle = T.grid; x.beginPath(); x.moveTo(X(t), pt - 8); x.lineTo(X(t), pb); x.stroke(); x.fillStyle = T.muted; x.fillText(String(t), X(t), pb + 15); }
       x.fillStyle = T.muted; x.font = FONT(500, 12); x.fillText(tx('2θ (degrees)', '2θ（度）'), W / 2, H - 7);
@@ -1804,10 +1847,10 @@
       for (let t = T0; t <= tt + 1e-9; t += 0.15) { const yy = Y(Math.min(inten(t), 100)); t === T0 ? x.moveTo(X(t), yy) : x.lineTo(X(t), yy); }
       x.lineTo(X(tt), Y(Math.min(I, 100))); x.stroke();
       P.filter(p => p.tt <= tt + 0.05).forEach(p => { x.save(); x.translate(X(p.tt) + 4, Y(p.I) - 6); x.rotate(-Math.PI / 2); x.textAlign = 'left'; x.fillStyle = T.ink; x.font = MFONT(600, 11); x.fillText(p.ok.map(f => f.join('')).join('/'), 0, 0); x.restore(); });
-      x.strokeStyle = T.hi; x.lineWidth = 1.5; x.beginPath(); x.moveTo(X(tt), gH + 10); x.lineTo(X(tt), pb); x.stroke();
+      x.strokeStyle = T.hi; x.lineWidth = 1.5; x.beginPath(); x.moveTo(X(tt), pY + 10); x.lineTo(X(tt), pb); x.stroke();
       x.textAlign = 'left';
       const d = LAM / (2 * Math.sin(th));
-      out.innerHTML = tx(`<dl class="stats"><dt>Detector angle 2θ</dt><dd>${tt.toFixed(1)}°</dd><dt>Beam to sample surface θ</dt><dd>${(tt / 2).toFixed(2)}°</dd><dt>Spacing that fits Bragg's law here</dt><dd>λ ÷ 2 sinθ = ${d.toFixed(4)} nm</dd></dl><p>${hit ? `<span class="pill ok">Peak ${name(hit)}</span> Copper has planes with exactly this spacing: ${name(hit)}, d = ${hit.d.toFixed(4)} nm. The grains that hold these planes at θ to the beam send X-rays into the detector.` : '<span class="pill bad">Background only</span> No set of planes in copper has this spacing. The scattered waves cancel and the detector counts almost nothing.'}</p><p class="note">Sample: copper powder (FCC, a = 0.3615 nm). X-rays: Cu Kα, λ = 0.1541 nm.</p>`, `<dl class="stats"><dt>偵測器角度 2θ</dt><dd>${tt.toFixed(1)}°</dd><dt>入射光與樣品表面夾角 θ</dt><dd>${(tt / 2).toFixed(2)}°</dd><dt>這個角度符合布拉格定律的間距</dt><dd>λ ÷ 2 sinθ = ${d.toFixed(4)} nm</dd></dl><p>${hit ? `<span class="pill ok">繞射峰 ${name(hit)}</span>　銅剛好有這個間距的晶面：${name(hit)}，d = ${hit.d.toFixed(4)} nm。晶面恰好和入射光夾 θ 角的那些晶粒，把 X 光送進偵測器。` : '<span class="pill bad">只有背景</span>　銅沒有任何一組晶面是這個間距。散射波互相抵銷，偵測器幾乎數不到東西。'}</p><p class="note">樣品：銅粉末（FCC，a = 0.3615 nm）。X 光：Cu Kα，λ = 0.1541 nm。</p>`);
+      out.innerHTML = tx(`<dl class="stats"><dt>Detector angle 2θ</dt><dd>${tt.toFixed(1)}°</dd><dt>Beam to sample surface θ</dt><dd>${(tt / 2).toFixed(2)}°</dd><dt>Spacing that fits Bragg's law here</dt><dd>λ ÷ 2 sinθ = ${d.toFixed(4)} nm</dd><dt>Planes in the zoom</dt><dd>${name(z.p)}, d = ${z.p.d.toFixed(4)} nm</dd><dt>Lower ray lags by</dt><dd>2d sinθ = ${z.ratio.toFixed(3)} λ</dd></dl><p>${hit ? `<span class="pill ok">Peak ${name(hit)}</span> Copper has planes with exactly this spacing: ${name(hit)}, d = ${hit.d.toFixed(4)} nm. In the zoom each layer's ray is one whole wavelength behind the one above, so all the layers add up, and the grains with these planes parallel to the surface send X-rays into the detector.` : `<span class="pill bad">Background only</span> No set of planes in copper has this spacing. The nearest, ${name(z.p)}, leaves each layer ${Math.abs(z.ratio - 1).toFixed(3)} λ out of step with the one above. Over many layers that mismatch adds up, the waves cancel, and the detector counts almost nothing.`}</p><p class="note">Sample: copper powder (FCC, a = 0.3615 nm). X-rays: Cu Kα, λ = 0.1541 nm.</p>`, `<dl class="stats"><dt>偵測器角度 2θ</dt><dd>${tt.toFixed(1)}°</dd><dt>入射光與樣品表面夾角 θ</dt><dd>${(tt / 2).toFixed(2)}°</dd><dt>這個角度符合布拉格定律的間距</dt><dd>λ ÷ 2 sinθ = ${d.toFixed(4)} nm</dd><dt>放大視窗裡的晶面</dt><dd>${name(z.p)}，d = ${z.p.d.toFixed(4)} nm</dd><dt>下層的光慢了</dt><dd>2d sinθ = ${z.ratio.toFixed(3)} λ</dd></dl><p>${hit ? `<span class="pill ok">繞射峰 ${name(hit)}</span>　銅剛好有這個間距的晶面：${name(hit)}，d = ${hit.d.toFixed(4)} nm。放大視窗裡，每一層的光都剛好比上一層慢一整個波長，所有層的光疊在一起變強，這些晶面平行於表面的晶粒就把 X 光送進偵測器。` : `<span class="pill bad">只有背景</span>　銅沒有任何一組晶面是這個間距。最接近的 ${name(z.p)}，每一層都和上一層錯開 ${Math.abs(z.ratio - 1).toFixed(3)} 個波長。層數一多，錯開的量越積越大，散射波互相抵銷，偵測器幾乎數不到東西。`}</p><p class="note">樣品：銅粉末（FCC，a = 0.3615 nm）。X 光：Cu Kα，λ = 0.1541 nm。</p>`);
       $('#df-v').textContent = tt.toFixed(1) + '°';
     }
     const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
