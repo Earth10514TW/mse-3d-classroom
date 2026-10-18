@@ -1,0 +1,1322 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Crystal Structure 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- figures and extra plots (unit 09) ---------- */
+.figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.fig{margin:0;display:grid;gap:8px;align-content:start;min-width:0}
+.fig svg{display:block;width:100%;height:auto;background:var(--stage);border:1px solid var(--line);border-radius:var(--r)}
+.fig figcaption{font-size:.86rem;line-height:1.65;color:var(--muted);max-width:40em}
+.fig figcaption b{color:var(--ink)}
+.fig .ln{fill:none;stroke:var(--ink);stroke-width:1.5}
+.fig .thin{fill:none;stroke:var(--muted);stroke-width:1.1}
+.fig .ink{fill:var(--ink)}
+.fig .xr{fill:none;stroke:var(--hi);stroke-width:1.8}
+.fig .xrf{fill:var(--hi)}
+.fig text{font:500 12px var(--f-mono);fill:var(--ink)}
+.fig text.mu{fill:var(--muted)}
+.fig text.r{fill:var(--hi);font-weight:600}
+@media (max-width:760px){.figs{grid-template-columns:minmax(0,1fr)}}
+.pair{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:24px;align-items:start}
+.pair > .prose{grid-column:2;grid-row:1;min-width:0}
+.pair > .mnote{grid-column:1;grid-row:1}
+@media (max-width:760px){.pair{grid-template-columns:minmax(0,1fr)}.pair > .prose,.pair > .mnote{grid-column:1;grid-row:auto}}
+#wv-plot{height:300px}
+#tb-plot{height:330px}
+#df-plot{height:440px}
+#sz-plot{height:280px}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="900"><span class="course-h" data-t="901">Materials Science and Engineering I</span><a href="index.html" aria-current="page" data-t="902">Ch 3 · Crystal structures</a><a href="ch4.html" data-t="903">Ch 4 · Solidification and defects</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="1">
+      <h1>Crystal Structure<br><span class="d">3D</span> Classroom</h1>
+      <p class="lede">A metal bends. A silicon wafer has to be cut along fixed directions. Both come down to how the atoms are arranged. Textbook drawings of unit cells are flat, so every one here is a 3D model you can turn. The first half shows how atoms are arranged. The second half shows how X‑rays prove they really are arranged that way.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for the whole site">
+        <li class="palette-h">Colors mean the same thing on every page of this site</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>corner atoms · layer A · first lattice</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>atoms inside the cell · layer B · second lattice</span></li>
+        <li><i style="background:var(--c-face)"></i><span><b>Green</b>face atoms · layer C</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>crystal planes</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>highlighted atoms, direction arrows</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <svg class="rings" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <circle r="47.5" stroke-width="1.3" stroke-opacity=".5"/>
+          <circle r="54.8" stroke-width="1" stroke-opacity=".34"/>
+          <circle r="77.5" stroke-width=".9" stroke-opacity=".3"/>
+          <circle r="90.9" stroke-width=".9" stroke-opacity=".28"/>
+          <circle r="94.9" stroke-width=".6" stroke-opacity=".18"/>
+        </svg>
+        <span class="plate-tag" data-t="2">FCC<br>2 × 2 × 2 unit cells</span>
+      </div>
+      <figcaption data-t="3">8 face-centered cubic (FCC) unit cells. The layers stack one on top of another along <span class="idx">[111]</span>, and the colors mark the three kinds of layer, <b style="color:var(--c-corner)">A</b>, <b style="color:var(--c-body)">B</b> and <b style="color:var(--c-face)">C</b>. Unit 4 takes them apart. The rings behind the model are a sketch of diffraction rings. Their radii follow the square roots of h² + k² + l² = 3, 4, 8, 11, 12, the values that appear for FCC. Unit 9 explains this.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="4">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="5"><span>01</span>Lattice &amp; unit cell</a></li>
+    <li><a href="#s2" data-t="6"><span>02</span>Crystal systems</a></li>
+    <li><a href="#s3" data-t="7"><span>03</span>Metal structures</a></li>
+    <li><a href="#s4" data-t="8"><span>04</span>Close packing</a></li>
+    <li><a href="#s5" data-t="9"><span>05</span>Semiconductor lattices</a></li>
+    <li><a href="#s6" data-t="10"><span>06</span>Miller indices</a></li>
+    <li><a href="#s7" data-t="11"><span>07</span>Hexagonal indices</a></li>
+    <li><a href="#s8" data-t="12"><span>08</span>Atomic density</a></li>
+    <li><a href="#s9" data-t="13"><span>09</span>X‑ray diffraction</a></li>
+    <li><a href="#s10" data-t="14"><span>10</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="15"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="16"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="17"><p class="unit-no">01</p><h2>Lattice and unit cell</h2><p class="unit-tag">a, b, c / α, β, γ</p></header>
+  <div class="prose" data-t="18">
+    <p>When the atoms in a solid are lined up in order and the same arrangement repeats over and over, the solid is called a <span class="term">crystal</span>. Iron, copper, silicon and table salt are crystals. In glass the atoms have no regular order, so glass is not a crystal.</p>
+    <p>Describing this repetition takes two ideas.</p>
+    <dl class="defs">
+      <dt>Lattice</dt><dd>Ignore what the atoms look like for now and use points to mark where each repeating unit sits. These points are called <span class="term">lattice points</span>.</dd>
+      <dt>Basis<small>or motif</small></dt><dd>The group of atoms placed on every lattice point. It may be 1 atom or several.</dd>
+    </dl>
+    <p>Put the two together and you have <strong>crystal structure = lattice + basis</strong>. The <span class="term">unit cell</span> is the smallest repeating block that can stand for the whole lattice. Once you know its three edge lengths <i>a</i>, <i>b</i>, <i>c</i> and its three angles α, β, γ, you can copy and paste it to build the whole crystal. These 6 numbers are called the <span class="term">lattice parameters</span>.</p>
+  </div>
+  <aside class="mnote" data-t="19"><span class="lbl">AN ANALOGY</span><p>Picture a tiled wall. The crossings of the grout lines are the lattice. The pattern on each tile is the basis. One tile is the unit cell. However fancy the pattern is, once you know one tile you can cover the whole wall.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-lattice"></div>
+      <div class="legend" id="lat-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="20">Show</span>
+        <div class="seg" id="lat-mode">
+          <button type="button" data-v="lattice" aria-pressed="true" data-t="21">Lattice points only</button>
+          <button type="button" data-v="crystal" aria-pressed="false" data-t="22">Lattice + basis = crystal</button>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="lat-one"><span data-t="23"> Show one unit cell only</span></label>
+      <div class="readout" id="lat-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="24"><p class="unit-no">02</p><h2>Seven crystal systems and 14 Bravais lattices</h2><p class="unit-tag">7 crystal systems → 14 lattices</p></header>
+  <div class="prose" data-t="25">
+    <p>Unit cells are sorted by two things: whether the edges <i>a</i>, <i>b</i>, <i>c</i> are equal, and whether the angles α, β, γ are 90°. Sorting this way gives only <strong>7 classes</strong>, called the <span class="term">seven crystal systems</span>.</p>
+    <p>Next comes where the lattice points can go. Besides the 8 corners, a cell can hold a few more points, as long as every point still has exactly the same surroundings afterwards. Only four placements pass this test:</p>
+    <ul>
+      <li><span class="term">Simple P</span>: only the 8 corners.</li>
+      <li><span class="term">Body-centered I</span>: one extra point at the very center of the cell.</li>
+      <li><span class="term">Face-centered F</span>: one extra point at the center of each of the 6 faces.</li>
+      <li><span class="term">Base-centered C</span>: one extra point at the center of the top and bottom faces only.</li>
+    </ul>
+    <p>Pair every crystal system with every placement and take out the duplicates. The French scientist Auguste Bravais (1811–1863) showed that only <strong>14</strong> are left, so they are called the <span class="term">Bravais lattices</span>. The buttons on the panel switch through them one at a time.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-bravais"></div>
+      <div class="legend" data-t="26">
+        <span><i style="background:var(--c-corner)"></i>Corner lattice points</span>
+        <span><i style="background:var(--c-body)"></i>Body center</span>
+        <span><i style="background:var(--c-face)"></i>Face center / base center</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Crystal axes a, b, c</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="27">Crystal system</span>
+        <div class="seg" id="bv-sys"></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="28">Where the lattice points go</span>
+        <div class="seg" id="bv-type">
+          <button type="button" data-v="P" data-t="29">Simple <small>P</small></button>
+          <button type="button" data-v="I" data-t="30">Body-centered <small>I</small></button>
+          <button type="button" data-v="F" data-t="31">Face-centered <small>F</small></button>
+          <button type="button" data-v="C" data-t="32">Base-centered <small>C</small></button>
+        </div>
+      </div>
+      <label class="check" id="bv-hexwrap" hidden><input type="checkbox" id="bv-hexfull" checked><span data-t="33"> Show the full hexagonal prism (made of 3 cells)</span></label>
+      <div class="ctl">
+        <span class="ctl-label" data-t="34">Going further: why only 14</span>
+        <div class="seg" id="bv-demo">
+          <button type="button" data-v="bcc2tet" data-t="35">“Base-centered cubic” is really simple tetragonal</button>
+          <button type="button" data-v="fcc2rh" data-t="36">A rhombohedral cell hides inside FCC</button>
+        </div>
+      </div>
+      <div class="readout" id="bv-info"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" data-t="37">
+    <table>
+      <thead><tr><th>Crystal system</th><th>Edges</th><th>Angles</th><th>Bravais lattices</th><th>Count</th></tr></thead>
+      <tbody>
+        <tr><td>Cubic</td><td class="num">a = b = c</td><td class="num">α = β = γ = 90°</td><td>P, I, F</td><td class="num">3</td></tr>
+        <tr><td>Tetragonal</td><td class="num">a = b ≠ c</td><td class="num">α = β = γ = 90°</td><td>P, I</td><td class="num">2</td></tr>
+        <tr><td>Orthorhombic</td><td class="num">a ≠ b ≠ c</td><td class="num">α = β = γ = 90°</td><td>P, C, I, F</td><td class="num">4</td></tr>
+        <tr><td>Rhombohedral (trigonal)</td><td class="num">a = b = c</td><td class="num">α = β = γ ≠ 90°</td><td>P (often written R)</td><td class="num">1</td></tr>
+        <tr><td>Hexagonal</td><td class="num">a = b ≠ c</td><td class="num">α = β = 90°, γ = 120°</td><td>P</td><td class="num">1</td></tr>
+        <tr><td>Monoclinic</td><td class="num">a ≠ b ≠ c</td><td class="num">α = γ = 90° ≠ β</td><td>P, C</td><td class="num">2</td></tr>
+        <tr><td>Triclinic</td><td class="num">a ≠ b ≠ c</td><td class="num">α ≠ β ≠ γ ≠ 90°</td><td>P</td><td class="num">1</td></tr>
+        <tr class="sum"><td><b>Total</b></td><td></td><td></td><td></td><td class="num"><b>14</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="38"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>The 7 crystal systems depend on edge lengths and angles. The 14 Bravais lattices also depend on where the lattice points sit.</li>
+      <li>“Base-centered cubic” is not a new lattice. It can be redrawn as a smaller simple tetragonal cell with base edge a/√2 and height a.</li>
+      <li>FCC can also be drawn as a rhombohedral cell with α = β = γ = 60°. We still describe FCC with the cubic cell, because the cubic cell shows its cubic symmetry directly.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="39"><p class="unit-no">03</p><h2>The three main crystal structures of metals</h2><p class="unit-tag">APF&emsp;0.52 / 0.68 / 0.74</p></header>
+  <div class="prose" data-t="40">
+    <p>About 90% of metals have one of three structures: BCC, FCC or HCP. The metallic bond has no fixed direction, so you can think of the atoms as <strong>hard spheres that touch each other</strong> and pack together as tightly as they can. To compare these structures we look at the numbers N, CN and APF:</p>
+    <dl class="defs">
+      <dt>Atoms per unit cell N</dt><dd>A corner atom is shared by 8 cells, so it counts as 1/8. A face atom is shared by 2 cells and counts as 1/2. An atom fully inside the cell counts as 1.</dd>
+      <dt>Coordination number CN</dt><dd>The number of nearest neighbors touching one atom.</dd>
+      <dt>Atomic packing factor APF</dt><dd>The fraction of the cell volume taken up by atoms (hard spheres). The larger the APF, the tighter the packing.<br><span class="idx wrap">APF = (atoms in the cell × sphere volume) ÷ cell volume = N · (4/3)πR³ ÷ V<sub>cell</sub></span></dd>
+    </dl>
+    <p>Switch the display to “Hard spheres, true size” or “Cut to the cell” to see what the 1/8 atom at a corner and the 1/2 atom on a face really look like.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-metal"></div>
+      <div class="legend" id="mt-legend">
+        <span data-t="41"><i style="background:var(--c-corner)"></i>Corner (shared by 8 cells; 6 for the hexagonal prism)</span>
+        <span data-t="42"><i style="background:var(--c-face)"></i>Face (shared by 2)</span>
+        <span data-t="43"><i style="background:var(--c-body)"></i>Inside (not shared)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="44">Structure</span>
+        <div class="seg" id="mt-s">
+          <button type="button" data-v="SC" data-t="45">Simple cubic <small>SC</small></button>
+          <button type="button" data-v="BCC" aria-pressed="true" data-t="46">Body-centered cubic <small>BCC</small></button>
+          <button type="button" data-v="FCC" data-t="47">Face-centered cubic <small>FCC</small></button>
+          <button type="button" data-v="HCP" data-t="48">Hexagonal close-packed <small>HCP</small></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="49">Display</span>
+        <div class="seg" id="mt-mode">
+          <button type="button" data-v="ball" aria-pressed="true" data-t="50">Small balls for positions</button>
+          <button type="button" data-v="hard" data-t="51">Hard spheres, true size</button>
+          <button type="button" data-v="cut" data-t="52">Cut to the cell</button>
+        </div>
+      </div>
+      <label class="check" id="mt-fadewrap" hidden><input type="checkbox" id="mt-fade" checked><span data-t="150"> Fade the atoms that are not marked</span></label>
+      <label class="check"><input type="checkbox" id="mt-cn"><span data-t="53"> Count the coordination number (nearest neighbors of the red atom)</span></label>
+      <div class="ctl" id="mt-cnwrap" hidden>
+        <span class="ctl-label" data-t="151">From the whole cell to all neighbors</span>
+        <input type="range" id="mt-cnt" min="0" max="3" step="0.01" value="0" aria-label="Add the neighboring cells" data-ta="152">
+      </div>
+      <div class="readout" id="mt-info"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" data-t="54">
+    <table>
+      <thead><tr><th>Structure</th><th>Atoms per cell N</th><th>Coordination number CN</th><th>a and R</th><th>APF</th><th>Examples (room temperature)</th></tr></thead>
+      <tbody>
+        <tr><td>Simple cubic SC</td><td class="num">1</td><td class="num">6</td><td class="num">a = 2R</td><td class="num">0.52</td><td>α-polonium Po (the only example)</td></tr>
+        <tr><td>Body-centered cubic BCC</td><td class="num">2</td><td class="num">8</td><td class="num">a = 4R/√3</td><td class="num">0.68</td><td>Fe, Cr, W, Na, Mo</td></tr>
+        <tr><td>Face-centered cubic FCC</td><td class="num">4</td><td class="num">12</td><td class="num">a = 2√2 R</td><td class="num">0.74</td><td>Cu, Al, Au, Ag, Ni</td></tr>
+        <tr><td>Hexagonal close-packed HCP</td><td class="num">6 (hexagonal prism) / 2 (primitive cell)</td><td class="num">12</td><td class="num">a = 2R, ideal c/a = 1.633</td><td class="num">0.74</td><td>Mg, Zn, Ti, Co</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="55"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>The key to working out APF is finding the line along which the atoms touch: the cube edge in SC, the body diagonal in BCC, the face diagonal in FCC.</li>
+      <li>FCC and HCP both have an APF of 0.74, the tightest packing that equal hard spheres can reach. They differ only in how the layers are stacked, as the next unit shows.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="56"><p class="unit-no">04</p><h2>Two ways to stack close-packed layers</h2><p class="unit-tag">…ABAB… / …ABCABC…</p></header>
+  <div class="prose" data-t="57">
+    <p>Pack equal spheres as tightly as possible on a flat surface and each sphere ends up with exactly 6 around it. Call this <b style="color:var(--c-corner)">layer A</b>. The gaps between the spheres are hollows, and the hollows fall into two sets. We call them the B positions and the C positions.</p>
+    <p>The second layer has to drop into one set of hollows. Call it <b style="color:var(--c-body)">layer B</b>. The two structures part ways at the <strong>third layer</strong>:</p>
+    <ul>
+      <li>Third layer directly above the first → <strong>ABAB…</strong>, which is <strong>HCP</strong>.</li>
+      <li>Third layer in the third kind of position, <b style="color:var(--c-face)">C</b> → <strong>ABCABC…</strong>, which is <strong>FCC</strong>.</li>
+    </ul>
+    <p>The two stackings are equally tight, so both have an APF of 0.74 and a coordination number of 12. In the cubic cell of FCC, these close-packed planes are the <span class="idx">(111)</span> planes, and they stack along the body diagonal <span class="idx">[111]</span>.</p>
+  </div>
+  <aside class="mnote" data-t="58"><span class="lbl">AN ANALOGY</span><p>A fruit stand that stacks oranges into a pyramid is using FCC packing. Take a look next time you walk past one. Every orange sits in the hollow made by three oranges in the layer below.</p></aside>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-stack"></div>
+      <div class="legend" data-t="59">
+        <span><i style="background:var(--c-corner)"></i>Layer A</span>
+        <span><i style="background:var(--c-body)"></i>Layer B</span>
+        <span><i style="background:var(--c-face)"></i>Layer C</span>
+        <span><i class="dot" style="background:var(--c-body)"></i><i class="dot" style="background:var(--c-face)"></i>Empty B and C hollows</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="60">Stacking</span>
+        <div class="seg" id="st-seq">
+          <button type="button" data-v="AB">ABAB… <small>HCP</small></button>
+          <button type="button" data-v="ABC" aria-pressed="true">ABCABC… <small>FCC</small></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="153">Atoms shown</span>
+        <div class="seg" id="st-mode">
+          <button type="button" data-v="full" aria-pressed="true" data-t="154">Full layers</button>
+          <button type="button" data-v="simple" data-t="155">Simple <small>7 + 3 atoms</small></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="61">One layer at a time</span>
+        <div class="row">
+          <button type="button" class="btn" id="st-add"><span data-t="62">+ Add a layer</span></button>
+          <button type="button" class="btn" id="st-del"><span data-t="63">− Remove a layer</span></button>
+          <button type="button" class="btn" id="st-replay"><span data-t="156">↻ Stack again</span></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="64">View</span>
+        <div class="seg" id="st-view">
+          <button type="button" data-v="side" aria-pressed="true" data-t="65">Angled view</button>
+          <button type="button" data-v="top" data-t="66">Top view</button>
+        </div>
+      </div>
+      <div class="readout" id="st-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="67"><p class="unit-no">05</p><h2>Common semiconductor lattices</h2><p class="unit-tag">Si&emsp;GaAs&emsp;NaCl&emsp;GaN</p></header>
+  <div class="prose" data-t="68">
+    <p>In semiconductors such as silicon (Si), germanium (Ge), gallium arsenide (GaAs) and gallium nitride (GaN), the atoms are joined by <span class="term">covalent bonds</span>. A covalent bond has a fixed direction. Each atom bonds to only 4 neighbors, and those 4 neighbors sit at the corners of a <span class="term">regular tetrahedron</span>. So these crystals are not packed as tightly as metals, and the APF of the diamond structure is only about 0.34.</p>
+    <p>All four structures can be seen as two lattices pushed into each other. In the models, <b style="color:var(--c-corner)">blue</b> marks the first set of sites and <b style="color:var(--c-body)">orange</b> marks the second.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-semi"></div>
+      <div class="legend" id="sc-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="69">Structure</span>
+        <div class="seg" id="sc-s">
+          <button type="button" data-v="dia" aria-pressed="true" data-t="70">Diamond</button>
+          <button type="button" data-v="zb" data-t="71">Zinc blende</button>
+          <button type="button" data-v="rs" data-t="72">Rock salt</button>
+          <button type="button" data-v="wz" data-t="73">Wurtzite</button>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="sc-poly" checked><span data-t="74"> Mark one atom and the polyhedron formed by its neighbors</span></label>
+      <label class="check"><input type="checkbox" id="sc-two"><span data-t="157"> Show how the two lattices slide into each other</span></label>
+      <div class="ctl" id="sc-twowrap" hidden>
+        <span class="ctl-label" data-t="158">Shift of the second lattice</span>
+        <input type="range" id="sc-twot" min="0" max="1" step="0.005" value="1" aria-label="Shift of the second lattice" data-ta="159">
+      </div>
+      <div class="readout" id="sc-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="75"><span class="key-tag">FOUR STRUCTURES</span>
+    <dl>
+      <dt>Diamond</dt><dd>Two FCC lattices shifted by 1/4 along the body diagonal. 8 atoms per cell, CN = 4.</dd>
+      <dt>Zinc blende</dt><dd>Exactly the same sites as the diamond structure, but the two FCC lattices hold different elements, for example Ga and As.</dd>
+      <dt>Rock salt</dt><dd>Two FCC lattices shifted by 1/2 along the cell edge. Each ion has 6 neighbors of the other kind (CN = 6).</dd>
+      <dt>Wurtzite</dt><dd>The hexagonal version of tetrahedral bonding. The cations stack ABAB. Zinc blende, seen along <span class="idx">[111]</span>, stacks ABCABC.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="76"><p class="unit-no">06</p><h2>Miller indices: positions, directions and planes</h2><p class="unit-tag">[uvw]&emsp;(hkl)&emsp;&lt;uvw&gt;&emsp;{hkl}</p></header>
+  <div class="prose" data-t="77">
+    <p>To say which direction to pull along or which plane to cut along, everyone needs the same notation. That notation is the <span class="term">Miller indices</span>. Directions and planes in this unit use a cubic cell, with the edge length <i>a</i> taken as 1.</p>
+    <dl class="defs">
+      <dt>Atom positions</dt><dd>Written as fractional coordinates (x, y, z). The body center, for example, is (½, ½, ½). The model lists them for every structure in Units 3 and 5. HCP and wurtzite use the hexagonal axes <i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>, <i>c</i>.</dd>
+      <dt>Direction <span class="idx">[uvw]</span></dt><dd>Subtract the start coordinates from the end coordinates, reduce to the smallest integers, and use square brackets. A minus sign is written above the number, as in <span class="idx">[1<span class="bar">1</span>0]</span>, read “one, bar one, zero”. A whole family of directions that are equivalent by symmetry is written <span class="idx">&lt;uvw&gt;</span>. For example, <span class="idx">&lt;100&gt;</span> covers 6 directions.</dd>
+      <dt>Plane <span class="idx">(hkl)</span></dt><dd>① Find the intercepts of the plane on the x, y and z axes. ② Take their reciprocals. ③ Clear the fractions to get integers, and use round brackets. When the plane is parallel to an axis, the intercept is ∞ and its reciprocal is 0. When the plane passes through the origin, move the origin to a neighboring corner first. A family of equivalent planes is written <span class="idx">{hkl}</span>.</dd>
+    </dl>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-miller"></div>
+      <div class="legend" data-t="78">
+        <span><i class="sq" style="background:var(--hi)"></i>Direction arrow</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Plane</span>
+        <span><i style="background:var(--hi)"></i>Atoms lying exactly on the plane</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="79">What to show</span>
+        <div class="seg" id="mi-mode">
+          <button type="button" data-v="pos" data-t="80">Atom coordinates</button>
+          <button type="button" data-v="dir" data-t="81">Direction [uvw]</button>
+          <button type="button" data-v="plane" aria-pressed="true" data-t="82">Plane (hkl)</button>
+        </div>
+      </div>
+      <div class="ctl" id="mi-posctl" hidden>
+        <span class="ctl-label" data-t="44">Structure</span>
+        <div class="seg" id="mi-pos">
+          <button type="button" data-v="SC" data-t="45">Simple cubic <small>SC</small></button>
+          <button type="button" data-v="BCC" aria-pressed="true" data-t="46">Body-centered cubic <small>BCC</small></button>
+          <button type="button" data-v="FCC" data-t="47">Face-centered cubic <small>FCC</small></button>
+          <button type="button" data-v="HCP" data-t="48">Hexagonal close-packed <small>HCP</small></button>
+          <button type="button" data-v="DIA" data-t="70">Diamond</button>
+          <button type="button" data-v="ZB" data-t="71">Zinc blende</button>
+          <button type="button" data-v="RS" data-t="72">Rock salt</button>
+          <button type="button" data-v="WZ" data-t="73">Wurtzite</button>
+        </div>
+        <label class="check"><input type="checkbox" id="mi-posall"><span data-t="160"> Also label the repeated atoms on the cell boundary</span></label>
+      </div>
+      <div class="ctl" id="mi-dirctl" hidden>
+        <span class="ctl-label" data-t="83">Enter direction indices (integers from -4 to 4)</span>
+        <div class="idx-in">[<input type="number" id="mi-u" min="-4" max="4" step="1" value="1" aria-label="u"><input type="number" id="mi-v" min="-4" max="4" step="1" value="1" aria-label="v"><input type="number" id="mi-w" min="-4" max="4" step="1" value="0" aria-label="w">]</div>
+        <div class="seg" id="mi-dirpre"></div>
+      </div>
+      <div class="ctl" id="mi-plctl">
+        <span class="ctl-label" data-t="84">Enter plane indices (integers from -4 to 4)</span>
+        <div class="idx-in">(<input type="number" id="mi-h" min="-4" max="4" step="1" value="1" aria-label="h"><input type="number" id="mi-k" min="-4" max="4" step="1" value="1" aria-label="k"><input type="number" id="mi-l" min="-4" max="4" step="1" value="1" aria-label="l">)</div>
+        <div class="seg" id="mi-plpre"></div>
+        <label class="check"><input type="checkbox" id="mi-fam"><span data-t="85"> Show the whole family of parallel planes and the interplanar spacing d</span></label>
+        <label class="check"><input type="checkbox" id="mi-norm" checked><span data-t="86"> Show the normal direction</span></label>
+      </div>
+      <div class="ctl" id="mi-xtalctl">
+        <span class="ctl-label" data-t="87">Put it in a crystal (for linear and planar density)</span>
+        <select id="mi-xtal">
+          <option value="none" data-t="88">No atoms</option>
+          <option value="po" data-t="89">Simple cubic: α-Po (a = 0.335 nm)</option>
+          <option value="fe" data-t="90">Body-centered cubic: Fe (a = 0.287 nm)</option>
+          <option value="w" data-t="91">Body-centered cubic: W (a = 0.3165 nm)</option>
+          <option value="cu" selected data-t="92">Face-centered cubic: Cu (a = 0.361 nm)</option>
+          <option value="al" data-t="93">Face-centered cubic: Al (a = 0.405 nm)</option>
+        </select>
+      </div>
+      <div class="readout" id="mi-info"></div>
+    </div>
+  </div>
+  <h3 data-t="161"><span class="h3-no">d<sub>hkl</sub></span>Where the spacing formula comes from</h3>
+  <div class="prose" data-t="162">
+    <p>Take the plane of the <span class="idx">(hkl)</span> family that lies closest to the origin. It cuts the three axes at A, B and C, at distances a/h, b/k and c/l from the origin. Another plane of the same family passes through the origin O itself. So the spacing d is simply the distance from O to the plane ABC.</p>
+    <p>Four steps of vector work give that distance. The steps need the three axes to be at right angles, which is true for cubic, tetragonal and orthorhombic cells.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-dspace"></div>
+      <div class="legend" data-t="163">
+        <span><i class="sq" style="background:var(--c-plane)"></i>Plane ABC</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Vectors lying in the plane</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Normal n and spacing d</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="164">Step</span>
+        <div class="seg" id="ds-step">
+          <button type="button" data-v="1" aria-pressed="true" data-t="165"><small>1</small> Intercepts</button>
+          <button type="button" data-v="2" data-t="166"><small>2</small> Two edges</button>
+          <button type="button" data-v="3" data-t="167"><small>3</small> Normal</button>
+          <button type="button" data-v="4" data-t="168"><small>4</small> Projection</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="169">Enter plane indices (integers from 1 to 4)</span>
+        <div class="idx-in">(<input type="number" id="ds-h" min="1" max="4" step="1" value="1" aria-label="h"><input type="number" id="ds-k" min="1" max="4" step="1" value="1" aria-label="k"><input type="number" id="ds-l" min="1" max="4" step="1" value="1" aria-label="l">)</div>
+        <div class="seg" id="ds-pre"></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="170">Unit cell</span>
+        <div class="seg" id="ds-cell">
+          <button type="button" data-v="cub" aria-pressed="true" data-t="171">Cubic <small>a = b = c</small></button>
+          <button type="button" data-v="ort" data-t="172">Orthorhombic <small>a ≠ b ≠ c</small></button>
+        </div>
+      </div>
+      <div class="readout" id="ds-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="94"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>In the cubic system, the normal to the plane <span class="idx">(hkl)</span> is the direction <span class="idx">[hkl]</span>.</li>
+      <li>The spacing between neighboring parallel planes is <span class="idx">d<sub>hkl</sub> = a / √(h² + k² + l²)</span>. The larger the indices, the more closely the planes are packed and the smaller the spacing.</li>
+      <li>Equation of the plane: <span class="idx">(h/a)x + (k/b)y + (l/c)z = n</span>. Different integers n give a whole family of parallel planes.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="95"><p class="unit-no">07</p><h2>Four-index notation for hexagonal crystals</h2><p class="unit-tag">u + v + t = 0&emsp;h + k + i = 0</p></header>
+  <div class="prose" data-t="96">
+    <p>The base of a hexagonal cell has three axes <i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>, <i>a</i><sub>3</sub> at 120° to each other, plus the vertical <i>c</i> axis. With only three indices, six directions that are equivalent by symmetry come out as numbers that look unrelated. With the four <span class="term">Miller–Bravais indices</span> <span class="idx">[uvtw]</span> and <span class="idx">(hkil)</span>, equivalent directions and planes differ only by numbers changing places and changing sign.</p>
+    <p>Because <i>a</i><sub>3</sub> = −(<i>a</i><sub>1</sub> + <i>a</i><sub>2</sub>), the four indices are not independent. A direction must satisfy <strong>u + v + t = 0</strong>, and a plane must satisfy <strong>h + k + i = 0</strong>.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-hex"></div>
+      <div class="legend" data-t="97">
+        <span><i class="sq" style="background:var(--accent)"></i>Crystal axes a₁, a₂, a₃, c</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Direction</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Plane</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="98">What to show</span>
+        <div class="seg" id="hx-mode">
+          <button type="button" data-v="dir" data-t="99">Direction [uvtw]</button>
+          <button type="button" data-v="plane" aria-pressed="true" data-t="100">Plane (hkil)</button>
+        </div>
+      </div>
+      <div class="ctl" id="hx-dirctl" hidden>
+        <span class="ctl-label" data-t="101">Four-index direction</span>
+        <div class="idx-in">[<input type="number" id="hx-u" min="-4" max="4" value="2" aria-label="u"><input type="number" id="hx-v" min="-4" max="4" value="-1" aria-label="v"><input type="number" id="hx-t" min="-4" max="4" value="-1" aria-label="t"><input type="number" id="hx-w" min="-4" max="4" value="0" aria-label="w">]</div>
+        <div class="seg" id="hx-dirpre"></div>
+      </div>
+      <div class="ctl" id="hx-plctl">
+        <span class="ctl-label" data-t="102">Four-index plane</span>
+        <div class="idx-in">(<input type="number" id="hx-h" min="-4" max="4" value="1" aria-label="h"><input type="number" id="hx-k" min="-4" max="4" value="0" aria-label="k"><input type="number" id="hx-i" min="-4" max="4" value="-1" aria-label="i"><input type="number" id="hx-l" min="-4" max="4" value="0" aria-label="l">)</div>
+        <div class="seg" id="hx-plpre"></div>
+      </div>
+      <div class="readout" id="hx-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="103"><span class="key-tag">CONVERSION</span>
+    <dl class="mono-dl">
+      <dt>Three-index → four-index</dt><dd><span class="idx">[UVW]</span> → <span class="idx">[uvtw]</span>: u = (2U − V)/3, v = (2V − U)/3, t = −(U + V)/3, w = W, then reduce to the smallest integers.</dd>
+      <dt>Four-index → three-index</dt><dd>U = u − t, V = v − t, W = w.</dd>
+      <dt>Planes</dt><dd>The easiest case. Add i = −(h + k) to <span class="idx">(hkl)</span> and it becomes <span class="idx">(hkil)</span>.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ======================= 08 ======================= -->
+<section class="unit" id="s8">
+  <header class="unit-head" data-t="104"><p class="unit-no">08</p><h2>Linear, planar and volume density</h2><p class="unit-tag">ρ<sub>l</sub>&emsp;ρ<sub>p</sub>&emsp;ρ<sub>v</sub></p></header>
+  <div class="prose" data-t="105">
+    <p>In the same crystal, the atoms are packed more or less tightly depending on the direction or the plane you pick. This affects which plane a metal slips on when it deforms, and which plane of a wafer etches more slowly. The model lets you turn each case around and see which atoms are counted. The cards under it work the three examples from the lecture slides on paper.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-dens"></div>
+      <div class="legend" data-t="179">
+        <span><i class="sq" style="background:var(--hi)"></i>Direction being measured</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Plane being measured</span>
+        <span>Every atom is a hard sphere at its true size, cut at the cell walls. Solid atoms are the ones being counted. Faded atoms are the rest of the cell.</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="173">What to measure</span>
+        <div class="seg" id="d3-mode">
+          <button type="button" data-v="lin" aria-pressed="true" data-t="174">Linear <small>ρ<sub>l</sub></small></button>
+          <button type="button" data-v="pla" data-t="175">Planar <small>ρ<sub>p</sub></small></button>
+          <button type="button" data-v="vol" data-t="176">Volume <small>ρ<sub>v</sub></small></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="177">The three examples from the slides</span>
+        <div class="seg" id="d3-ex"></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="178">Crystal</span>
+        <select id="d3-mat"></select>
+      </div>
+      <div class="ctl" id="d3-dirctl">
+        <span class="ctl-label" data-t="83">Enter direction indices (integers from -4 to 4)</span>
+        <div class="idx-in">[<input type="number" id="d3-u" min="-4" max="4" step="1" value="1" aria-label="u"><input type="number" id="d3-v" min="-4" max="4" step="1" value="1" aria-label="v"><input type="number" id="d3-w" min="-4" max="4" step="1" value="0" aria-label="w">]</div>
+      </div>
+      <div class="ctl" id="d3-plctl" hidden>
+        <span class="ctl-label" data-t="84">Enter plane indices (integers from -4 to 4)</span>
+        <div class="idx-in">(<input type="number" id="d3-h" min="-4" max="4" step="1" value="1" aria-label="h"><input type="number" id="d3-k" min="-4" max="4" step="1" value="1" aria-label="k"><input type="number" id="d3-l" min="-4" max="4" step="1" value="0" aria-label="l">)</div>
+      </div>
+      <div class="readout" id="d3-info"></div>
+    </div>
+  </div>
+  <div class="cards wide" data-t="106">
+    <article class="card">
+      <p class="card-no">EXAMPLE 1&emsp;LINEAR DENSITY</p>
+      <h4><span class="idx">[110]</span> in Cu</h4>
+      <svg viewBox="0 0 220 170" role="img" aria-label="Hard-sphere view of the front face of an FCC cube: three atoms touch along the face diagonal">
+        <defs><clipPath id="x8a"><rect x="40" y="20" width="130" height="130"/></clipPath></defs>
+        <g clip-path="url(#x8a)" fill-opacity=".8" stroke-width="1.2">
+          <g fill="var(--c-corner)" stroke="var(--c-corner)"><circle cx="40" cy="150" r="46.0"/><circle cx="170" cy="20" r="46.0"/><circle cx="170" cy="150" r="46.0"/><circle cx="40" cy="20" r="46.0"/></g>
+          <circle cx="105" cy="85" r="46.0" fill="var(--c-face)" stroke="var(--c-face)"/>
+        </g>
+        <rect x="40" y="20" width="130" height="130" fill="none" stroke="var(--edge3d)" stroke-width="1.5"/>
+        <line x1="40" y1="150" x2="170" y2="20" stroke="var(--hi)" stroke-width="3"/>
+        <g stroke="var(--hi)" stroke-width="2"><line x1="67.5" y1="112.5" x2="77.5" y2="122.5"/><line x1="132.5" y1="47.5" x2="142.5" y2="57.5"/></g>
+        <text x="105" y="166" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono, monospace">a</text>
+        <text x="178" y="84" fill="var(--hi)" font-size="12" font-family="IBM Plex Mono, monospace">√2 a</text>
+        <text x="178" y="100" fill="var(--hi)" font-size="12" font-family="IBM Plex Mono, monospace">= 4R</text>
+      </svg>
+      <p class="note">Along the face diagonal there is half an atom at each end and a whole atom in the middle, 2 atom diameters in all. The length is √2 a.</p>
+      <div class="eq">ρ<sub>l</sub> = 2 atoms ÷ (√2 × 0.361 nm)<br>= 3.92 atoms/nm = 3.92 × 10⁶ atoms/mm</div>
+    </article>
+    <article class="card">
+      <p class="card-no">EXAMPLE 2&emsp;PLANAR DENSITY</p>
+      <h4><span class="idx">(110)</span> in Fe (BCC)</h4>
+      <svg viewBox="0 0 220 170" role="img" aria-label="Hard-sphere view of the 110 plane of BCC, a rectangle a by root 2 a: a quarter atom at each corner and one atom in the middle, touching along the diagonal">
+        <defs><clipPath id="x8b"><rect x="20" y="24" width="180" height="127.3"/></clipPath></defs>
+        <rect x="20" y="24" width="180" height="127.3" fill="var(--c-plane)" fill-opacity=".12"/>
+        <g clip-path="url(#x8b)" fill-opacity=".8" stroke-width="1.2">
+          <g fill="var(--c-corner)" stroke="var(--c-corner)"><circle cx="20" cy="24.0" r="55.1"/><circle cx="200" cy="24.0" r="55.1"/><circle cx="20" cy="151.3" r="55.1"/><circle cx="200" cy="151.3" r="55.1"/></g>
+          <circle cx="110.0" cy="87.6" r="55.1" fill="var(--c-body)" stroke="var(--c-body)"/>
+        </g>
+        <rect x="20" y="24" width="180" height="127.3" fill="none" stroke="var(--c-plane)" stroke-width="1.5"/>
+        <text x="110" y="16" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono, monospace">√2 a</text>
+        <text x="206" y="92" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono, monospace">a</text>
+      </svg>
+      <p class="note">There is 1/4 of an atom at each of the four corners of the rectangle, plus the body-center atom in the middle, 2 in all. Area = a × √2 a.</p>
+      <div class="eq">ρ<sub>p</sub> = 2 ÷ (√2 × 0.287² nm²)<br>= 17.2 atoms/nm² = 1.72 × 10¹³ atoms/mm²</div>
+    </article>
+    <article class="card">
+      <p class="card-no">EXAMPLE 3&emsp;VOLUME DENSITY</p>
+      <h4>Cu (FCC)</h4>
+      <svg viewBox="0 0 220 170" role="img" aria-label="Hard-sphere model of an FCC unit cell, which holds 4 atoms">
+        <defs><radialGradient id="x8s" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient></defs>
+        <g stroke="var(--edge3d)" stroke-width="1.2"><line x1="94.6" y1="92.0" x2="94.6" y2="27.4"/><line x1="94.6" y1="92.0" x2="156.3" y2="102.9"/><line x1="94.6" y1="92.0" x2="63.7" y2="113.7"/></g>
+        <circle cx="94.6" cy="92.0" r="24.4" fill="var(--c-corner)"/><circle cx="94.6" cy="92.0" r="24.4" fill="url(#x8s)"/><circle cx="94.6" cy="27.4" r="24.4" fill="var(--c-corner)"/><circle cx="94.6" cy="27.4" r="24.4" fill="url(#x8s)"/><circle cx="125.4" cy="65.1" r="24.4" fill="var(--c-face)"/><circle cx="125.4" cy="65.1" r="24.4" fill="url(#x8s)"/><circle cx="156.3" cy="102.9" r="24.4" fill="var(--c-corner)"/><circle cx="156.3" cy="102.9" r="24.4" fill="url(#x8s)"/><circle cx="79.1" cy="70.6" r="24.4" fill="var(--c-face)"/><circle cx="79.1" cy="70.6" r="24.4" fill="url(#x8s)"/><circle cx="110.0" cy="108.3" r="24.4" fill="var(--c-face)"/><circle cx="110.0" cy="108.3" r="24.4" fill="url(#x8s)"/><circle cx="156.3" cy="38.3" r="24.4" fill="var(--c-corner)"/><circle cx="156.3" cy="38.3" r="24.4" fill="url(#x8s)"/><circle cx="63.7" cy="113.7" r="24.4" fill="var(--c-corner)"/><circle cx="63.7" cy="113.7" r="24.4" fill="url(#x8s)"/><circle cx="110.0" cy="43.7" r="24.4" fill="var(--c-face)"/><circle cx="110.0" cy="43.7" r="24.4" fill="url(#x8s)"/><circle cx="140.9" cy="81.4" r="24.4" fill="var(--c-face)"/><circle cx="140.9" cy="81.4" r="24.4" fill="url(#x8s)"/><circle cx="63.7" cy="49.1" r="24.4" fill="var(--c-corner)"/><circle cx="63.7" cy="49.1" r="24.4" fill="url(#x8s)"/><circle cx="94.6" cy="86.9" r="24.4" fill="var(--c-face)"/><circle cx="94.6" cy="86.9" r="24.4" fill="url(#x8s)"/><circle cx="125.4" cy="124.6" r="24.4" fill="var(--c-corner)"/><circle cx="125.4" cy="124.6" r="24.4" fill="url(#x8s)"/><circle cx="125.4" cy="60.0" r="24.4" fill="var(--c-corner)"/><circle cx="125.4" cy="60.0" r="24.4" fill="url(#x8s)"/>
+        <g stroke="var(--ink)" stroke-width="1" stroke-opacity=".55" stroke-dasharray="4 3"><line x1="94.6" y1="27.4" x2="156.3" y2="38.3"/><line x1="94.6" y1="27.4" x2="63.7" y2="49.1"/><line x1="156.3" y1="102.9" x2="156.3" y2="38.3"/><line x1="156.3" y1="102.9" x2="125.4" y2="124.6"/><line x1="156.3" y1="38.3" x2="125.4" y2="60.0"/><line x1="63.7" y1="113.7" x2="63.7" y2="49.1"/><line x1="63.7" y1="113.7" x2="125.4" y2="124.6"/><line x1="63.7" y1="49.1" x2="125.4" y2="60.0"/><line x1="125.4" y1="124.6" x2="125.4" y2="60.0"/></g>
+        <text x="110" y="166" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono, monospace">a = 0.361 nm = 2√2 R</text>
+      </svg>
+      <p class="note">Mass of the cell ÷ volume of the cell. Each FCC cell holds 4 Cu atoms, and the atomic mass is 63.54 g/mol.</p>
+      <div class="eq">m = 4 × 63.54 ÷ (6.022 × 10²³) = 4.22 × 10⁻²² g<br>V = (0.361 × 10⁻⁷ cm)³ = 4.70 × 10⁻²³ cm³<br>ρ<sub>v</sub> = m ÷ V ≈ 8.98 g/cm³ (measured 8.96)</div>
+    </article>
+  </div>
+  <p class="errata" data-t="107"><b>ERRATUM</b>The denominator in the planar density example should be √2 × 0.287² nm² (√2 a × a). The slide lost the root sign in typesetting. The answer, 17.2 atoms/nm², is correct.</p>
+  <div class="lab wide">
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="108">Work out a volume density yourself: pick a metal or semiconductor</span>
+        <select id="den-el"></select>
+      </div>
+      <div class="readout" id="den-out"></div>
+    </div>
+    <aside class="try" data-t="109"><span class="lbl">GOING FURTHER</span><p>In the model above, choose Cu and planar density, then compare <span class="idx">(111)</span>, <span class="idx">(100)</span> and <span class="idx">(110)</span>. The densest is <span class="idx">(111)</span>, the close-packed plane from Unit 4. Its circles touch and leave the least empty space.</p></aside>
+  </div>
+</section>
+
+<!-- ======================= 09 ======================= -->
+<section class="unit" id="s9">
+  <header class="unit-head" data-t="110"><p class="unit-no">09</p><h2>Seeing how atoms are arranged with X‑ray diffraction</h2><p class="unit-tag">2d sinθ = nλ</p></header>
+  <div class="prose" data-t="111">
+    <p>Atoms are too small to see with an ordinary microscope. Visible light has a wavelength of 400–700 nm, more than a thousand times the spacing between atoms (about 0.2–0.3 nm), so it cannot tell one layer of atoms from the next. Shine light whose <strong>wavelength is about the same as the spacing between atoms</strong> on a crystal instead. The light scattered by layer after layer of atoms interferes, and it turns bright only at certain angles. Measure those angles and you can work back to how the atoms are arranged. X‑rays have wavelengths of about 0.05–0.25 nm, the same scale as the spacing between crystal planes.</p>
+    <p>This unit goes in order: how two waves add (9‑1), where X‑rays come from (9‑2), which angles turn bright (9‑3), how an instrument measures them (9‑4), why some peaks go missing (9‑5), and how to read a pattern back into a crystal structure (9‑6 to 9‑8).</p>
+  </div>
+
+  <h3 data-t="180"><span class="h3-no">9-1</span>When two waves meet: reinforce or cancel</h3>
+  <div class="pair wide">
+  <div class="prose" data-t="181">
+    <p>X‑rays are waves, like ripples on water. The distance from one crest to the next is the <span class="term">wavelength</span> λ. Everything in this unit rests on one fact: when two waves meet, their heights add.</p>
+    <dl class="defs">
+      <dt>In phase</dt><dd>Crest meets crest. The two waves reinforce each other and the result is twice as tall. This is called <span class="term">constructive interference</span>.</dd>
+      <dt>Out of phase</dt><dd>Crest meets trough. The two waves cancel and nothing is left. This is called <span class="term">destructive interference</span>.</dd>
+    </dl>
+    <p>Which one you get depends on how far one wave lags behind the other. A lag of 0, 1, 2 … whole wavelengths puts the two back in step. A lag of ½, 1½ … wavelengths puts them exactly opposite. Drag the slider and watch the sum.</p>
+  </div>
+  <aside class="mnote" data-t="182"><span class="lbl">AN ANALOGY</span><p>Noise-cancelling headphones work this way. They play a sound wave that is exactly opposite to the noise outside, crest against trough, and the two cancel.</p></aside>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="wv-plot"><canvas id="wv-cv" aria-label="Two waves and their sum" data-ta="183"></canvas></div>
+    <div class="panel">
+      <div class="ctl"><span class="ctl-label"><span data-t="184">How far wave 2 lags: </span><span class="mono" id="wv-v"></span></span><input type="range" id="wv-s" min="0" max="2" step="0.01" value="0" aria-label="Lag of wave 2 in wavelengths" data-ta="185"></div>
+      <div class="row" id="wv-pre"><button type="button" class="btn" data-v="0">0</button><button type="button" class="btn" data-v="0.25">¼ λ</button><button type="button" class="btn" data-v="0.5">½ λ</button><button type="button" class="btn" data-v="1">1 λ</button><button type="button" class="btn" data-v="1.5">1½ λ</button></div>
+      <div class="readout" id="wv-out"></div>
+    </div>
+  </div>
+
+  <h3 data-t="112"><span class="h3-no">9-2</span>Where X‑rays come from</h3>
+  <div class="prose" data-t="113">
+    <p>Inside the vacuum of an X‑ray tube, a heated tungsten filament (the cathode) gives off electrons, and a metal cup around it focuses them into a beam. A high voltage of tens of thousands of volts (35 kV in the lecture's figure) accelerates them into a metal target (the anode, usually Cu, Mo or W). About 99% of their energy turns into heat, so the target is cooled with water. Some tubes also spin the anode, so the beam keeps landing on a fresh, cool spot. The remaining 1% or so leaves as X‑rays. Two kinds come out together.</p>
+    <dl class="defs">
+      <dt>Continuous X‑rays</dt><dd>An electron that passes close to a nucleus in the target is pulled off course and slowed down. The energy it loses leaves as an X‑ray photon. Each electron is slowed by a different amount: a little, a lot, or stopped completely. So the wavelengths spread over a continuous range, like a broad hump.</dd>
+      <dt>Characteristic X‑rays</dt><dd>An electron can also knock an inner electron (K shell) out of a target atom. An outer electron drops down to fill the hole and gives off the energy difference as one X‑ray photon. A drop from the L shell gives <span class="term">K<sub>α</sub></span>. A drop from the M shell gives <span class="term">K<sub>β</sub></span>. The shell energies are fixed by the element, so these wavelengths identify the target: Cu K<sub>α</sub> is 0.154 nm and Mo K<sub>α</sub> is 0.071 nm. Looked at closely, K<sub>α</sub> is two lines very close together, K<sub>α1</sub> and K<sub>α2</sub>, because the L shell has sublevels. They are usually treated as one line.</dd>
+    </dl>
+    <p>The energy of a photon and its wavelength are tied by one handy number: <span class="idx wrap">E (eV) = 1240 ÷ λ (nm)</span>. An electron accelerated through V volts carries V electron-volts. When all of that goes into one photon, you get the shortest wavelength in the spectrum: <span class="idx wrap">λ<sub>min</sub>(nm) = 1240 ÷ accelerating voltage (V)</span>. At 35 kV that is 1240 ÷ 35000 = 0.035 nm. Older figures use the ångström (1 Å = 0.1 nm), and there the same rule reads <span class="idx wrap">E (eV) = 12400 ÷ λ (Å)</span>.</p>
+    <p>Diffraction needs a single wavelength, so experiments use the strong K<sub>α</sub> line. A thin metal filter (nickel foil for a copper tube) removes most of the K<sub>β</sub>.</p>
+  </div>
+  <div class="figs wide">
+    <figure class="fig">
+      <svg viewBox="0 0 320 170" role="img" aria-label="X-ray tube" data-ta="186">
+        <defs>
+          <marker id="mk-i" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ink"/></marker>
+          <marker id="mk-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="xrf"/></marker>
+        </defs>
+        <rect x="26" y="42" width="268" height="84" rx="42" class="ln"/>
+        <path d="M60 30H110M210 30H262M60 30V66M262 30V62" class="thin"/>
+        <text x="160" y="34" text-anchor="middle">35 kV</text>
+        <text x="60" y="24" text-anchor="middle" class="mu">−</text><text x="262" y="24" text-anchor="middle" class="mu">+</text>
+        <path d="M52 66h16v36H52" class="ln"/>
+        <path d="M68 72l8 4l-8 4l8 4l-8 4l8 4l-8 4" class="ln"/>
+        <path d="M86 76H196" class="thin" stroke-dasharray="3 4" marker-end="url(#mk-i)"/><path d="M86 84H202" class="thin" stroke-dasharray="3 4" marker-end="url(#mk-i)"/><path d="M86 92H208" class="thin" stroke-dasharray="3 4" marker-end="url(#mk-i)"/>
+        <path d="M216 62H274V106H234z" class="ln"/><path d="M216 62H274V106H234z" class="ink" fill-opacity=".12"/>
+        <path d="M224 90L200 150" class="xr" marker-end="url(#mk-r)"/><path d="M226 92L222 152" class="xr" marker-end="url(#mk-r)"/><path d="M228 94L246 150" class="xr" marker-end="url(#mk-r)"/>
+        <path d="M190 126h66" class="ln" stroke-width="4" stroke="var(--stage)"/><path d="M190 126h66" class="thin" stroke-dasharray="2 3"/>
+        <text x="46" y="140" class="mu">①</text><text x="140" y="70" text-anchor="middle" class="mu">②</text><text x="252" y="88" text-anchor="middle">③</text><text x="262" y="150" class="r">④</text>
+      </svg>
+      <figcaption data-t="187"><b>X‑ray tube.</b> ① The heated filament (cathode) gives off electrons. ② The high voltage accelerates them across the vacuum. ③ They hit the metal target (anode). ④ X‑rays leave through a thin beryllium window.</figcaption>
+    </figure>
+    <figure class="fig">
+      <svg viewBox="0 0 320 170" role="img" aria-label="Electron shells and the K alpha and K beta transitions" data-ta="188">
+        <circle cx="86" cy="88" r="7" class="ink"/>
+        <circle cx="86" cy="88" r="26" class="thin"/><circle cx="86" cy="88" r="47" class="thin"/><circle cx="86" cy="88" r="68" class="thin"/>
+        <text x="86" y="58" text-anchor="middle" class="mu">K</text><text x="86" y="37" text-anchor="middle" class="mu">L</text><text x="86" y="16" text-anchor="middle" class="mu">M</text>
+        <path d="M6 150L60 100" class="ln" marker-end="url(#mk-i)"/>
+        <circle cx="64" cy="102" r="4.5" fill="var(--stage)" stroke="var(--ink)" stroke-width="1.5"/>
+        <path d="M70 108L104 160" class="thin" stroke-dasharray="3 3" marker-end="url(#mk-i)"/>
+        <circle cx="133" cy="88" r="4.5" class="ink"/><circle cx="154" cy="88" r="4.5" class="ink"/>
+        <text x="8" y="166" class="mu">e⁻</text><text x="110" y="166" class="mu">e⁻</text>
+        <path d="M200 140H300M200 74H300M200 44H300" class="ln"/>
+        <text x="192" y="144" text-anchor="end">K</text><text x="192" y="78" text-anchor="end">L</text><text x="192" y="48" text-anchor="end">M</text>
+        <path d="M230 76V136" class="xr" marker-end="url(#mk-r)"/><path d="M272 46V136" class="xr" marker-end="url(#mk-r)"/>
+        <text x="236" y="112" class="r">Kα</text><text x="278" y="100" class="r">Kβ</text>
+      </svg>
+      <figcaption data-t="189"><b>Where the characteristic lines come from.</b> Left: an incoming electron knocks a K‑shell electron out and leaves a hole. Right: the energy levels. An electron dropping from L to K gives K<sub>α</sub>. A drop from M to K is a larger step, so K<sub>β</sub> has more energy and a shorter wavelength.</figcaption>
+    </figure>
+  </div>
+  <div class="prose" data-t="190">
+    <p>The plot below is the spectrum that comes out of the tube. Raise the voltage and watch two things: the left edge λ<sub>min</sub> moves to shorter wavelengths, and the characteristic lines appear only once the electrons have enough energy to remove a K electron (about 9 kV for Cu, 20 kV for Mo, 69.5 kV for W). The faint curves are the same tube at 20, 40, 60 and 80 kV, for comparison.</p>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="tb-plot"><canvas id="tb-cv" aria-label="X-ray spectrum of the tube" data-ta="191"></canvas></div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="192">Target metal</span>
+        <div class="seg" id="tb-t"><button type="button" data-v="cu" aria-pressed="false">Cu</button><button type="button" data-v="mo" aria-pressed="true">Mo</button><button type="button" data-v="w" aria-pressed="false">W</button></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="114">Accelerating voltage: </span><span id="kv-val" class="mono">35</span> kV</span>
+        <input type="range" id="kv" min="5" max="80" step="1" value="35" aria-label="Accelerating voltage" data-ta="115">
+      </div>
+      <div class="readout" id="kv-out"></div>
+    </div>
+  </div>
+
+  <h3 data-t="116"><span class="h3-no">9-3</span>Bragg's law: the angles that turn bright</h3>
+  <div class="prose" data-t="117">
+    <p>Think of a crystal as a stack of parallel planes of atoms, a distance d apart. An X‑ray beam comes in at an angle θ to the planes. Note that θ is measured from the plane itself, not from the line perpendicular to it. Every plane scatters a little of the beam.</p>
+    <p>Compare the ray scattered by the first layer with the ray scattered by the second. The lower ray has to go down to the second layer and come back up, so it travels farther. The extra distance is the two red segments in the figure, FG and GH. Each one is a side of a right triangle whose longest side is OG = d, so each has length d sinθ. Together, FG + GH = <strong>2d sinθ</strong>.</p>
+    <p>From 9‑1, the two rays reinforce only when the lag is a whole number of wavelengths:</p>
+    <p class="eq big">2d sinθ = nλ&emsp;&emsp;(n = 1, 2, 3 …)</p>
+    <p>This is <span class="term">Bragg's law</span>. The whole number n is the order of diffraction. n = 1 means the lower ray is exactly one wavelength behind, n = 2 means two. Drag the sliders to change θ, d and λ, and watch for when the crests of the two waves line up.</p>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="br-plot"><canvas id="br-cv" aria-label="Diagram of Bragg diffraction" data-ta="118"></canvas></div>
+    <div class="panel">
+      <div class="ctl"><span class="ctl-label"><span data-t="119">Angle of incidence θ: </span><span class="mono" id="br-th-v"></span></span><input type="range" id="br-th" min="5" max="85" step="0.1" value="20" aria-label="Angle of incidence" data-ta="120"></div>
+      <div class="ctl"><span class="ctl-label"><span data-t="121">Interplanar spacing d: </span><span class="mono" id="br-d-v"></span></span><input type="range" id="br-d" min="0.12" max="0.40" step="0.001" value="0.208" aria-label="Interplanar spacing" data-ta="122"></div>
+      <div class="ctl"><span class="ctl-label"><span data-t="123">X‑ray wavelength λ: </span><span class="mono" id="br-l-v"></span></span><input type="range" id="br-l" min="0.05" max="0.25" step="0.001" value="0.154" aria-label="Wavelength" data-ta="124"></div>
+      <div class="row"><button type="button" class="btn" id="br-next"><span data-t="125">Jump to the next bright angle</span></button><button type="button" class="btn" id="br-cu"><span data-t="126">Set to Cu (111), Cu K</span><sub>α</sub></button></div>
+      <div class="readout" id="br-out"></div>
+    </div>
+  </div>
+  <div class="key" data-t="193"><span class="key-tag">FOUR THINGS TO NOTICE</span>
+    <dl>
+      <dt>A worked case</dt><dd>The <span class="idx">(111)</span> planes of copper are d = 0.2087 nm apart. With Cu K<sub>α</sub> (λ = 0.154 nm) and n = 1, sinθ = λ ÷ 2d = 0.154 ÷ 0.4174 = 0.369, so θ = 21.7°.</dd>
+      <dt>The wavelength must be short enough</dt><dd>sinθ can never be more than 1, so diffraction needs λ ≤ 2d. Visible light is far too long, which is why a crystal does not diffract it.</dd>
+      <dt>Why real peaks are sharp</dt><dd>With only two layers, the brightness fades slowly as you move off the Bragg angle. A real crystal has thousands of layers. Slightly off the angle, every layer finds a deeper layer that is exactly half a wavelength behind it, and the two cancel. So the peak is very narrow.</dd>
+      <dt>We usually set n = 1</dt><dd>Second-order diffraction (n = 2) from <span class="idx">(100)</span> planes of spacing d falls at the same angle as first-order diffraction from planes of spacing d/2, and those are the <span class="idx">(200)</span> planes. So the order is folded into the indices and the law is written <span class="idx wrap">λ = 2 d<sub>hkl</sub> sinθ</span>, with d<sub>hkl</sub> from unit 6.</dd>
+    </dl>
+  </div>
+
+  <h3 data-t="127"><span class="h3-no">9-4</span>How a diffraction pattern is measured</h3>
+  <div class="prose" data-t="194">
+    <p>The instrument is called a <span class="term">diffractometer</span>. The X‑ray beam hits the sample at an angle θ to its surface. The detector waits on the other side, also at θ to the surface. Seen from the incoming beam, the detector has turned through <strong>2θ</strong>, and 2θ is the angle the instrument records. That is why the horizontal axis of every diffraction pattern is 2θ and not θ.</p>
+    <p>During a scan the sample turns by θ while the detector turns by 2θ, so the two angles stay matched. At most angles the scattered waves cancel and the detector counts almost nothing. When some set of planes satisfies Bragg's law, the count jumps. Plot the count against 2θ and you have the <span class="term">diffraction pattern</span>. Press Scan to see one being drawn.</p>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="df-plot"><canvas id="df-cv" aria-label="A diffractometer scanning copper powder, and the pattern it records" data-ta="195"></canvas></div>
+    <div class="panel">
+      <div class="ctl"><span class="ctl-label"><span data-t="196">Detector angle 2θ: </span><span class="mono" id="df-v"></span></span><input type="range" id="df-tt" min="30" max="125" step="0.1" value="74.1" aria-label="Detector angle 2θ" data-ta="197"></div>
+      <div class="row"><button type="button" class="btn" id="df-scan"><span data-t="198">▶ Scan from 30° to 125°</span></button><button type="button" class="btn" id="df-next"><span data-t="199">Jump to the next peak</span></button></div>
+      <div class="readout" id="df-out"></div>
+    </div>
+  </div>
+  <div class="prose" data-t="129">
+    <p>The sample in the scan above is a <strong>powder</strong>. It holds countless tiny grains pointing every which way, so for every set of planes some grains sit at exactly the Bragg angle. Their diffracted rays form a cone around the beam, and on a flat film the cones show up as rings. A <strong>single crystal</strong> has only one orientation. It gives separate bright spots, and it has to be turned on a goniometer (a holder that rotates the crystal about several axes) to bring each set of planes to its Bragg angle. A single crystal gives a full three-dimensional set of spots. A powder squeezes the same information onto one axis, 2θ. That is quicker to measure, but peaks that fall close together can overlap.</p>
+  </div>
+  <div class="figs wide">
+    <figure class="fig">
+      <svg viewBox="0 0 320 150" role="img" aria-label="Diffraction spots from a single crystal" data-ta="200">
+        <rect x="85" y="0" width="150" height="150" fill="var(--film)"/>
+        <g fill="var(--film-ink)">
+          <circle cx="160" cy="75" r="4"/>
+          <circle cx="160" cy="38" r="2.6"/><circle cx="160" cy="112" r="2.6"/><circle cx="123" cy="75" r="2.6"/><circle cx="197" cy="75" r="2.6"/>
+          <circle cx="134" cy="49" r="2.2"/><circle cx="186" cy="49" r="2.2"/><circle cx="134" cy="101" r="2.2"/><circle cx="186" cy="101" r="2.2"/>
+          <circle cx="160" cy="14" r="1.6"/><circle cx="160" cy="136" r="1.6"/><circle cx="99" cy="75" r="1.6"/><circle cx="221" cy="75" r="1.6"/>
+          <circle cx="112" cy="27" r="1.4"/><circle cx="208" cy="27" r="1.4"/><circle cx="112" cy="123" r="1.4"/><circle cx="208" cy="123" r="1.4"/>
+        </g>
+      </svg>
+      <figcaption data-t="201"><b>Single crystal.</b> One orientation, so each set of planes sends its beam in one direction: separate spots.</figcaption>
+    </figure>
+    <figure class="fig">
+      <svg viewBox="0 0 320 150" role="img" aria-label="Diffraction rings from a powder" data-ta="202">
+        <rect x="85" y="0" width="150" height="150" fill="var(--film)"/>
+        <g fill="none" stroke="var(--film-ring)">
+          <circle cx="160" cy="75" r="31" stroke-width="2.2" stroke-opacity=".9"/><circle cx="160" cy="75" r="36" stroke-width="1.6" stroke-opacity=".7"/>
+          <circle cx="160" cy="75" r="51" stroke-width="1.4" stroke-opacity=".6"/><circle cx="160" cy="75" r="60" stroke-width="1.4" stroke-opacity=".6"/><circle cx="160" cy="75" r="62.5" stroke-width="1" stroke-opacity=".4"/>
+        </g>
+        <circle cx="160" cy="75" r="4" fill="var(--film-ink)"/>
+      </svg>
+      <figcaption data-t="203"><b>Powder.</b> Grains in every orientation, so each spot is smeared around the beam into a ring. A diffractometer scan cuts across these rings.</figcaption>
+    </figure>
+  </div>
+  <div class="prose" data-t="204">
+    <p>The picture of Bragg's law looks like a mirror, with the angle in equal to the angle out. Diffraction is still a different thing from reflection:</p>
+  </div>
+  <div class="tbl-wrap" data-t="128">
+    <table>
+      <thead><tr><th></th><th>Mirror reflection</th><th>X‑ray diffraction</th></tr></thead>
+      <tbody>
+        <tr><td>What takes part</td><td>Surface atoms only</td><td>Atoms at every depth along the beam path</td></tr>
+        <tr><td>Angles where it appears</td><td>Any angle</td><td>Only angles that satisfy 2d sinθ = nλ</td></tr>
+        <tr><td>Intensity</td><td>Close to the incident beam (I<sub>reflected</sub>/I<sub>incident</sub> ≈ 1)</td><td>Very weak, a small part of the incident beam</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 data-t="130"><span class="h3-no">9-5</span>The structure factor: why some peaks are missing</h3>
+  <div class="pair wide">
+  <div class="prose" data-t="131">
+    <p>An X‑ray is an electromagnetic wave. Its oscillating electric field shakes the electrons of every atom it passes, and the shaken electrons send out X‑rays of the same wavelength in all directions. That is what “an atom scatters X‑rays” means. The wave leaving the crystal is the sum of the waves from all the atoms. Every unit cell is the same, so it is enough to add up the atoms of one cell.</p>
+    <p>Bragg's law counts only one layer of atoms per spacing d. A unit cell often has more atoms sitting between those layers, and they scatter X‑rays too. Their waves can make the peak stronger, or wipe it out.</p>
+    <p>Take the BCC <span class="idx">(100)</span> peak. At the Bragg angle, the waves from two neighboring layers of corner atoms differ by exactly one wavelength, so they are in step. The body-center atoms form one more layer, exactly halfway between. Their wave is half a wavelength behind, so its crests meet the troughs of the corner wave. The two cancel and the peak never shows up. This is called <span class="term">extinction</span> (a systematic absence).</p>
+    <p>Every atom follows the same rule. An atom at (x, y, z) sends out a wave that lags by <span class="idx">hx + ky + lz</span> wavelengths. A whole number means in step. A half means exactly opposite.</p>
+    <p>The plot shows this twice. The first panel draws the waves themselves. The second turns each wave into an arrow: its length is the scattering strength f of the atom, and it is turned by <span class="idx">360° × (hx + ky + lz)</span>. Join the arrows head to tail. The red arrow from the start to the end is the total, called the <span class="term">structure factor</span> F. When the arrows end where they started, F = 0 and the peak is extinct.</p>
+    <p>Textbooks write the same sum in one line. The term e<sup>iφ</sup> simply means “an arrow turned by the angle φ”.</p>
+    <p class="eq big">F<sub>hkl</sub> = Σ f<sub>n</sub> · e<sup>2πi(hx<sub>n</sub> + ky<sub>n</sub> + lz<sub>n</sub>)</sup>&emsp;&emsp;diffracted intensity ∝ |F<sub>hkl</sub>|²</p>
+    <p>Choose BCC and try <span class="idx">(100)</span>, then <span class="idx">(200)</span>. For <span class="idx">(200)</span> the body-center wave lags by one whole wavelength, and the peak comes back.</p>
+  </div>
+  <aside class="mnote" data-t="205"><span class="lbl">WHAT IS f?</span><p>f is the atomic scattering factor: how strongly one atom scatters X‑rays. The electrons do the scattering, so an atom with more electrons has a larger f. Gold scatters far more strongly than aluminum.</p></aside>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="ph-plot"><canvas id="ph-cv" aria-label="Structure factor: the wave from each atom, and the same waves as arrows" data-ta="132"></canvas></div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="133">Crystal structure</span>
+        <div class="seg" id="ph-s">
+          <button type="button" data-v="SC">SC</button>
+          <button type="button" data-v="BCC" aria-pressed="true">BCC</button>
+          <button type="button" data-v="FCC">FCC</button>
+          <button type="button" data-v="DIA" data-t="134">Diamond</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="135">Diffracting plane (hkl)</span>
+        <div class="idx-in">(<input type="number" id="ph-h" min="0" max="6" value="1" aria-label="h"><input type="number" id="ph-k" min="0" max="6" value="0" aria-label="k"><input type="number" id="ph-l" min="0" max="6" value="0" aria-label="l">)</div>
+        <div class="seg" id="ph-pre"></div>
+      </div>
+      <div class="readout" id="ph-out"></div>
+    </div>
+  </div>
+  <div class="prose" data-t="206">
+    <p><strong>Working it out by hand.</strong> The formula gives the same answers in a few lines. You only need two values. They come from Euler's formula, <span class="idx wrap">e<sup>iφ</sup> = cos φ + i sin φ</span>. Read it as an arrow turned by φ: cos φ is how far it reaches sideways and sin φ is how far it reaches upwards, as in panel 2 above.</p>
+    <p class="eq">e<sup>πi × even</sup> = +1&emsp;an arrow turned through whole turns points the same way<br>e<sup>πi × odd</sup> = −1&emsp;an arrow turned through half a turn points backwards</p>
+    <p><strong>BCC</strong> (tungsten, for example) has 2 atoms of the same element per cell, at (0, 0, 0) and (½, ½, ½):</p>
+    <p class="eq">F = f · e<sup>2πi(0)</sup> + f · e<sup>2πi(h/2 + k/2 + l/2)</sup> = f [ 1 + e<sup>πi(h + k + l)</sup> ]<br>h + k + l even&emsp;→ F = f (1 + 1) = 2f, intensity ∝ 4f²<br>h + k + l odd&emsp;&ensp;→ F = f (1 − 1) = 0, no peak</p>
+    <p><strong>FCC</strong> (gold, for example) has 4 atoms per cell, at (0, 0, 0), (½, ½, 0), (½, 0, ½) and (0, ½, ½):</p>
+    <p class="eq">F = f [ 1 + e<sup>πi(h + k)</sup> + e<sup>πi(h + l)</sup> + e<sup>πi(k + l)</sup> ]<br>h, k, l all odd or all even&emsp;→ every pair adds to an even number, F = f (1 + 1 + 1 + 1) = 4f<br>mixed, such as (100) or (110)&emsp;→ two of the pairs are odd, F = f (1 + 1 − 1 − 1) = 0</p>
+    <p>The <strong>diamond structure</strong> (silicon) is an FCC lattice plus a second FCC lattice shifted by (¼, ¼, ¼). Every FCC arrow gets a shifted partner, so the FCC result is multiplied by one more bracket:</p>
+    <p class="eq">F = F<sub>FCC</sub> · [ 1 + e<sup>πi(h + k + l)/2</sup> ]<br>all odd&emsp;→ the partner is turned a quarter turn, the bracket has length √2, intensity ∝ 32f²<br>all even, h + k + l = 4n&emsp;→ the bracket is 1 + 1 = 2, F = 8f, intensity ∝ 64f²<br>all even, h + k + l = 4n + 2&emsp;→ the bracket is 1 − 1 = 0, no peak: (200), (222), (420)</p>
+    <p>The two tables collect these rules. They are what makes one structure's pattern look different from another's.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="136">
+    <table>
+      <thead><tr><th>Bravais lattice</th><th>Peaks present</th><th>Peaks absent</th><th>Sequence of h² + k² + l²</th></tr></thead>
+      <tbody>
+        <tr><td>Simple cubic SC</td><td>All</td><td>None</td><td class="num">1, 2, 3, 4, 5, 6, 8, 9 … (no 7)</td></tr>
+        <tr><td>Body-centered cubic BCC</td><td>h + k + l even</td><td>h + k + l odd</td><td class="num">2, 4, 6, 8, 10, 12, 14 …</td></tr>
+        <tr><td>Face-centered cubic FCC</td><td>h, k, l all odd or all even</td><td>Mixed odd and even</td><td class="num">3, 4, 8, 11, 12, 16, 19, 20, 24 …</td></tr>
+        <tr><td>Diamond (Si, Ge)</td><td>All odd, or all even with h + k + l a multiple of 4</td><td>The FCC rule, plus all even with h + k + l = 4n + 2</td><td class="num">3, 8, 11, 16, 19, 24 …</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose" data-t="207">
+    <p>The same rules, plane by plane, in the order the peaks appear in a pattern. ● means the peak is present.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="208">
+    <table>
+      <thead><tr><th>h² + k² + l²</th><th>{hkl}</th><th>Simple cubic</th><th>BCC</th><th>FCC</th><th>Diamond</th></tr></thead>
+      <tbody><tr><td class="num">1</td><td class="num">{100}</td><td class="num">●</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">2</td><td class="num">{110}</td><td class="num">●</td><td class="num">●</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">3</td><td class="num">{111}</td><td class="num">●</td><td class="num">–</td><td class="num">●</td><td class="num">●</td></tr><tr><td class="num">4</td><td class="num">{200}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">–</td></tr><tr><td class="num">5</td><td class="num">{210}</td><td class="num">●</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">6</td><td class="num">{211}</td><td class="num">●</td><td class="num">●</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">8</td><td class="num">{220}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">●</td></tr><tr><td class="num">9</td><td class="num">{221} {300}</td><td class="num">●</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">10</td><td class="num">{310}</td><td class="num">●</td><td class="num">●</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">11</td><td class="num">{311}</td><td class="num">●</td><td class="num">–</td><td class="num">●</td><td class="num">●</td></tr><tr><td class="num">12</td><td class="num">{222}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">–</td></tr><tr><td class="num">14</td><td class="num">{321}</td><td class="num">●</td><td class="num">●</td><td class="num">–</td><td class="num">–</td></tr><tr><td class="num">16</td><td class="num">{400}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">●</td></tr><tr><td class="num">19</td><td class="num">{331}</td><td class="num">●</td><td class="num">–</td><td class="num">●</td><td class="num">●</td></tr><tr><td class="num">20</td><td class="num">{420}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">–</td></tr><tr><td class="num">24</td><td class="num">{422}</td><td class="num">●</td><td class="num">●</td><td class="num">●</td><td class="num">●</td></tr></tbody>
+    </table>
+  </div>
+
+  <h3 data-t="137"><span class="h3-no">9-6</span>XRD pattern simulator</h3>
+  <div class="prose" data-t="138">
+    <p>For a cubic crystal, two formulas are already in hand: Bragg's law with n = 1, and the interplanar spacing from unit 6.</p>
+    <p class="eq">λ = 2 d sinθ&emsp;&emsp;d = a ÷ √(h² + k² + l²)</p>
+    <p>Put the second into the first, then square both sides:</p>
+    <p class="eq big">sin²θ = (λ² / 4a²) · (h² + k² + l²)</p>
+    <p>The lecture writes the same relation the other way round: <span class="idx wrap">h² + k² + l² = (4a² / λ²) · sin²θ</span>. λ and a are the same for every peak in one pattern, so sin²θ is proportional to the whole number h² + k² + l². Planes with small indices have a large spacing d and show up at small angles. Divide the sin²θ of each peak by the sin²θ of the first peak and look at the sequence of ratios. It tells you whether the crystal is SC, BCC or FCC.</p>
+    <p>A quick test needs only the first two peaks. Their sin²θ ratio is 2 ÷ 4 = <strong>0.5 for BCC</strong> and 3 ÷ 4 = <strong>0.75 for FCC</strong>.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="xr-plot"><canvas id="xr-cv" aria-label="Simulated X‑ray diffraction pattern" data-ta="139"></canvas></div>
+      <p class="note" data-t="140">Peak positions are calculated exactly. Peak heights are only schematic. They include just the multiplicity, the Lorentz–polarization factor and a simplified fall-off in atomic scattering, enough to show the general trend.</p>
+    </div>
+    <div class="panel">
+      <div class="ctl"><span class="ctl-label" data-t="141">Sample</span><select id="xr-mat"></select></div>
+      <div class="ctl"><span class="ctl-label" data-t="142">X‑ray tube (target)</span><select id="xr-tube"></select></div>
+      <label class="check"><input type="checkbox" id="xr-ghost" checked><span data-t="143"> Use dashed lines to mark peaks that simple cubic would have but that are extinct here</span></label>
+      <div class="readout" id="xr-tip"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" id="xr-table"></div>
+
+  <h3 data-t="209"><span class="h3-no">9-7</span>Worked example: naming an unknown metal</h3>
+  <div class="pair wide">
+  <div class="prose" data-t="210">
+    <p>A powder of an unknown cubic metal, either BCC or FCC, is measured with λ = 0.154 nm. The pattern has peaks at 2θ = 40.0°, 58.0°, 73.0°, 86.8°, 100.4° and 114.7°. Which structure is it, and what is the lattice constant a?</p>
+    <ol>
+      <li>Halve each 2θ to get θ, then calculate sin²θ.</li>
+      <li>Take the ratio of the first two: 0.1170 ÷ 0.2350 = 0.498. That is 0.5, so the metal is <strong>BCC</strong>. FCC would give 0.75.</li>
+      <li>Give the peaks the BCC values of h² + k² + l² in order: 2, 4, 6, 8, 10, 12. Each value names its planes, for example 2 = 1² + 1² + 0², the <span class="idx">{110}</span> planes.</li>
+      <li>Solve for a from each peak: <span class="idx wrap">a = λ √(h² + k² + l²) ÷ (2 sinθ)</span>. The first peak gives 0.154 × √2 ÷ (2 × 0.3420) = 0.318 nm.</li>
+      <li>Look it up. A BCC metal with a ≈ 0.317 nm is <strong>tungsten</strong> (a = 0.3165 nm).</li>
+    </ol>
+  </div>
+  <aside class="mnote" data-t="211"><span class="lbl">CHECK IT</span><p>These angles are read from the tungsten record in the lecture (Fig. 3.28). In the simulator above, choose tungsten with Cu K<sub>α</sub> and the peaks land at almost the same angles. In the real record <span class="idx">(200)</span> is the tallest peak: real heights also depend on how the grains in the sample are oriented.</p></aside>
+  </div>
+  <div class="tbl-wrap wide" data-t="212">
+    <table>
+      <thead><tr><th>Peak</th><th>2θ (°)</th><th>θ (°)</th><th>sinθ</th><th>sin²θ</th><th>÷ 1st peak</th><th>h² + k² + l²</th><th>{hkl}</th><th>a (nm)</th></tr></thead>
+      <tbody><tr><td class="num">1</td><td class="num">40.0</td><td class="num">20.00</td><td class="num">0.3420</td><td class="num">0.1170</td><td class="num">1.00</td><td class="num">2</td><td class="num">{110}</td><td class="num">0.3184</td></tr><tr><td class="num">2</td><td class="num">58.0</td><td class="num">29.00</td><td class="num">0.4848</td><td class="num">0.2350</td><td class="num">2.01</td><td class="num">4</td><td class="num">{200}</td><td class="num">0.3177</td></tr><tr><td class="num">3</td><td class="num">73.0</td><td class="num">36.50</td><td class="num">0.5948</td><td class="num">0.3538</td><td class="num">3.02</td><td class="num">6</td><td class="num">{211}</td><td class="num">0.3171</td></tr><tr><td class="num">4</td><td class="num">86.8</td><td class="num">43.40</td><td class="num">0.6871</td><td class="num">0.4721</td><td class="num">4.04</td><td class="num">8</td><td class="num">{220}</td><td class="num">0.3170</td></tr><tr><td class="num">5</td><td class="num">100.4</td><td class="num">50.20</td><td class="num">0.7683</td><td class="num">0.5903</td><td class="num">5.05</td><td class="num">10</td><td class="num">{310}</td><td class="num">0.3169</td></tr><tr><td class="num">6</td><td class="num">114.7</td><td class="num">57.35</td><td class="num">0.8420</td><td class="num">0.7089</td><td class="num">6.06</td><td class="num">12</td><td class="num">{222}</td><td class="num">0.3168</td></tr></tbody>
+    </table>
+  </div>
+  <div class="prose" data-t="213">
+    <p class="note">The ratios 1 : 2 : 3 : 4 : 5 : 6 alone would also fit simple cubic. The two differ at the seventh peak: BCC has a ratio of 7 there, and simple cubic skips it. The question already ruled simple cubic out, and almost no metal has that structure.</p>
+  </div>
+
+  <h3 data-t="144"><span class="h3-no">9-8</span>From pattern to crystal structure</h3>
+  <ol class="flow wide" data-t="145">
+    <li><b>Prepare the sample</b><span>Grind the material into a fine powder, or use a thin film or a bulk piece.</span></li>
+    <li><b>Measure the diffraction pattern</b><span>Scan 2θ and record the intensity at each angle.</span></li>
+    <li><b>Search and match</b><span>Compare the peak positions with standard patterns of known substances (such as JCPDS/ICDD cards) and pick a candidate.</span></li>
+    <li><b>Determine the unit cell</b><span>Check that the candidate's cell explains every peak. If it does not, go back to step 3 and try another candidate.</span></li>
+    <li><b>Identify the crystal structure</b><span>With the cell settled, the extinction rules and peak intensities give the lattice type and where the atoms are.</span></li>
+  </ol>
+  <div class="prose" data-t="214">
+    <p>A peak carries three pieces of information. Each one answers a different question about the sample.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="215">
+    <table>
+      <thead><tr><th>What you read</th><th>What sets it</th><th>What it tells you</th></tr></thead>
+      <tbody>
+        <tr><td>Position (2θ)</td><td>Interplanar spacing d, through Bragg's law</td><td>Size and shape of the unit cell. If the peaks shift, the lattice constant has changed, for example from strain or from alloying.</td></tr>
+        <tr><td>Present or absent, and how strong</td><td>Atom positions in the cell, through the structure factor</td><td>Lattice type (BCC, FCC, diamond …) and where the atoms sit.</td></tr>
+        <tr><td>Width</td><td>How many layers scatter together</td><td>Crystal size. Crystals only a few nanometers across have too few layers to cancel completely off the Bragg angle, so their peaks are broad.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose" data-t="216">
+    <p>The silicon pattern in the lecture shows position and width at work: peaks from silicon nanoparticles are broader than peaks from bulk silicon, and slightly shifted. Drag the slider to change the crystal size and watch the <span class="idx">(111)</span> peak of silicon.</p>
+  </div>
+  <div class="lab wide">
+    <div class="plot" id="sz-plot"><canvas id="sz-cv" aria-label="Width of the silicon (111) peak for different crystal sizes" data-ta="217"></canvas></div>
+    <div class="panel">
+      <div class="ctl"><span class="ctl-label"><span data-t="218">Crystal size: </span><span class="mono" id="sz-v"></span></span><input type="range" id="sz-l" min="0.3" max="2.3" step="0.01" value="1" aria-label="Crystal size" data-ta="219"></div>
+      <div class="readout" id="sz-out"></div>
+    </div>
+  </div>
+  <div class="key" data-t="146"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Waves that lag by a whole number of wavelengths reinforce. Waves that lag by half a wavelength cancel. Bragg's law and the structure factor are both this one idea.</li>
+      <li>The <b>position</b> of a peak is set by the size and shape of the unit cell (Bragg's law). <b>Whether a peak appears and how strong it is</b> is set by where the atoms sit in the cell (the structure factor).</li>
+      <li>For cubic crystals sin²θ is proportional to h² + k² + l². The first two peaks give a ratio of 0.5 for BCC and 0.75 for FCC.</li>
+      <li>Silicon has the diamond structure. Its lattice is FCC, yet the <span class="idx">(200)</span>, <span class="idx">(222)</span> and <span class="idx">(420)</span> peaks are missing, because the waves scattered by the second set of FCC atoms cancel them.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 10 ======================= -->
+<section class="unit" id="s10">
+  <header class="unit-head" data-t="147"><p class="unit-no">10</p><h2>Quiz</h2><p class="unit-tag">10 questions</p></header>
+  <p class="quiz-intro" data-t="148">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score">Answered 0 / 10, correct 0</p>
+  <div class="quiz" id="quiz"></div>
+  <p class="next" data-t="904"><a href="ch4.html">Next, Chapter 4: Solidification and Defects 3D Classroom →</a></p>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="149">
+  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch.3 of Introduction to Materials Science, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019. The semiconductor lattice constants come from the table in the lecture slides (Sze). The value for germanium uses a more recent literature value, 0.5658 nm.</p>
+  <span class="lbl">ERRATA</span>
+  <p>Slide 15 gives the volume of the atoms in BCC as 8.373R³ and 8.723R³. The correct value is 2 × (4/3)πR³ = 8.378R³. The conclusion APF = 0.68 is unchanged.</p>
+</footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={"1": "\n      <h1>晶體結構<br><span class=\"d\">3D<\/span>教室<\/h1>\n      <p class=\"lede\">金屬能摺彎，矽晶圓得沿固定方向切割，原因都在原子的排法。課本上的晶胞圖是平面的，這裡每一個都做成可以轉動的 3D 模型。前半段看原子怎麼排，後半段看怎麼用 X 光證明它們真的這樣排。<\/p>\n      <p class=\"lede\">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。<\/p>\n      <ul class=\"palette\" aria-label=\"全站顏色約定\">\n        <li class=\"palette-h\">整個網站的顏色都照這個約定<\/li>\n        <li><i style=\"background:var(--c-corner)\"><\/i><span><b>藍<\/b>　角落的原子・A 層・第一套晶格<\/span><\/li>\n        <li><i style=\"background:var(--c-body)\"><\/i><span><b>橘<\/b>　晶胞內部的原子・B 層・第二套晶格<\/span><\/li>\n        <li><i style=\"background:var(--c-face)\"><\/i><span><b>綠<\/b>　面上的原子・C 層<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i><span><b>紫<\/b>　晶面<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--hi)\"><\/i><span><b>紅<\/b>　特別標出的原子、方向箭頭<\/span><\/li>\n      <\/ul>\n    ", "2": "FCC　2 × 2 × 2 個晶胞", "3": "8 個面心立方（FCC）晶胞。沿 <span class=\"idx\">[111]<\/span> 方向一層層往上疊，顏色分出 <b style=\"color:var(--c-corner)\">A<\/b>、<b style=\"color:var(--c-body)\">B<\/b>、<b style=\"color:var(--c-face)\">C<\/b> 三種層，第 4 單元會拆開來看。背後的同心環是繞射環的示意：半徑照 FCC 會出現的 h² + k² + l² = 3、4、8、11、12 開根號的比例畫，第 9 單元會講到。", "4": "單元目錄", "5": "<span>01<\/span>晶格與晶胞", "6": "<span>02<\/span>七大晶系", "7": "<span>03<\/span>金屬結構", "8": "<span>04<\/span>最密堆積", "9": "<span>05<\/span>半導體晶格", "10": "<span>06<\/span>米勒指數", "11": "<span>07<\/span>六方指數", "12": "<span>08<\/span>原子密度", "13": "<span>09<\/span>X 光繞射", "14": "<span>10<\/span>小測驗", "15": "語言", "16": "深色模式", "17": "<p class=\"unit-no\">01<\/p><h2>晶格與單位晶胞<\/h2><p class=\"unit-tag\">a, b, c ／ α, β, γ<\/p>", "18": "\n    <p>固體裡的原子如果排得整整齊齊，同一種排法一路重複下去，這種固體就叫<span class=\"term\">晶體<\/span>。鐵、銅、矽、食鹽都是晶體；玻璃的原子排得沒有規律，所以不是。<\/p>\n    <p>描述這種重複，要分成兩件事來講。<\/p>\n    <dl class=\"defs\">\n      <dt>晶格<small>lattice<\/small><\/dt><dd>先不管原子長什麼樣子，只用點標出每個重複單元的位置。這些點叫<span class=\"term\">晶格點<\/span>。<\/dd>\n      <dt>基底<small>basis<\/small><\/dt><dd>放在每個晶格點上的那一組原子，可能只有 1 個原子，也可能好幾個。<\/dd>\n    <\/dl>\n    <p>兩者合起來，<strong>晶體結構 ＝ 晶格 ＋ 基底<\/strong>。<span class=\"term\">單位晶胞<small>unit cell<\/small><\/span>是能代表整個晶格的最小重複積木。知道它的三個邊長 <i>a<\/i>、<i>b<\/i>、<i>c<\/i> 和三個夾角 α、β、γ，就能把整塊晶體複製貼上出來。這 6 個數字叫<span class=\"term\">晶格參數<\/span>。<\/p>\n  ", "19": "<span class=\"lbl\">打個比方<\/span><p>想像一面磁磚牆。格線的交點是晶格，磁磚上的花紋是基底，一塊磁磚就是單位晶胞。花紋再複雜，知道一塊長怎樣，就能貼滿整面牆。<\/p>", "20": "顯示", "21": "只有晶格點", "22": "晶格 ＋ 基底 ＝ 晶體", "23": " 只看一個單位晶胞", "24": "<p class=\"unit-no\">02<\/p><h2>七大晶系與 14 種布拉維晶格<\/h2><p class=\"unit-tag\">7 個晶系 → 14 種晶格<\/p>", "25": "\n    <p>單位晶胞依兩件事分類：邊長 <i>a<\/i>、<i>b<\/i>、<i>c<\/i> 相不相等，夾角 α、β、γ 是不是 90°。這樣分下來只有 <strong>7 類<\/strong>，叫做<span class=\"term\">七大晶系<\/span>。<\/p>\n    <p>再來看晶格點能放在哪裡。除了 8 個角落，晶胞裡還可以多放幾個點，條件是放完以後，每個點的周圍環境仍然一模一樣。符合條件的放法只有四種：<\/p>\n    <ul>\n      <li><span class=\"term\">簡單 P<\/span>：只有 8 個角落。<\/li>\n      <li><span class=\"term\">體心 I<\/span>：晶胞正中央多一個點。<\/li>\n      <li><span class=\"term\">面心 F<\/span>：6 個面的中心各多一個點。<\/li>\n      <li><span class=\"term\">底心 C<\/span>：只有上、下兩個面的中心多一個點。<\/li>\n    <\/ul>\n    <p>晶系和放法兩兩配對，扣掉重複的組合，法國科學家布拉維（Auguste Bravais，1811–1863）證明全部只有 <strong>14 種<\/strong>，所以叫<span class=\"term\">布拉維晶格<\/span>。面板上的按鈕可以一種一種切換。<\/p>\n  ", "26": "\n        <span><i style=\"background:var(--c-corner)\"><\/i>角落的晶格點<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>體心<\/span>\n        <span><i style=\"background:var(--c-face)\"><\/i>面心／底心<\/span>\n        <span><i class=\"sq\" style=\"background:var(--accent)\"><\/i>晶軸 a、b、c<\/span>\n      ", "27": "晶系", "28": "晶格點的放法", "29": "簡單 <small>P<\/small>", "30": "體心 <small>I<\/small>", "31": "面心 <small>F<\/small>", "32": "底心 <small>C<\/small>", "33": " 顯示完整的六角柱（3 個晶胞拼成）", "34": "延伸：為什麼只有 14 種", "35": "「底心立方」其實是簡單正方", "36": "FCC 裡藏著菱方晶胞", "37": "\n    <table>\n      <thead><tr><th>晶系<\/th><th>邊長<\/th><th>夾角<\/th><th>布拉維晶格<\/th><th>數量<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>立方 Cubic<\/td><td class=\"num\">a = b = c<\/td><td class=\"num\">α = β = γ = 90°<\/td><td>P、I、F<\/td><td class=\"num\">3<\/td><\/tr>\n        <tr><td>正方（四方）Tetragonal<\/td><td class=\"num\">a = b ≠ c<\/td><td class=\"num\">α = β = γ = 90°<\/td><td>P、I<\/td><td class=\"num\">2<\/td><\/tr>\n        <tr><td>斜方（正交）Orthorhombic<\/td><td class=\"num\">a ≠ b ≠ c<\/td><td class=\"num\">α = β = γ = 90°<\/td><td>P、C、I、F<\/td><td class=\"num\">4<\/td><\/tr>\n        <tr><td>菱方（三方）Rhombohedral<\/td><td class=\"num\">a = b = c<\/td><td class=\"num\">α = β = γ ≠ 90°<\/td><td>P（常記為 R）<\/td><td class=\"num\">1<\/td><\/tr>\n        <tr><td>六方 Hexagonal<\/td><td class=\"num\">a = b ≠ c<\/td><td class=\"num\">α = β = 90°，γ = 120°<\/td><td>P<\/td><td class=\"num\">1<\/td><\/tr>\n        <tr><td>單斜 Monoclinic<\/td><td class=\"num\">a ≠ b ≠ c<\/td><td class=\"num\">α = γ = 90° ≠ β<\/td><td>P、C<\/td><td class=\"num\">2<\/td><\/tr>\n        <tr><td>三斜 Triclinic<\/td><td class=\"num\">a ≠ b ≠ c<\/td><td class=\"num\">α ≠ β ≠ γ ≠ 90°<\/td><td>P<\/td><td class=\"num\">1<\/td><\/tr>\n        <tr class=\"sum\"><td><b>合計<\/b><\/td><td><\/td><td><\/td><td><\/td><td class=\"num\"><b>14<\/b><\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ", "38": "<span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>7 大晶系看邊長和夾角；14 種布拉維晶格再多看晶格點放在哪。<\/li>\n      <li>「底心立方」不算新晶格。它可以改畫成一個更小的簡單正方晶胞，底邊 a/√2、高 a。<\/li>\n      <li>FCC 也能畫成 α = β = γ = 60° 的菱方晶胞。我們還是用立方晶胞描述 FCC，因為立方晶胞直接看得出它的立方對稱。<\/li>\n    <\/ul>\n  ", "39": "<p class=\"unit-no\">03<\/p><h2>金屬的三大晶體結構<\/h2><p class=\"unit-tag\">APF　0.52 ／ 0.68 ／ 0.74<\/p>", "40": "\n    <p>大約 90% 的金屬是 BCC、FCC、HCP 三種結構之一。金屬鍵沒有固定方向，原子可以想成一顆顆<strong>互相接觸的硬球<\/strong>，盡量擠在一起。比較這幾種結構時，看的是 N、CN、APF 這幾個數字：<\/p>\n    <dl class=\"defs\">\n      <dt>每晶胞原子數 N<\/dt><dd>角落的原子被 8 個晶胞共用，只算 1/8；面上的原子被 2 個晶胞共用，算 1/2；完全在內部的原子算 1。<\/dd>\n      <dt>配位數 CN<\/dt><dd>一顆原子周圍緊貼著幾個最近的鄰居。<\/dd>\n      <dt>原子堆積因子 APF<\/dt><dd>晶胞體積中被原子（硬球）佔掉的比例。APF 越大，排得越密。<br><span class=\"idx wrap\">APF ＝ 晶胞內原子的體積 ÷ 晶胞體積 ＝ N · (4/3)πR³ ÷ V<sub>cell<\/sub><\/span><\/dd>\n    <\/dl>\n    <p>顯示方式切到「硬球真實大小」或「切出晶胞內的部分」，就看得到角落那 1/8 顆、面上那 1/2 顆原子實際的樣子。<\/p>\n  ", "41": "<i style=\"background:var(--c-corner)\"><\/i>角落（被 8 個晶胞共用；六方柱為 6 個）", "42": "<i style=\"background:var(--c-face)\"><\/i>面上（2 個共用）", "43": "<i style=\"background:var(--c-body)\"><\/i>內部（獨享）", "44": "結構", "45": "簡單立方 <small>SC<\/small>", "46": "體心立方 <small>BCC<\/small>", "47": "面心立方 <small>FCC<\/small>", "48": "六方最密 <small>HCP<\/small>", "49": "顯示方式", "50": "小球看位置", "51": "硬球真實大小", "52": "切出晶胞內的部分", "53": " 數一數配位數（紅色原子的最近鄰居）", "54": "\n    <table>\n      <thead><tr><th>結構<\/th><th>每晶胞原子數 N<\/th><th>配位數 CN<\/th><th>a 與 R 的關係<\/th><th>APF<\/th><th>例子（室溫）<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>簡單立方 SC<\/td><td class=\"num\">1<\/td><td class=\"num\">6<\/td><td class=\"num\">a = 2R<\/td><td class=\"num\">0.52<\/td><td>α-釙 Po（唯一的例子）<\/td><\/tr>\n        <tr><td>體心立方 BCC<\/td><td class=\"num\">2<\/td><td class=\"num\">8<\/td><td class=\"num\">a = 4R/√3<\/td><td class=\"num\">0.68<\/td><td>Fe、Cr、W、Na、Mo<\/td><\/tr>\n        <tr><td>面心立方 FCC<\/td><td class=\"num\">4<\/td><td class=\"num\">12<\/td><td class=\"num\">a = 2√2 R<\/td><td class=\"num\">0.74<\/td><td>Cu、Al、Au、Ag、Ni<\/td><\/tr>\n        <tr><td>六方最密 HCP<\/td><td class=\"num\">6（六角柱）／2（基本晶胞）<\/td><td class=\"num\">12<\/td><td class=\"num\">a = 2R，理想 c/a = 1.633<\/td><td class=\"num\">0.74<\/td><td>Mg、Zn、Ti、Co<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ", "55": "<span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>算 APF 的關鍵是找出原子沿哪條線互相接觸：SC 沿邊、BCC 沿體對角線、FCC 沿面對角線。<\/li>\n      <li>FCC 和 HCP 的 APF 都是 0.74，這是等大硬球能達到的最密排法。兩者只差在疊法，下一個單元會看到。<\/li>\n    <\/ul>\n  ", "56": "<p class=\"unit-no\">04<\/p><h2>最密堆積的兩種疊法<\/h2><p class=\"unit-tag\">…ABAB… ／ …ABCABC…<\/p>", "57": "\n    <p>把一樣大的球在平面上排到最擠，每顆球周圍剛好圍著 6 顆，這一層叫 <b style=\"color:var(--c-corner)\">A 層<\/b>。球和球之間會留下凹洞，凹洞分成兩組，我們叫它們 B 位置和 C 位置。<\/p>\n    <p>第二層一定落進其中一組凹洞，叫 <b style=\"color:var(--c-body)\">B 層<\/b>。兩種結構從<strong>第三層<\/strong>開始分家：<\/p>\n    <ul>\n      <li>第三層正對第一層 → <strong>ABAB…<\/strong>，這就是 <strong>HCP<\/strong>。<\/li>\n      <li>第三層落到第三種位置 <b style=\"color:var(--c-face)\">C<\/b> → <strong>ABCABC…<\/strong>，這就是 <strong>FCC<\/strong>。<\/li>\n    <\/ul>\n    <p>兩種疊法一樣擠，所以 APF 都是 0.74、配位數都是 12。在 FCC 的立方晶胞裡，這些最密排的平面就是 <span class=\"idx\">(111)<\/span> 面，往上疊的方向是體對角線 <span class=\"idx\">[111]<\/span>。<\/p>\n  ", "58": "<span class=\"lbl\">打個比方<\/span><p>水果攤把柳丁堆成金字塔，用的就是 FCC 的堆法。下次經過可以看一下：每顆柳丁都落在下面一層三顆柳丁圍出的凹洞裡。<\/p>", "59": "\n        <span><i style=\"background:var(--c-corner)\"><\/i>A 層<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>B 層<\/span>\n        <span><i style=\"background:var(--c-face)\"><\/i>C 層<\/span>\n        <span><i class=\"dot\" style=\"background:var(--c-body)\"><\/i><i class=\"dot\" style=\"background:var(--c-face)\"><\/i>還空著的 B、C 凹洞<\/span>\n      ", "60": "疊法", "61": "一層一層放", "62": "＋ 放上一層", "63": "－ 拿掉一層", "64": "視角", "65": "斜著看", "66": "從正上方看", "67": "<p class=\"unit-no\">05<\/p><h2>常見的半導體晶格<\/h2><p class=\"unit-tag\">Si　GaAs　NaCl　GaN<\/p>", "68": "\n    <p>矽（Si）、鍺（Ge）和砷化鎵（GaAs）、氮化鎵（GaN）這些半導體，原子之間靠<span class=\"term\">共價鍵<\/span>相連。共價鍵有固定方向，每個原子只和 4 個鄰居相連，這 4 個鄰居排成一個<span class=\"term\">正四面體<\/span>。所以它們不像金屬那麼擠，鑽石結構的 APF 只有約 0.34。<\/p>\n    <p>四種結構都可以看成兩套晶格互相穿插。模型裡<b style=\"color:var(--c-corner)\">藍色<\/b>是第一套位置，<b style=\"color:var(--c-body)\">橘色<\/b>是第二套位置。<\/p>\n  ", "69": "結構", "70": "鑽石", "71": "閃鋅礦", "72": "岩鹽", "73": "纖鋅礦", "74": " 標出一個原子和它的鄰居圍成的多面體", "75": "<span class=\"key-tag\">四種結構<\/span>\n    <dl>\n      <dt>鑽石結構<\/dt><dd>兩套 FCC 沿體對角線錯開 1/4，每晶胞 8 個原子、CN = 4。<\/dd>\n      <dt>閃鋅礦<\/dt><dd>位置和鑽石結構完全一樣，只是兩套 FCC 放不同元素，例如 Ga 和 As。<\/dd>\n      <dt>岩鹽<\/dt><dd>兩套 FCC 沿晶胞邊錯開 1/2，每個離子有 6 個異種鄰居（CN = 6）。<\/dd>\n      <dt>纖鋅礦<\/dt><dd>四面體鍵結的「六方版本」，陽離子照 ABAB 堆疊；閃鋅礦沿 <span class=\"idx\">[111]<\/span> 看則是 ABCABC。<\/dd>\n    <\/dl>\n  ", "76": "<p class=\"unit-no\">06<\/p><h2>米勒指數：位置、方向與平面<\/h2><p class=\"unit-tag\">[uvw]　(hkl)　&lt;uvw&gt;　{hkl}<\/p>", "77": "\n    <p>要講「沿哪個方向拉」「沿哪個面切」，大家得用同一套寫法，這套寫法叫<span class=\"term\">米勒指數<small>Miller indices<\/small><\/span>。這個單元的方向和平面都用立方晶胞舉例，邊長 <i>a<\/i> 當作 1。<\/p>\n    <dl class=\"defs\">\n      <dt>原子位置<\/dt><dd>用分數座標 (x, y, z) 表示，例如體心是 (½, ½, ½)。模型可以切換第 3、5 單元的每一種結構；HCP 和纖鋅礦改用六方晶軸 <i>a<\/i><sub>1<\/sub>、<i>a<\/i><sub>2<\/sub>、<i>c<\/i>。<\/dd>\n      <dt>方向 <span class=\"idx\">[uvw]<\/span><\/dt><dd>終點座標減起點座標，再化成最小整數，用方括號。負號寫在數字上方，例如 <span class=\"idx\">[1<span class=\"bar\">1<\/span>0]<\/span>，讀作「一、負一、零」。一整族對稱等價的方向用 <span class=\"idx\">&lt;uvw&gt;<\/span>，例如 <span class=\"idx\">&lt;100&gt;<\/span> 包含 6 個方向。<\/dd>\n      <dt>平面 <span class=\"idx\">(hkl)<\/span><\/dt><dd>① 找平面在 x、y、z 軸的截距 ② 取倒數 ③ 消去分數化成整數，用圓括號。平面和某軸平行時截距是 ∞，倒數為 0；平面通過原點時，把原點移到隔壁的角落再算。一族等價平面用 <span class=\"idx\">{hkl}<\/span>。<\/dd>\n    <\/dl>\n  ", "78": "\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>方向箭頭<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>平面<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>剛好在平面上的原子<\/span>\n      ", "79": "要看什麼", "80": "原子座標", "81": "方向 [uvw]", "82": "平面 (hkl)", "83": "輸入方向指數（-4 到 4 的整數）", "84": "輸入平面指數（-4 到 4 的整數）", "85": " 顯示整族平行平面與面間距 d", "86": " 顯示法線方向", "87": "放進晶體（計算線、面密度）", "88": "不放原子", "89": "簡單立方：α-Po（a = 0.335 nm）", "90": "體心立方：Fe（a = 0.287 nm）", "91": "體心立方：W（a = 0.3165 nm）", "92": "面心立方：Cu（a = 0.361 nm）", "93": "面心立方：Al（a = 0.405 nm）", "94": "<span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>立方晶系裡，平面 <span class=\"idx\">(hkl)<\/span> 的法線方向就是 <span class=\"idx\">[hkl]<\/span>。<\/li>\n      <li>相鄰平行平面的間距是 <span class=\"idx\">d<sub>hkl<\/sub> = a / √(h² + k² + l²)<\/span>。指數越大，平面排得越密集，間距越小。<\/li>\n      <li>平面方程式：<span class=\"idx\">(h/a)x + (k/b)y + (l/c)z = n<\/span>，n 取不同整數就得到一整族平行面。<\/li>\n    <\/ul>\n  ", "95": "<p class=\"unit-no\">07<\/p><h2>六方晶系的四軸指數<\/h2><p class=\"unit-tag\">u + v + t = 0　h + k + i = 0<\/p>", "96": "\n    <p>六方晶胞的底面有三條互成 120° 的軸 <i>a<\/i><sub>1<\/sub>、<i>a<\/i><sub>2<\/sub>、<i>a<\/i><sub>3<\/sub>，再加上垂直的 <i>c<\/i> 軸。只用三個指數的話，六個對稱等價的方向會寫成看起來毫無關係的數字。改用四個指數 <span class=\"idx\">[uvtw]<\/span> 和 <span class=\"idx\">(hkil)<\/span>，等價的方向和平面就只是數字換位置、換正負號。<\/p>\n    <p>因為 <i>a<\/i><sub>3<\/sub> = −(<i>a<\/i><sub>1<\/sub> + <i>a<\/i><sub>2<\/sub>)，四個指數不是獨立的：方向必須滿足 <strong>u + v + t = 0<\/strong>，平面必須滿足 <strong>h + k + i = 0<\/strong>。<\/p>\n  ", "97": "\n        <span><i class=\"sq\" style=\"background:var(--accent)\"><\/i>晶軸 a₁、a₂、a₃、c<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>方向<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>平面<\/span>\n      ", "98": "要看什麼", "99": "方向 [uvtw]", "100": "平面 (hkil)", "101": "四軸方向指數", "102": "四軸平面指數", "103": "<span class=\"key-tag\">換算<\/span>\n    <dl class=\"mono-dl\">\n      <dt>三軸 → 四軸<\/dt><dd><span class=\"idx\">[UVW]<\/span> → <span class=\"idx\">[uvtw]<\/span>：u = (2U − V)/3，v = (2V − U)/3，t = −(U + V)/3，w = W，再化成最小整數。<\/dd>\n      <dt>四軸 → 三軸<\/dt><dd>U = u − t，V = v − t，W = w。<\/dd>\n      <dt>平面<\/dt><dd>最簡單：<span class=\"idx\">(hkl)<\/span> 直接補上 i = −(h + k) 就變成 <span class=\"idx\">(hkil)<\/span>。<\/dd>\n    <\/dl>\n  ", "104": "<p class=\"unit-no\">08<\/p><h2>線密度、面密度、體密度<\/h2><p class=\"unit-tag\">ρ<sub>l<\/sub>　ρ<sub>p<\/sub>　ρ<sub>v<\/sub><\/p>", "105": "\n    <p>同一塊晶體，換個方向、換個平面，原子擠的程度就不一樣。金屬沿哪個面滑動變形、晶圓沿哪個面蝕刻得比較慢，都跟這件事有關。下面的模型可以轉著看，哪些原子被算進去一目了然。模型下方的卡片把課堂投影片的三個例題用紙筆算一遍。<\/p>\n  ", "106": "\n    <article class=\"card\">\n      <p class=\"card-no\">例題 1　線密度<\/p>\n      <h4>Cu 的 <span class=\"idx\">[110]<\/span><\/h4>\n      <svg viewBox=\"0 0 220 170\" role=\"img\" aria-label=\"FCC 立方體正面的硬球圖，三顆原子沿面對角線互相接觸\">\n        <defs><clipPath id=\"x8a\"><rect x=\"40\" y=\"20\" width=\"130\" height=\"130\"/><\/clipPath><\/defs>\n        <g clip-path=\"url(#x8a)\" fill-opacity=\".8\" stroke-width=\"1.2\">\n          <g fill=\"var(--c-corner)\" stroke=\"var(--c-corner)\"><circle cx=\"40\" cy=\"150\" r=\"46.0\"/><circle cx=\"170\" cy=\"20\" r=\"46.0\"/><circle cx=\"170\" cy=\"150\" r=\"46.0\"/><circle cx=\"40\" cy=\"20\" r=\"46.0\"/><\/g>\n          <circle cx=\"105\" cy=\"85\" r=\"46.0\" fill=\"var(--c-face)\" stroke=\"var(--c-face)\"/>\n        <\/g>\n        <rect x=\"40\" y=\"20\" width=\"130\" height=\"130\" fill=\"none\" stroke=\"var(--edge3d)\" stroke-width=\"1.5\"/>\n        <line x1=\"40\" y1=\"150\" x2=\"170\" y2=\"20\" stroke=\"var(--hi)\" stroke-width=\"3\"/>\n        <g stroke=\"var(--hi)\" stroke-width=\"2\"><line x1=\"67.5\" y1=\"112.5\" x2=\"77.5\" y2=\"122.5\"/><line x1=\"132.5\" y1=\"47.5\" x2=\"142.5\" y2=\"57.5\"/><\/g>\n        <text x=\"105\" y=\"166\" text-anchor=\"middle\" fill=\"var(--muted)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">a<\/text>\n        <text x=\"178\" y=\"84\" fill=\"var(--hi)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">√2 a<\/text>\n        <text x=\"178\" y=\"100\" fill=\"var(--hi)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">= 4R<\/text>\n      <\/svg>\n      <p class=\"note\">沿面對角線：兩端各算半顆，中間一整顆，共 2 個原子直徑，長度 √2 a。<\/p>\n      <div class=\"eq\">ρ<sub>l<\/sub> = 2 個原子 ÷ (√2 × 0.361 nm)<br>= 3.92 個/nm = 3.92 × 10⁶ 個/mm<\/div>\n    <\/article>\n    <article class=\"card\">\n      <p class=\"card-no\">例題 2　面密度<\/p>\n      <h4>Fe（BCC）的 <span class=\"idx\">(110)<\/span><\/h4>\n      <svg viewBox=\"0 0 220 170\" role=\"img\" aria-label=\"BCC 的 110 面硬球圖：a 乘以根號 2 a 的長方形，四角各四分之一顆、中間一顆，沿對角線互相接觸\">\n        <defs><clipPath id=\"x8b\"><rect x=\"20\" y=\"24\" width=\"180\" height=\"127.3\"/><\/clipPath><\/defs>\n        <rect x=\"20\" y=\"24\" width=\"180\" height=\"127.3\" fill=\"var(--c-plane)\" fill-opacity=\".12\"/>\n        <g clip-path=\"url(#x8b)\" fill-opacity=\".8\" stroke-width=\"1.2\">\n          <g fill=\"var(--c-corner)\" stroke=\"var(--c-corner)\"><circle cx=\"20\" cy=\"24.0\" r=\"55.1\"/><circle cx=\"200\" cy=\"24.0\" r=\"55.1\"/><circle cx=\"20\" cy=\"151.3\" r=\"55.1\"/><circle cx=\"200\" cy=\"151.3\" r=\"55.1\"/><\/g>\n          <circle cx=\"110.0\" cy=\"87.6\" r=\"55.1\" fill=\"var(--c-body)\" stroke=\"var(--c-body)\"/>\n        <\/g>\n        <rect x=\"20\" y=\"24\" width=\"180\" height=\"127.3\" fill=\"none\" stroke=\"var(--c-plane)\" stroke-width=\"1.5\"/>\n        <text x=\"110\" y=\"16\" text-anchor=\"middle\" fill=\"var(--muted)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">√2 a<\/text>\n        <text x=\"206\" y=\"92\" fill=\"var(--muted)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">a<\/text>\n      <\/svg>\n      <p class=\"note\">長方形四角各 1/4 顆，加上正中央的體心原子，共 2 個；面積 = a × √2 a。<\/p>\n      <div class=\"eq\">ρ<sub>p<\/sub> = 2 ÷ (√2 × 0.287² nm²)<br>= 17.2 個/nm² = 1.72 × 10¹³ 個/mm²<\/div>\n    <\/article>\n    <article class=\"card\">\n      <p class=\"card-no\">例題 3　體密度<\/p>\n      <h4>Cu（FCC）<\/h4>\n      <svg viewBox=\"0 0 220 170\" role=\"img\" aria-label=\"FCC 晶胞的硬球模型，含 4 個原子\">\n        <defs><radialGradient id=\"x8s\" cx=\".36\" cy=\".3\" r=\".8\"><stop offset=\"0\" stop-color=\"#fff\" stop-opacity=\".5\"/><stop offset=\".45\" stop-color=\"#fff\" stop-opacity=\"0\"/><stop offset=\".55\" stop-color=\"#000\" stop-opacity=\"0\"/><stop offset=\"1\" stop-color=\"#000\" stop-opacity=\".4\"/><\/radialGradient><\/defs>\n        <g stroke=\"var(--edge3d)\" stroke-width=\"1.2\"><line x1=\"94.6\" y1=\"92.0\" x2=\"94.6\" y2=\"27.4\"/><line x1=\"94.6\" y1=\"92.0\" x2=\"156.3\" y2=\"102.9\"/><line x1=\"94.6\" y1=\"92.0\" x2=\"63.7\" y2=\"113.7\"/><\/g>\n        <circle cx=\"94.6\" cy=\"92.0\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"94.6\" cy=\"92.0\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"94.6\" cy=\"27.4\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"94.6\" cy=\"27.4\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"125.4\" cy=\"65.1\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"125.4\" cy=\"65.1\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"156.3\" cy=\"102.9\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"156.3\" cy=\"102.9\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"79.1\" cy=\"70.6\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"79.1\" cy=\"70.6\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"110.0\" cy=\"108.3\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"110.0\" cy=\"108.3\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"156.3\" cy=\"38.3\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"156.3\" cy=\"38.3\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"63.7\" cy=\"113.7\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"63.7\" cy=\"113.7\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"110.0\" cy=\"43.7\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"110.0\" cy=\"43.7\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"140.9\" cy=\"81.4\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"140.9\" cy=\"81.4\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"63.7\" cy=\"49.1\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"63.7\" cy=\"49.1\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"94.6\" cy=\"86.9\" r=\"24.4\" fill=\"var(--c-face)\"/><circle cx=\"94.6\" cy=\"86.9\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"125.4\" cy=\"124.6\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"125.4\" cy=\"124.6\" r=\"24.4\" fill=\"url(#x8s)\"/><circle cx=\"125.4\" cy=\"60.0\" r=\"24.4\" fill=\"var(--c-corner)\"/><circle cx=\"125.4\" cy=\"60.0\" r=\"24.4\" fill=\"url(#x8s)\"/>\n        <g stroke=\"var(--ink)\" stroke-width=\"1\" stroke-opacity=\".55\" stroke-dasharray=\"4 3\"><line x1=\"94.6\" y1=\"27.4\" x2=\"156.3\" y2=\"38.3\"/><line x1=\"94.6\" y1=\"27.4\" x2=\"63.7\" y2=\"49.1\"/><line x1=\"156.3\" y1=\"102.9\" x2=\"156.3\" y2=\"38.3\"/><line x1=\"156.3\" y1=\"102.9\" x2=\"125.4\" y2=\"124.6\"/><line x1=\"156.3\" y1=\"38.3\" x2=\"125.4\" y2=\"60.0\"/><line x1=\"63.7\" y1=\"113.7\" x2=\"63.7\" y2=\"49.1\"/><line x1=\"63.7\" y1=\"113.7\" x2=\"125.4\" y2=\"124.6\"/><line x1=\"63.7\" y1=\"49.1\" x2=\"125.4\" y2=\"60.0\"/><line x1=\"125.4\" y1=\"124.6\" x2=\"125.4\" y2=\"60.0\"/><\/g>\n        <text x=\"110\" y=\"166\" text-anchor=\"middle\" fill=\"var(--muted)\" font-size=\"12\" font-family=\"IBM Plex Mono, monospace\">a = 0.361 nm = 2√2 R<\/text>\n      <\/svg>\n      <p class=\"note\">晶胞質量 ÷ 晶胞體積。FCC 每個晶胞有 4 個 Cu 原子，原子量 63.54 g/mol。<\/p>\n      <div class=\"eq\">m = 4 × 63.54 ÷ (6.022 × 10²³) = 4.22 × 10⁻²² g<br>V = (0.361 × 10⁻⁷ cm)³ = 4.70 × 10⁻²³ cm³<br>ρ<sub>v<\/sub> = m ÷ V ≈ 8.98 g/cm³（實測 8.96）<\/div>\n    <\/article>\n  ", "107": "<b>勘誤<\/b>面密度例題的分母應為 √2 × 0.287² nm²（√2 a × a），投影片排版時漏了根號；答案 17.2 個/nm² 正確。", "108": "自己算體密度：選一種金屬或半導體", "109": "<span class=\"lbl\">延伸<\/span><p>在上面的模型選 Cu 和面密度，比較 <span class=\"idx\">(111)<\/span>、<span class=\"idx\">(100)<\/span>、<span class=\"idx\">(110)<\/span>。最密的是 <span class=\"idx\">(111)<\/span>，也就是第 4 單元的最密排面：圓和圓互相接觸，留下的空隙最少。<\/p>", "110": "<p class=\"unit-no\">09<\/p><h2>用 X 光繞射看原子排列<\/h2><p class=\"unit-tag\">2d sinθ = nλ<\/p>", "111": "\n    <p>原子太小，一般顯微鏡看不到。可見光的波長是 400–700 nm，比原子間距（約 0.2–0.3 nm）長了一千倍以上，分不出相鄰的兩層原子。換成<strong>波長和原子間距差不多<\/strong>的光去照晶體，一層層原子散射出來的光會互相干涉，只在某些特定角度變亮。量出這些角度，就能反推原子怎麼排。X 光的波長約 0.05–0.25 nm，剛好和晶面間距同一個等級。<\/p>\n    <p>這個單元照順序走：兩道波怎麼相加（9-1）、X 光從哪裡來（9-2）、什麼角度會變亮（9-3）、儀器怎麼量（9-4）、為什麼有些峰不見了（9-5），最後是怎麼把圖譜讀回晶體結構（9-6 到 9-8）。<\/p>\n  ", "112": "<span class=\"h3-no\">9-2<\/span>X 光從哪裡來", "113": "\n    <p>在真空的 X 光管裡，加熱的鎢燈絲（陰極）放出電子，燈絲外面的金屬杯把電子聚成一束。電子被幾萬伏特的高電壓（講義的圖是 35 kV）加速，撞上金屬靶（陽極，常用 Cu、Mo、W）。電子的能量約 99% 變成熱，所以靶要通水冷卻。有些 X 光管還會讓陽極旋轉，電子束才會一直打在還沒變熱的新位置上。剩下 1% 左右變成 X 光，而且兩種 X 光一起出來。<\/p>\n    <dl class=\"defs\">\n      <dt>連續 X 光<\/dt><dd>電子從靶原子的原子核旁邊經過時，會被拉偏、減速。失去的能量變成一顆 X 光光子放出來。每顆電子減速的程度不同：有的只慢一點，有的慢很多，有的整個停下來。所以波長連成一片，像一座寬寬的山丘。<\/dd>\n      <dt>特性 X 光<\/dt><dd>電子也可能把靶原子內層（K 層）的電子撞飛。外層電子掉下來補位，把能量差變成一顆 X 光光子放出來。從 L 層掉下來的叫 <span class=\"term\">K<sub>α<\/sub><\/span>，從 M 層掉下來的叫 <span class=\"term\">K<sub>β<\/sub><\/span>。各層的能量由元素決定，所以這些波長等於靶材的身分證：Cu K<sub>α<\/sub> 是 0.154 nm，Mo K<sub>α<\/sub> 是 0.071 nm。仔細看，K<sub>α<\/sub> 其實是靠得很近的兩條線 K<sub>α1<\/sub> 和 K<sub>α2<\/sub>，因為 L 層還分成幾個次能階。平常把它們當成一條線。<\/dd>\n    <\/dl>\n    <p>光子的能量和波長靠一個好記的數字換算：<span class=\"idx wrap\">E (eV) = 1240 ÷ λ (nm)<\/span>。被 V 伏特加速的電子帶有 V 電子伏特的能量。這些能量全部變成一顆光子時，得到光譜裡最短的波長：<span class=\"idx wrap\">λ<sub>min<\/sub>(nm) = 1240 ÷ 加速電壓(V)<\/span>。35 kV 時是 1240 ÷ 35000 = 0.035 nm。比較舊的圖用埃（1 Å = 0.1 nm）當單位，同一條規則寫成 <span class=\"idx wrap\">E (eV) = 12400 ÷ λ (Å)<\/span>。<\/p>\n    <p>繞射需要單一波長，所以實驗用的是最強的 K<sub>α<\/sub> 線。再加一片金屬薄片當濾片（銅靶用鎳箔），就能濾掉大部分的 K<sub>β<\/sub>。<\/p>\n  ", "114": "加速電壓：", "115": "加速電壓", "116": "<span class=\"h3-no\">9-3<\/span>布拉格定律：什麼角度會變亮", "117": "\n    <p>把晶體想成一疊互相平行的原子面，每層相隔 d。X 光以 θ 角射向這些面。注意 θ 是和「面」的夾角，不是和法線的夾角。每一層都會散射一點光。<\/p>\n    <p>比較第一層和第二層散射出來的光。下面那道光要多走下去再走上來，所以走得比較遠。多走的路就是圖裡的兩段紅線 FG 和 GH。每一段都是直角三角形的一邊，三角形的斜邊是 OG = d，所以每段長 d sinθ，合起來 FG + GH = <strong>2d sinθ<\/strong>。<\/p>\n    <p>照 9-1 的結論，落後的距離剛好是波長的整數倍時，兩道光才會互相加強：<\/p>\n    <p class=\"eq big\">2d sinθ = nλ　　（n = 1, 2, 3 …）<\/p>\n    <p>這就是<span class=\"term\">布拉格定律<\/span>。整數 n 叫繞射階數：n = 1 表示下面那道光剛好落後一個波長，n = 2 表示落後兩個。拖動滑桿改變 θ、d、λ，看兩道波什麼時候波峰對齊。<\/p>\n  ", "118": "布拉格繞射示意圖", "119": "入射角 θ：", "120": "入射角", "121": "晶面間距 d：", "122": "晶面間距", "123": "X 光波長 λ：", "124": "波長", "125": "跳到下一個亮點角度", "126": "設成 Cu (111)、Cu K", "127": "<span class=\"h3-no\">9-4<\/span>繞射圖譜是怎麼量出來的", "128": "\n    <table>\n      <thead><tr><th><\/th><th>鏡面反射<\/th><th>X 光繞射<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>誰在作用<\/td><td>只有表面的原子<\/td><td>光束路徑上所有深度的原子<\/td><\/tr>\n        <tr><td>出現角度<\/td><td>任何角度都有<\/td><td>只在滿足 2d sinθ = nλ 的角度<\/td><\/tr>\n        <tr><td>強度<\/td><td>接近入射光（I<sub>反射<\/sub>/I<sub>入射<\/sub> ≈ 1）<\/td><td>很弱，只佔入射光一小部分<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ", "129": "\n    <p>上面掃描的樣品是<strong>粉末<\/strong>。裡面有無數顆朝向亂七八糟的小晶粒，所以每一組晶面總有晶粒剛好滿足布拉格角。它們的繞射光繞著入射光形成一個圓錐，打在平的底片上就是一圈圈的環。<strong>單晶<\/strong>只有一個方向，打出來的是一顆顆分散的亮點，而且要用測角器（能繞好幾個軸轉動晶體的座台）把晶體轉到每一組晶面各自的布拉格角。單晶得到的是一整組三維的亮點。粉末把同樣的資訊壓到 2θ 這一條軸上，量起來快，但靠得太近的峰會疊在一起。<\/p>\n  ", "130": "<span class=\"h3-no\">9-5<\/span>結構因子：為什麼有些峰消失了", "131": "\n    <p>X 光是電磁波。它來回振盪的電場會搖動路上每個原子的電子，被搖動的電子再往四面八方放出同樣波長的 X 光。「原子散射 X 光」指的就是這件事。離開晶體的波，是所有原子散射波的總和。每個晶胞都一樣，所以只要把一個晶胞裡的原子加起來就夠了。<\/p>\n    <p>布拉格定律只算了每隔 d 的那一層原子。晶胞裡常常還有別的原子夾在兩層之間，它們一樣會散射 X 光。這些波可能讓峰變強，也可能把峰整個抵銷。<\/p>\n    <p>以 BCC 的 <span class=\"idx\">(100)<\/span> 峰為例。在布拉格角上，相鄰兩層角落原子的波剛好差一個波長，步調一致。體心原子自成一層，正好夾在兩層的正中間。它的波慢了半個波長，波峰對上角落那道波的波谷。兩道波互相抵銷，這個峰就不會出現，稱為<span class=\"term\">消光<\/span>。<\/p>\n    <p>每個原子都照同一條規則：位在 (x, y, z) 的原子，散射波慢了 <span class=\"idx\">hx + ky + lz<\/span> 個波長。整數代表步調一致，半整數代表剛好相反。<\/p>\n    <p>下面的圖把這件事畫兩次。第一格畫出波本身。第二格把每道波換成一支箭頭：長度是原子的散射能力 f，轉的角度是 <span class=\"idx\">360° × (hx + ky + lz)<\/span>。把箭頭頭接尾排起來，從起點指到終點的紅色箭頭就是總和，叫<span class=\"term\">結構因子<\/span> F。箭頭繞回起點時 F = 0，峰就消光了。<\/p>\n    <p>課本把同一個加法寫成一行。式子裡的 e<sup>iφ<\/sup> 意思就是「轉了 φ 角的箭頭」。<\/p>\n    <p class=\"eq big\">F<sub>hkl<\/sub> = Σ f<sub>n<\/sub> · e<sup>2πi(hx<sub>n<\/sub> + ky<sub>n<\/sub> + lz<sub>n<\/sub>)<\/sup>　　繞射強度 ∝ |F<sub>hkl<\/sub>|²<\/p>\n    <p>先選 BCC 試 <span class=\"idx\">(100)<\/span>，再試 <span class=\"idx\">(200)<\/span>。<span class=\"idx\">(200)<\/span> 的體心波慢了整整一個波長，峰又回來了。<\/p>\n  ", "132": "結構因子：各原子的波形與箭頭圖", "133": "晶體結構", "134": "鑽石", "135": "繞射面 (hkl)", "136": "\n    <table>\n      <thead><tr><th>布拉維晶格<\/th><th>會出現的峰<\/th><th>消失的峰<\/th><th>h² + k² + l² 的序列<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>簡單立方 SC<\/td><td>全部<\/td><td>無<\/td><td class=\"num\">1, 2, 3, 4, 5, 6, 8, 9 …（沒有 7）<\/td><\/tr>\n        <tr><td>體心立方 BCC<\/td><td>h + k + l 為偶數<\/td><td>h + k + l 為奇數<\/td><td class=\"num\">2, 4, 6, 8, 10, 12, 14 …<\/td><\/tr>\n        <tr><td>面心立方 FCC<\/td><td>h、k、l 全奇或全偶<\/td><td>奇偶混雜<\/td><td class=\"num\">3, 4, 8, 11, 12, 16, 19, 20, 24 …<\/td><\/tr>\n        <tr><td>鑽石（Si、Ge）<\/td><td>全奇；或全偶且 h + k + l 是 4 的倍數<\/td><td>FCC 的規則再加上：全偶但 h + k + l = 4n + 2<\/td><td class=\"num\">3, 8, 11, 16, 19, 24 …<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ", "137": "<span class=\"h3-no\">9-6<\/span>XRD 圖譜模擬器", "138": "\n    <p>立方晶體有兩條現成的公式：n = 1 的布拉格定律，還有單元 6 的面間距。<\/p>\n    <p class=\"eq\">λ = 2 d sinθ　　d = a ÷ √(h² + k² + l²)<\/p>\n    <p>把第二式代進第一式，兩邊平方：<\/p>\n    <p class=\"eq big\">sin²θ = (λ² / 4a²) · (h² + k² + l²)<\/p>\n    <p>講義把同一條關係反過來寫：<span class=\"idx wrap\">h² + k² + l² = (4a² / λ²) · sin²θ<\/span>。同一張圖譜裡，每個峰的 λ 和 a 都一樣，所以 sin²θ 和整數 h² + k² + l² 成正比。指數小的晶面間距 d 大，出現在小角度。把每個峰的 sin²θ 除以第一個峰的 sin²θ，看比值序列，就能分辨晶體是 SC、BCC 還是 FCC。<\/p>\n    <p>還有一個只看前兩個峰的快速判斷法。前兩個峰的 sin²θ 比值，<strong>BCC 是 2 ÷ 4 = 0.5<\/strong>，<strong>FCC 是 3 ÷ 4 = 0.75<\/strong>。<\/p>\n  ", "139": "模擬的 X 光繞射圖譜", "140": "峰的位置是精確計算的。峰高只是示意：只考慮多重度、勞侖茲─偏振因子與簡化的原子散射衰減，用來看出大致趨勢。", "141": "樣品", "142": "X 光管（靶材）", "143": " 用虛線標出「簡單立方會有、這裡被消光」的位置", "144": "<span class=\"h3-no\">9-8<\/span>從圖譜到晶體結構", "145": "\n    <li><b>準備樣品<\/b><span>把材料磨成細粉，或使用薄膜、塊材。<\/span><\/li>\n    <li><b>量測繞射圖譜<\/b><span>掃描 2θ，記錄每個角度的強度。<\/span><\/li>\n    <li><b>搜尋與比對<\/b><span>和已知物質的標準圖譜（如 JCPDS／ICDD 卡）比對峰位，挑出候選。<\/span><\/li>\n    <li><b>決定晶胞<\/b><span>檢查候選的晶胞能不能解釋每一個峰。不行就回到第 3 步，換一個候選再比。<\/span><\/li>\n    <li><b>鑑定晶體結構<\/b><span>晶胞確定以後，用消光規則和峰的強度判斷晶格類型和原子位置。<\/span><\/li>\n  ", "146": "<span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>落後整數個波長的波互相加強，落後半個波長的波互相抵銷。布拉格定律和結構因子講的都是這一件事。<\/li>\n      <li>峰的<b>位置<\/b>由晶胞大小與形狀決定（布拉格定律）；峰<b>有沒有出現、有多強<\/b>由晶胞裡原子的位置決定（結構因子）。<\/li>\n      <li>立方晶體的 sin²θ 和 h² + k² + l² 成正比。前兩個峰的比值，BCC 是 0.5，FCC 是 0.75。<\/li>\n      <li>矽是鑽石結構，晶格雖然是 FCC，<span class=\"idx\">(200)<\/span>、<span class=\"idx\">(222)<\/span>、<span class=\"idx\">(420)<\/span> 峰卻消失了，因為第二套 FCC 原子的散射波把它們抵銷了。<\/li>\n    <\/ul>\n  ", "147": "<p class=\"unit-no\">10<\/p><h2>小測驗<\/h2><p class=\"unit-tag\">10 題<\/p>", "148": "每題只能選一次，選完會出現解說。", "150": " 把沒被標出的原子淡化", "151": "從整個晶胞到所有鄰居", "152": "加入相鄰晶胞", "153": "原子數量", "154": "完整層", "155": "簡單模式 <small>7 ＋ 3 顆<\/small>", "156": "↻ 從頭疊一次", "157": " 演示兩套晶格怎麼互相穿插", "158": "第二套晶格的位移", "159": "第二套晶格的位移", "160": " 邊界上重複的原子也標出座標", "149": "\n  <span class=\"lbl\">內容依據<\/span>\n  <p>國立清華大學材料科學導論 Ch.3 課堂投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering<\/i>, 6th ed., McGraw-Hill, 2019。半導體晶格常數取自課堂投影片表格（Sze），鍺的數值改用較新的文獻值 0.5658 nm。<\/p>\n  <span class=\"lbl\">勘誤對照<\/span>\n  <p>投影片第 15 頁 BCC 原子體積寫成 8.373R³ 與 8.723R³，正確值為 2 × (4/3)πR³ = 8.378R³；APF = 0.68 的結論不變。<\/p>\n", "161": "<span class=\"h3-no\">d<sub>hkl<\/sub><\/span>面間距公式是怎麼來的", "162": "\n    <p>取 <span class=\"idx\">(hkl)<\/span> 這族平面裡最靠近原點的那一片。它和三個軸交於 A、B、C，離原點分別是 a/h、b/k、c/l。同一族還有一片平面剛好通過原點 O，所以面間距 d 就是 O 到平面 ABC 的距離。<\/p>\n    <p>用向量四步就能算出這段距離。推導要求三個軸互相垂直，立方、正方、斜方晶系都符合。<\/p>\n  ", "163": "\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>平面 ABC<\/span>\n        <span><i class=\"sq\" style=\"background:var(--accent)\"><\/i>躺在平面上的向量<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>法向量 n 與面間距 d<\/span>\n      ", "164": "步驟", "165": "<small>1<\/small> 截點", "166": "<small>2<\/small> 兩條邊", "167": "<small>3<\/small> 法向量", "168": "<small>4<\/small> 投影", "169": "輸入晶面指數（1 到 4 的整數）", "170": "晶胞", "171": "立方 <small>a = b = c<\/small>", "172": "斜方 <small>a ≠ b ≠ c<\/small>", "173": "要算哪一種", "174": "線密度 <small>ρ<sub>l<\/sub><\/small>", "175": "面密度 <small>ρ<sub>p<\/sub><\/small>", "176": "體密度 <small>ρ<sub>v<\/sub><\/small>", "177": "投影片的三個例題", "178": "晶體", "179": "\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>要算的方向<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>要算的平面<\/span>\n        <span>所有原子都是真實大小的硬球，沿晶胞的面切開。實心的是被算進去的原子，淡化的是晶胞裡其他原子。<\/span>\n      ", "180": "<span class=\"h3-no\">9-1<\/span>兩道波相遇：加強還是抵銷", "181": "\n    <p>X 光是波，就像水面上的漣漪。相鄰兩個波峰之間的距離叫<span class=\"term\">波長<\/span> λ。這個單元只靠一件事：兩道波相遇時，高度會相加。<\/p>\n    <dl class=\"defs\">\n      <dt>同相<\/dt><dd>波峰對波峰。兩道波互相加強，結果變成兩倍高，稱為<span class=\"term\">建設性干涉<\/span>。<\/dd>\n      <dt>反相<\/dt><dd>波峰對波谷。兩道波互相抵銷，什麼都不剩，稱為<span class=\"term\">破壞性干涉<\/span>。<\/dd>\n    <\/dl>\n    <p>會是哪一種，看其中一道波比另一道落後多少。落後 0、1、2 … 個完整波長，兩道波又回到同步。落後 ½、1½ … 個波長，兩道波剛好相反。拖動滑桿，看相加的結果。<\/p>\n  ", "182": "<span class=\"lbl\">打個比方<\/span><p>抗噪耳機就是這個原理。它播出一道和外面噪音剛好相反的聲波，波峰對波谷，兩道聲波互相抵銷。<\/p>", "183": "兩道波與它們的總和", "184": "第 2 道波落後：", "185": "第 2 道波落後幾個波長", "186": "X 光管", "187": "<b>X 光管。<\/b>① 加熱的燈絲（陰極）放出電子。② 高電壓讓電子在真空中加速。③ 電子撞上金屬靶（陽極）。④ X 光從很薄的鈹窗射出。", "188": "電子殼層與 K alpha、K beta 躍遷", "189": "<b>特性線怎麼來的。<\/b>左：外來電子把 K 層電子撞飛，留下一個空位。右：能階圖。電子從 L 掉到 K 放出 K<sub>α<\/sub>。從 M 掉到 K 的落差更大，所以 K<sub>β<\/sub> 能量較高、波長較短。", "190": "\n    <p>下面這張圖是 X 光管射出來的光譜。把電壓調高，注意兩件事：左邊界 λ<sub>min<\/sub> 往短波長移動；特性線要等電子的能量夠把 K 層電子撞出來才會出現（Cu 約 9 kV、Mo 約 20 kV、W 要 69.5 kV）。淡色的曲線是同一支管在 20、40、60、80 kV 的光譜，用來對照。<\/p>\n  ", "191": "X 光管的光譜", "192": "靶材", "193": "<span class=\"key-tag\">四件要注意的事<\/span>\n    <dl>\n      <dt>實際算一次<\/dt><dd>銅的 <span class=\"idx\">(111)<\/span> 面間距 d = 0.2087 nm。用 Cu K<sub>α<\/sub>（λ = 0.154 nm）、n = 1：sinθ = λ ÷ 2d = 0.154 ÷ 0.4174 = 0.369，所以 θ = 21.7°。<\/dd>\n      <dt>波長要夠短<\/dt><dd>sinθ 不可能超過 1，所以要有繞射，必須 λ ≤ 2d。可見光的波長太長，晶體沒辦法讓它繞射。<\/dd>\n      <dt>為什麼真實的峰很尖<\/dt><dd>只有兩層時，角度偏離布拉格角，亮度只會慢慢變暗。真實晶體有幾千層。角度稍微偏一點，每一層都能在更深處找到一層剛好落後半個波長的，兩兩抵銷。所以峰非常窄。<\/dd>\n      <dt>通常直接取 n = 1<\/dt><dd>間距 d 的 <span class=\"idx\">(100)<\/span> 面的第二階繞射（n = 2），和間距 d/2 的面的第一階繞射落在同一個角度，而那正是 <span class=\"idx\">(200)<\/span> 面。所以階數併進指數裡，定律寫成 <span class=\"idx wrap\">λ = 2 d<sub>hkl<\/sub> sinθ<\/span>，d<sub>hkl<\/sub> 用單元 6 的公式算。<\/dd>\n    <\/dl>\n  ", "194": "\n    <p>量測的儀器叫<span class=\"term\">繞射儀<\/span>。X 光以 θ 角射到樣品表面，偵測器在另一側，同樣和表面夾 θ 角等著。從入射光的方向看，偵測器總共轉了 <strong>2θ<\/strong>，儀器記錄的就是這個 2θ。所以繞射圖譜的橫軸都是 2θ，不是 θ。<\/p>\n    <p>掃描時樣品轉 θ、偵測器轉 2θ，兩個角度一直保持配對。大部分的角度，散射波互相抵銷，偵測器幾乎數不到東西。一旦有某一組晶面滿足布拉格定律，計數就突然跳高。把計數對 2θ 畫出來，就是<span class=\"term\">繞射圖譜<\/span>。按「掃描」看它怎麼畫出來。<\/p>\n  ", "195": "繞射儀掃描銅粉末，以及記錄下來的圖譜", "196": "偵測器角度 2θ：", "197": "偵測器角度 2θ", "198": "▶ 從 30° 掃到 125°", "199": "跳到下一個峰", "200": "單晶的繞射亮點", "201": "<b>單晶。<\/b>只有一個方向，每一組晶面只把光送往一個方向：一顆顆分開的亮點。", "202": "粉末的繞射環", "203": "<b>粉末。<\/b>晶粒什麼方向都有，每個亮點繞著入射光被抹成一圈環。繞射儀的掃描就是橫切過這些環。", "204": "\n    <p>布拉格定律的圖看起來很像鏡子，入射角等於出射角。但繞射和反射是兩回事：<\/p>\n  ", "205": "<span class=\"lbl\">f 是什麼？<\/span><p>f 是原子散射因子，代表一個原子散射 X 光的能力。散射 X 光的是電子，所以電子越多的原子 f 越大。金的散射能力比鋁強得多。<\/p>", "206": "\n    <p><strong>用手算一次。<\/strong>同樣的結果，用公式幾行就算得出來。只需要兩個值，它們來自尤拉公式 <span class=\"idx wrap\">e<sup>iφ<\/sup> = cos φ + i sin φ<\/span>。把它看成一支轉了 φ 角的箭頭：cos φ 是橫向的長度，sin φ 是縱向的長度，就是上面第 2 格畫的箭頭。<\/p>\n    <p class=\"eq\">e<sup>πi × 偶數<\/sup> = +1　箭頭轉了整數圈，方向不變<br>e<sup>πi × 奇數<\/sup> = −1　箭頭轉了半圈，指向反方向<\/p>\n    <p><strong>BCC<\/strong>（例如鎢）每個晶胞有 2 個同種原子，位在 (0, 0, 0) 和 (½, ½, ½)：<\/p>\n    <p class=\"eq\">F = f · e<sup>2πi(0)<\/sup> + f · e<sup>2πi(h/2 + k/2 + l/2)<\/sup> = f [ 1 + e<sup>πi(h + k + l)<\/sup> ]<br>h + k + l 是偶數　→ F = f (1 + 1) = 2f，強度 ∝ 4f²<br>h + k + l 是奇數　→ F = f (1 − 1) = 0，沒有峰<\/p>\n    <p><strong>FCC<\/strong>（例如金）每個晶胞有 4 個原子，位在 (0, 0, 0)、(½, ½, 0)、(½, 0, ½)、(0, ½, ½)：<\/p>\n    <p class=\"eq\">F = f [ 1 + e<sup>πi(h + k)<\/sup> + e<sup>πi(h + l)<\/sup> + e<sup>πi(k + l)<\/sup> ]<br>h、k、l 全奇或全偶　→ 任兩個相加都是偶數，F = f (1 + 1 + 1 + 1) = 4f<br>奇偶混雜，例如 (100)、(110)　→ 有兩組相加是奇數，F = f (1 + 1 − 1 − 1) = 0<\/p>\n    <p><strong>鑽石結構<\/strong>（矽）是一套 FCC 再加上平移 (¼, ¼, ¼) 的第二套 FCC。每支 FCC 箭頭都多一支平移過的同伴，所以 FCC 的結果要再乘上一個括號：<\/p>\n    <p class=\"eq\">F = F<sub>FCC<\/sub> · [ 1 + e<sup>πi(h + k + l)/2<\/sup> ]<br>全奇　→ 同伴轉了四分之一圈，括號的長度是 √2，強度 ∝ 32f²<br>全偶且 h + k + l = 4n　→ 括號是 1 + 1 = 2，F = 8f，強度 ∝ 64f²<br>全偶且 h + k + l = 4n + 2　→ 括號是 1 − 1 = 0，沒有峰：(200)、(222)、(420)<\/p>\n    <p>下面兩張表把這些規則整理在一起。不同結構的圖譜長得不一樣，靠的就是這些規則。<\/p>\n  ", "209": "<span class=\"h3-no\">9-7<\/span>例題：認出一種未知金屬", "210": "\n    <p>有一種未知的立方金屬粉末，結構不是 BCC 就是 FCC。用 λ = 0.154 nm 的 X 光量測，圖譜的峰出現在 2θ = 40.0°、58.0°、73.0°、86.8°、100.4°、114.7°。它是哪一種結構？晶格常數 a 是多少？<\/p>\n    <ol>\n      <li>把每個 2θ 除以 2 得到 θ，再算 sin²θ。<\/li>\n      <li>取前兩個的比值：0.1170 ÷ 0.2350 = 0.498，也就是 0.5，所以是 <strong>BCC<\/strong>。如果是 FCC 會得到 0.75。<\/li>\n      <li>照順序把 BCC 的 h² + k² + l² 值 2、4、6、8、10、12 配給各個峰。每個值對應一組晶面，例如 2 = 1² + 1² + 0²，就是 <span class=\"idx\">{110}<\/span> 面。<\/li>\n      <li>用每個峰解出 a：<span class=\"idx wrap\">a = λ √(h² + k² + l²) ÷ (2 sinθ)<\/span>。第一個峰得到 0.154 × √2 ÷ (2 × 0.3420) = 0.318 nm。<\/li>\n      <li>查表。a ≈ 0.317 nm 的 BCC 金屬是<strong>鎢<\/strong>（a = 0.3165 nm）。<\/li>\n    <\/ol>\n  ", "211": "<span class=\"lbl\">驗算<\/span><p>這些角度讀自講義的鎢繞射圖（Fig. 3.28）。在上面的模擬器選鎢和 Cu K<sub>α<\/sub>，峰的角度幾乎一樣。實際那張圖最高的是 <span class=\"idx\">(200)<\/span> 峰：真實的峰高還和樣品裡晶粒的朝向有關。<\/p>", "212": "\n    <table>\n      <thead><tr><th>峰<\/th><th>2θ（°）<\/th><th>θ（°）<\/th><th>sinθ<\/th><th>sin²θ<\/th><th>÷ 第 1 峰<\/th><th>h² + k² + l²<\/th><th>{hkl}<\/th><th>a（nm）<\/th><\/tr><\/thead>\n      <tbody><tr><td class=\"num\">1<\/td><td class=\"num\">40.0<\/td><td class=\"num\">20.00<\/td><td class=\"num\">0.3420<\/td><td class=\"num\">0.1170<\/td><td class=\"num\">1.00<\/td><td class=\"num\">2<\/td><td class=\"num\">{110}<\/td><td class=\"num\">0.3184<\/td><\/tr><tr><td class=\"num\">2<\/td><td class=\"num\">58.0<\/td><td class=\"num\">29.00<\/td><td class=\"num\">0.4848<\/td><td class=\"num\">0.2350<\/td><td class=\"num\">2.01<\/td><td class=\"num\">4<\/td><td class=\"num\">{200}<\/td><td class=\"num\">0.3177<\/td><\/tr><tr><td class=\"num\">3<\/td><td class=\"num\">73.0<\/td><td class=\"num\">36.50<\/td><td class=\"num\">0.5948<\/td><td class=\"num\">0.3538<\/td><td class=\"num\">3.02<\/td><td class=\"num\">6<\/td><td class=\"num\">{211}<\/td><td class=\"num\">0.3171<\/td><\/tr><tr><td class=\"num\">4<\/td><td class=\"num\">86.8<\/td><td class=\"num\">43.40<\/td><td class=\"num\">0.6871<\/td><td class=\"num\">0.4721<\/td><td class=\"num\">4.04<\/td><td class=\"num\">8<\/td><td class=\"num\">{220}<\/td><td class=\"num\">0.3170<\/td><\/tr><tr><td class=\"num\">5<\/td><td class=\"num\">100.4<\/td><td class=\"num\">50.20<\/td><td class=\"num\">0.7683<\/td><td class=\"num\">0.5903<\/td><td class=\"num\">5.05<\/td><td class=\"num\">10<\/td><td class=\"num\">{310}<\/td><td class=\"num\">0.3169<\/td><\/tr><tr><td class=\"num\">6<\/td><td class=\"num\">114.7<\/td><td class=\"num\">57.35<\/td><td class=\"num\">0.8420<\/td><td class=\"num\">0.7089<\/td><td class=\"num\">6.06<\/td><td class=\"num\">12<\/td><td class=\"num\">{222}<\/td><td class=\"num\">0.3168<\/td><\/tr><\/tbody>\n    <\/table>\n  ", "213": "\n    <p class=\"note\">只看 1 : 2 : 3 : 4 : 5 : 6 這串比值，簡單立方也符合。兩者要到第 7 個峰才分得出來：BCC 的比值有 7，簡單立方會跳過 7。這一題已經排除簡單立方，而且幾乎沒有金屬是這種結構。<\/p>\n  ", "214": "\n    <p>一個峰帶有三項資訊，各自回答樣品的一個問題。<\/p>\n  ", "215": "\n    <table>\n      <thead><tr><th>讀什麼<\/th><th>由什麼決定<\/th><th>告訴你什麼<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>位置（2θ）<\/td><td>面間距 d（布拉格定律）<\/td><td>晶胞的大小與形狀。峰如果移位，代表晶格常數變了，例如受到應變或加了合金元素。<\/td><\/tr>\n        <tr><td>有沒有出現、有多強<\/td><td>晶胞裡原子的位置（結構因子）<\/td><td>晶格類型（BCC、FCC、鑽石 …）和原子的位置。<\/td><\/tr>\n        <tr><td>寬度<\/td><td>有多少層一起散射<\/td><td>晶粒大小。只有幾奈米的晶粒層數太少，偏離布拉格角時抵銷不完全，所以峰會變寬。<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ", "207": "\n    <p>同樣的規則，照峰在圖譜裡出現的順序，一組晶面一組晶面列出來。● 代表有峰。<\/p>\n  ", "208": "\n    <table>\n      <thead><tr><th>h² + k² + l²<\/th><th>{hkl}<\/th><th>簡單立方<\/th><th>BCC<\/th><th>FCC<\/th><th>鑽石<\/th><\/tr><\/thead>\n      <tbody><tr><td class=\"num\">1<\/td><td class=\"num\">{100}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">2<\/td><td class=\"num\">{110}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">3<\/td><td class=\"num\">{111}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><tr><td class=\"num\">4<\/td><td class=\"num\">{200}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">5<\/td><td class=\"num\">{210}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">6<\/td><td class=\"num\">{211}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">8<\/td><td class=\"num\">{220}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><tr><td class=\"num\">9<\/td><td class=\"num\">{221} {300}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">10<\/td><td class=\"num\">{310}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">11<\/td><td class=\"num\">{311}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><tr><td class=\"num\">12<\/td><td class=\"num\">{222}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">14<\/td><td class=\"num\">{321}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">16<\/td><td class=\"num\">{400}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><tr><td class=\"num\">19<\/td><td class=\"num\">{331}<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><tr><td class=\"num\">20<\/td><td class=\"num\">{420}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">–<\/td><\/tr><tr><td class=\"num\">24<\/td><td class=\"num\">{422}<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><td class=\"num\">●<\/td><\/tr><\/tbody>\n    <\/table>\n  ", "216": "\n    <p>講義裡矽的圖譜剛好示範了位置和寬度這兩項：奈米矽顆粒的峰比塊材矽寬，位置也稍微偏移。拖動滑桿改變晶粒大小，看矽的 <span class=\"idx\">(111)<\/span> 峰怎麼變。<\/p>\n  ", "217": "不同晶粒大小的矽 (111) 峰寬", "218": "晶粒大小：", "219": "晶粒大小", "900": "章節", "901": "材料科學與工程導論（一）", "902": "第 3 章・晶體結構", "903": "第 4 章・凝固與缺陷", "904": "<a href=\"ch4.html\">下一章，第 4 章：凝固與缺陷 3D 教室 →<\/a>"}, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title='晶體結構 3D 教室';var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="app.js"></script>
+
+</body></html>

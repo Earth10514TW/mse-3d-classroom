@@ -1,0 +1,1360 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Solidification and Defects 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+
+#so-plot,#gs-plot{height:400px}
+#nu-plot{height:320px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="1"><span class="course-h" data-t="2">Materials Science and Engineering I</span><a href="index.html" data-t="3">Ch 3 · Crystal structures</a><a href="ch4.html" aria-current="page" data-t="4">Ch 4 · Solidification and defects</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="5">
+      <h1>Solidification &amp; Defects<br><span class="d">3D</span> Classroom</h1>
+      <p class="lede">Chapter 3 drew crystals as perfect. Real metal starts as a liquid, freezes into many small crystals, and every one of them carries mistakes: missing atoms, extra half-planes, layers stacked in the wrong order. Those mistakes decide how strong a metal is and how it bends. Every model here can be turned, and most have a slider that lets you move the defect yourself.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for this chapter">
+        <li class="palette-h">Colors mean the same thing on every page of this chapter</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>host atoms · layer A</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>solute atoms · the extra half-plane · layer B</span></li>
+        <li><i style="background:var(--c-face)"></i><span><b>Green</b>a third element · layer C</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>slip planes, boundaries, critical size</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>the defect itself, Burgers vector</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <span class="plate-tag" data-t="6">EDGE DISLOCATION<br>one extra half-plane</span>
+      </div>
+      <figcaption data-t="7">A block of crystal with one <b style="color:var(--c-body)">extra half-plane</b> of atoms pushed in from the top. The half-plane ends inside the crystal, and the line where it ends (<b style="color:var(--hi)">red</b>) is an edge dislocation. Unit 6 lets you slide this line through the crystal and watch the top half slip by one atom spacing.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="8">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="9"><span>01</span>Solidification</a></li>
+    <li><a href="#s2" data-t="10"><span>02</span>Critical nucleus</a></li>
+    <li><a href="#s3" data-t="11"><span>03</span>Nucleation on a surface</a></li>
+    <li><a href="#s4" data-t="12"><span>04</span>Solid solutions</a></li>
+    <li><a href="#s5" data-t="13"><span>05</span>Point defects</a></li>
+    <li><a href="#s6" data-t="14"><span>06</span>Dislocations</a></li>
+    <li><a href="#s7" data-t="15"><span>07</span>Planar defects</a></li>
+    <li><a href="#s8" data-t="16"><span>08</span>Grain size</a></li>
+    <li><a href="#s9" data-t="17"><span>09</span>Microscopes</a></li>
+    <li><a href="#s10" data-t="18"><span>10</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="19"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="20"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="21"><p class="unit-no">01</p><h2>From liquid to grains</h2><p class="unit-tag">nucleation → growth → grain boundaries</p></header>
+  <div class="prose" data-t="22">
+    <p>Molten metal does not freeze all at once. It freezes in two steps.</p>
+    <dl class="defs">
+      <dt>Nucleation</dt><dd>Here and there in the liquid, a small group of atoms lines up into a crystal. A group that is large enough to survive is a <span class="term">nucleus</span>.</dd>
+      <dt>Crystal growth</dt><dd>Liquid atoms attach to each nucleus, so each one grows until it runs into its neighbors. In metals the growing crystal usually branches like a tree, and such a crystal is called a <span class="term">dendrite</span>.</dd>
+    </dl>
+    <p>Every nucleus starts with its own orientation. When two growing crystals meet, their lattices do not line up, and the mismatched seam between them is a <span class="term">grain boundary</span>. Each crystal is now called a <span class="term">grain</span>, and the solid is a polycrystal.</p>
+    <p>The number of nuclei sets the grain size. More nuclei means more grains, and each grain has less room, so the grains are smaller. Foundries use this. A little Ti, B or Zr added to molten aluminum gives the liquid many places to nucleate, and the casting comes out fine-grained. These additions are called <span class="term">grain refiners</span>.</p>
+    <p>Where the nuclei form matters too. The mold wall is cold, so many nuclei form there and give small <span class="term">equiaxed grains</span>, about the same size in every direction. Further in, the liquid cools slowly and heat flows out through the wall, so the grains that already exist grow inward along that direction and become long <span class="term">columnar grains</span>.</p>
+  </div>
+  <aside class="mnote" data-t="23"><span class="lbl">AN ANALOGY</span><p>Frost on a window starts at a few specks of dust and spreads outward. Where two patches meet you can see a line, because their patterns point different ways. That line is a grain boundary.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="so-plot"><canvas id="so-cv" role="img" aria-label="Atoms freezing from liquid into grains" data-ta="24"></canvas></div>
+      <div class="legend" data-t="25">
+        <span><i style="background:var(--ghost3d)"></i>Liquid atoms (no order, always moving)</span>
+        <span><i style="background:var(--c-corner)"></i>Solid atoms (lined up in a lattice)</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Mold wall</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="26">Where nuclei form</span>
+        <div class="seg" id="so-mode">
+          <button type="button" data-v="few" aria-pressed="true" data-t="27">A few nuclei</button>
+          <button type="button" data-v="many" data-t="28">Many nuclei <small>grain refiner</small></button>
+          <button type="button" data-v="wall" data-t="29">On the mold wall only</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="30">Time</span>
+        <input type="range" id="so-t" min="0" max="1" step="0.002" value="0" aria-label="Time" data-ta="31">
+        <div class="row"><button type="button" class="btn" id="so-play"><span data-t="32">↻ Freeze again</span></button></div>
+      </div>
+      <div class="readout" id="so-info"></div>
+    </div>
+  </div>
+  <div class="prose" data-t="33">
+    <p>Sometimes the goal is the opposite: no grain boundaries at all. A solid that grew from a single nucleus is a <span class="term">single crystal</span>. The slides show three ways to make one. All three keep the solid–liquid interface only slightly below the melting point, so no new nucleus has a chance to form ahead of the crystal that is already growing.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="34">
+    <table>
+      <thead><tr><th>Method</th><th>How it works</th><th>Used for</th><th>Point to remember</th></tr></thead>
+      <tbody>
+        <tr><td>Directional solidification<br>with a pigtail selector</td><td>The mold is pulled slowly out of the furnace.<br>A spiral passage lets only one grain through.</td><td>Gas-turbine blades</td><td>No grain boundaries, so the blade resists<br>creep at high temperature.</td></tr>
+        <tr><td>Czochralski process</td><td>A seed crystal is dipped in molten silicon,<br>rotated, and pulled up at about mm/min.</td><td>Silicon wafers</td><td>Large diameters need a magnetic field to<br>control defects, impurities and oxygen.</td></tr>
+        <tr><td>Float-zone growth</td><td>An RF coil melts a narrow zone of a<br>polycrystalline rod. The zone moves along the rod.</td><td>High-resistivity silicon</td><td>No crucible, so very little oxygen.<br>Surface tension limits the diameter.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="35"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Solidification = nucleation + growth. Grain boundaries are where crystals with different orientations meet.</li>
+      <li>Higher nucleation rate → more grains → smaller grains.</li>
+      <li>Equiaxed grains form where many nuclei form, such as at the mold wall. Columnar grains grow along the direction of heat flow.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="36"><p class="unit-no">02</p><h2>Why a nucleus has to be big enough</h2><p class="unit-tag">ΔG<sub>T</sub> = volume term + surface term</p></header>
+  <div class="prose" data-t="37">
+    <p>Below the melting point the solid has the lower energy, so one might expect the liquid to freeze at once. It does not, because a small crystal has to pay for its surface.</p>
+    <dl class="defs">
+      <dt>Volume term<small>negative</small></dt><dd>Every bit of liquid that turns solid releases energy. For a sphere of radius r this is (4/3)πr³ · ΔG<sub>v</sub>, and ΔG<sub>v</sub> is negative.</dd>
+      <dt>Surface term<small>positive</small></dt><dd>The new boundary between solid and liquid costs energy γ per unit area. For the same sphere this is 4πr² · γ.</dd>
+    </dl>
+    <p>A tiny cluster is almost all surface, so the cost wins and the cluster dissolves again. Such a cluster is an <span class="term">embryo</span>. Volume grows as r³ and surface only as r², so beyond a certain size the gain wins and the cluster keeps growing. That size is the <span class="term">critical radius r*</span>, and a cluster larger than r* is a nucleus.</p>
+    <p>Cooling further below the melting point makes ΔG<sub>v</sub> more negative, which makes r* smaller. The amount of cooling below the melting point is the <span class="term">undercooling ΔT</span>. Move the two sliders and watch the same thing in the model and on the curve.</p>
+  </div>
+  <aside class="mnote" data-t="38"><span class="lbl">AN ANALOGY</span><p>A new shop pays rent from day one, and income only builds up as the shop grows. Below a certain size the rent wins and the shop closes. Above it, every extra customer is profit.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-nuc"></div>
+      <div class="legend" data-t="39">
+        <span><i style="background:var(--hi)"></i>Embryo: smaller than r*, will dissolve</span>
+        <span><i style="background:var(--c-corner)"></i>Nucleus: larger than r*, will grow</span>
+        <span><i style="background:var(--c-plane);opacity:.45"></i>Sphere of critical radius r*</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="40">Undercooling ΔT</span> · <b id="nu-dt-v"></b></span>
+        <input type="range" id="nu-dt" min="110" max="400" step="2" value="236" aria-label="Undercooling" data-ta="41">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="42">Radius of this cluster r</span> · <b id="nu-r-v"></b></span>
+        <input type="range" id="nu-r" min="0.2" max="2.5" step="0.02" value="0.7" aria-label="Cluster radius" data-ta="43">
+        <div class="row"><button type="button" class="btn" id="nu-rs"><span data-t="44">Set r = r*</span></button></div>
+      </div>
+      <div class="readout" id="nu-info"></div>
+    </div>
+  </div>
+  <div class="plot wide" id="nu-plot"><canvas id="nu-cv" role="img" aria-label="Free energy of a cluster against its radius" data-ta="45"></canvas></div>
+  <div class="key" data-t="46"><span class="key-tag">FORMULAS</span>
+    <dl>
+      <dt>Total energy change</dt><dd><span class="idx wrap">ΔG<sub>T</sub> = (4/3)πr³ ΔG<sub>v</sub> + 4πr² γ</span></dd>
+      <dt>Critical radius</dt><dd><span class="idx wrap">r* = −2γ / ΔG<sub>v</sub> = 2γ T<sub>m</sub> / (ΔH<sub>f</sub> ΔT)</span>, found by setting d(ΔG<sub>T</sub>)/dr = 0</dd>
+      <dt>Energy barrier</dt><dd><span class="idx wrap">ΔG* = 16πγ³ / (3 ΔG<sub>v</sub>²)</span></dd>
+      <dt>Driving force</dt><dd><span class="idx wrap">ΔG<sub>v</sub> ≈ −ΔH<sub>f</sub> ΔT / T<sub>m</sub></span> for small undercooling. ΔH<sub>f</sub> is the latent heat of fusion per unit volume.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="47"><p class="unit-no">03</p><h2>Nucleating on a surface</h2><p class="unit-tag">ΔG*<sub>het</sub> = ΔG*<sub>hom</sub> · f(θ)</p></header>
+  <div class="prose" data-t="48">
+    <p>The last unit assumed the nucleus forms alone in the middle of the liquid. This is <span class="term">homogeneous nucleation</span>, and for copper it needs an undercooling of more than 200 K. Real castings freeze after only a few degrees of undercooling, because the nucleus forms on something that is already there: the mold wall, an insoluble impurity, a grain refiner. This is <span class="term">heterogeneous nucleation</span>, and the surface it uses is called a <span class="term">nucleating agent</span>.</p>
+    <p>On a surface the nucleus is a cap cut from a sphere. The cap has the same radius of curvature r* as the full sphere, yet it holds far fewer atoms, so far fewer atoms have to come together by chance.</p>
+    <p>How much of the sphere is left depends on the <span class="term">contact angle θ</span> between the solid and the surface. The angle comes from a balance of three surface energies (Young's equation): <span class="idx wrap">γ<sub>na–L</sub> = γ<sub>na–S</sub> + γ<sub>SL</sub> cos θ</span>. The better the solid wets the nucleating agent, the smaller θ is and the flatter the cap. Surface energy and surface tension are the same quantity here: the energy per unit area equals the force per unit length of edge.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-het"></div>
+      <div class="legend" data-t="49">
+        <span><i style="background:var(--c-corner)"></i>Atoms of the cap-shaped nucleus</span>
+        <span><i style="background:var(--c-plane);opacity:.45"></i>The full sphere of the same radius r*</span>
+        <span><i class="sq" style="background:var(--ghost3d)"></i>Nucleating agent (mold wall, impurity)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="50">Contact angle θ</span> · <b id="he-th-v"></b></span>
+        <input type="range" id="he-th" min="20" max="180" step="1" value="60" aria-label="Contact angle" data-ta="51">
+      </div>
+      <div class="readout" id="he-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="52"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Shape factor: <span class="idx wrap">f(θ) = (2 − 3 cos θ + cos³ θ) / 4</span>. It runs from 0 (θ = 0°) to 1 (θ = 180°).</li>
+      <li>Homogeneous and heterogeneous nucleation have the same r*. The heterogeneous nucleus has fewer atoms, N*<sub>het</sub> = N*<sub>hom</sub> · f(θ), and a lower barrier, ΔG*<sub>het</sub> = ΔG*<sub>hom</sub> · f(θ).</li>
+      <li>At θ = 180° the solid does not wet the surface at all, and the surface gives no help.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="53"><p class="unit-no">04</p><h2>Solid solutions and the gaps between atoms</h2><p class="unit-tag">substitutional · interstitial · high-entropy</p></header>
+  <div class="prose" data-t="54">
+    <p>Most metals in use are <span class="term">alloys</span>, mixtures of two or more elements. Cartridge brass is 70% Cu and 30% Zn. Inconel, a nickel-based superalloy, holds about 10 elements. The simplest kind of alloy is a <span class="term">solid solution</span>: the added atoms (the solute) are spread through the crystal of the main element (the solvent), and the whole thing is still one phase with one crystal structure.</p>
+    <p>A solute atom can sit in two kinds of place.</p>
+    <dl class="defs">
+      <dt>Substitutional</dt><dd>The solute takes the place of a solvent atom on a lattice site. The lattice is slightly distorted, but the structure does not change.</dd>
+      <dt>Interstitial</dt><dd>A small atom such as C, N or H sits in a gap between the solvent atoms. The gaps are called <span class="term">interstitial sites</span>.</dd>
+    </dl>
+    <p>How much solute a substitutional solution can hold is its <span class="term">solid solubility</span>. The <span class="term">Hume-Rothery rules</span> say when it is high:</p>
+    <ul>
+      <li>The atomic radii differ by no more than 15%.</li>
+      <li>The two elements have similar crystal structures.</li>
+      <li>They have similar electronegativity.</li>
+      <li>They have the same valence. This is needed for complete solubility.</li>
+    </ul>
+  </div>
+  <div class="tbl-wrap wide" data-t="55">
+    <table>
+      <thead><tr><th>System</th><th>Radius difference</th><th>Electronegativity difference</th><th>Solid solubility</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>Cu–Ni</td><td class="num">−2.3%</td><td class="num">0</td><td class="num">100%</td><td>Every rule is met, so they mix in any proportion.</td></tr>
+        <tr><td>Cu–Zn</td><td class="num">3.9%</td><td class="num">0.1</td><td class="num">38.3%</td><td>The sizes match, but Zn is HCP and has a different valence.</td></tr>
+        <tr><td>Cu–Pb</td><td class="num">36.7%</td><td class="num">0.2</td><td class="num">0.1%</td><td>The size difference is far over 15%.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 data-t="56"><span class="h3-no">4-1</span>Mixing many elements: configurational entropy</h3>
+  <div class="prose" data-t="57">
+    <p>Mixing is decided by <span class="idx wrap">ΔG<sub>mix</sub> = ΔH<sub>mix</sub> − T ΔS<sub>mix</sub></span>. The more ways there are to arrange the atoms, the larger the entropy ΔS<sub>mix</sub>, and the lower the free energy of the mixed state. For n elements in equal amounts, the entropy from arrangement alone is <span class="idx wrap">ΔS<sub>conf</sub> = R ln n</span>, with R = 8.31 J/mol·K.</p>
+    <p>A <span class="term">high-entropy alloy</span> (HEA) has at least 5 main elements, each between 5 and 35 atomic percent. The entropy is then large enough to favor one mixed solid solution over a set of separate compounds.</p>
+    <p>When the amounts are not equal, the formula is <span class="idx wrap">ΔS<sub>conf</sub> = −R Σ x<sub>i</sub> ln x<sub>i</sub></span>, where x<sub>i</sub> is the atomic fraction of each element. By this measure most traditional alloys are low-entropy. 7-3 brass is 0.61R and 304 stainless steel is 0.96R. Nickel-base superalloys such as Inconel 718 reach 1.31R, which counts as medium.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-alloy"></div>
+      <div class="legend" id="al-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="58">Number of elements n</span> · <b id="al-n-v"></b></span>
+        <input type="range" id="al-n" min="1" max="6" step="1" value="5" aria-label="Number of elements" data-ta="59">
+        <div class="row"><button type="button" class="btn" id="al-mix"><span data-t="60">Shuffle the atoms</span></button></div>
+      </div>
+      <div class="readout" id="al-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="61"><span class="key-tag">FOUR CORE EFFECTS</span>
+    <dl>
+      <dt>High entropy</dt><dd>A large T ΔS<sub>mix</sub> lowers ΔG<sub>mix</sub> and favors a solid solution.</dd>
+      <dt>Sluggish diffusion</dt><dd>Phase changes are slow, so precipitates stay at nanometer to sub-micrometer size.</dd>
+      <dt>Lattice distortion</dt><dd>Atoms of many sizes share one lattice. Electrical and thermal conductivity drop.</dd>
+      <dt>Cocktail effect</dt><dd>The elements interact, and the alloy can have properties beyond a simple average.</dd>
+    </dl>
+  </div>
+  <h3 data-t="62"><span class="h3-no">4-2</span>Where interstitial atoms sit</h3>
+  <div class="prose" data-t="63">
+    <p>Even the closest packing leaves gaps. There are two kinds, named after the shape made by the atoms around the gap. An <span class="term">octahedral site</span> has 6 neighbors, and a <span class="term">tetrahedral site</span> has 4. The model marks one site, the atoms around it, and the largest sphere that fits without pushing them apart.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-void"></div>
+      <div class="legend" data-t="64">
+        <span><i style="background:var(--hi)"></i>Interstitial site</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Polyhedron made by its neighbors</span>
+        <span><i style="background:var(--c-corner)"></i><i style="background:var(--c-face);margin-left:-4px"></i><i style="background:var(--c-body);margin-left:-4px"></i>Host atoms (corner, face, body center)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="65">Host structure</span>
+        <div class="seg" id="vo-s">
+          <button type="button" data-v="FCC" aria-pressed="true">FCC</button>
+          <button type="button" data-v="BCC">BCC</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="66">Kind of site</span>
+        <div class="seg" id="vo-t">
+          <button type="button" data-v="o" aria-pressed="true" data-t="67">Octahedral</button>
+          <button type="button" data-v="t" data-t="68">Tetrahedral</button>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="vo-hard"><span data-t="69"> Hard spheres, true size</span></label>
+      <label class="check"><input type="checkbox" id="vo-all"><span data-t="70"> Show every site of this kind in the cell</span></label>
+      <div class="readout" id="vo-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="71"><p class="unit-no">05</p><h2>Point defects</h2><p class="unit-tag">n<sub>v</sub> / N = C · exp(−E<sub>v</sub> / kT)</p></header>
+  <div class="prose" data-t="72">
+    <p>No real crystal is perfect. Defects are sorted by how many dimensions they extend in:</p>
+    <ul>
+      <li><strong>0-D, point defects</strong>: vacancies, interstitials. This unit.</li>
+      <li><strong>1-D, line defects</strong>: dislocations. Unit 6.</li>
+      <li><strong>2-D, planar defects</strong>: grain boundaries, stacking faults, twin boundaries, surfaces. Unit 7.</li>
+      <li><strong>3-D, volume defects</strong>: cracks, voids, precipitates.</li>
+    </ul>
+    <p>A point defect is a mistake at one or two atomic sites. The atoms around it shift a little, so each point defect carries a small region of strain.</p>
+    <dl class="defs">
+      <dt>Vacancy</dt><dd>A lattice site with no atom on it. Vacancies form during solidification and during plastic deformation, rapid cooling or particle bombardment. Vacancies that gather together become microvoids.</dd>
+      <dt>Self-interstitial</dt><dd>An atom of the crystal itself squeezed into a gap. It distorts the lattice strongly, so it mostly appears after high-energy irradiation or ion bombardment.</dd>
+      <dt>Impurity atom</dt><dd>A foreign atom, either on a lattice site or in a gap. These are the solute atoms of Unit 4.</dd>
+      <dt>Schottky defect</dt><dd>In an ionic crystal, one cation and one anion missing together. Removing them as a pair keeps the crystal electrically neutral.</dd>
+      <dt>Frenkel defect</dt><dd>In an ionic crystal, a cation that has left its site and moved into a gap nearby. It leaves a vacancy behind.</dd>
+    </dl>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-pt"></div>
+      <div class="legend" id="pt-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="73">In a metal</span>
+        <div class="seg" id="pt-s">
+          <button type="button" data-v="vac" aria-pressed="true" data-t="74">Vacancy</button>
+          <button type="button" data-v="self" data-t="75">Self-interstitial</button>
+          <button type="button" data-v="sub" data-t="76">Substitutional impurity</button>
+          <button type="button" data-v="int" data-t="77">Interstitial impurity</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="78">In an ionic crystal</span>
+        <div class="seg" id="pt-i">
+          <button type="button" data-v="sch" aria-pressed="false" data-t="79">Schottky</button>
+          <button type="button" data-v="fre" aria-pressed="false" data-t="80">Frenkel</button>
+        </div>
+      </div>
+      <div class="readout" id="pt-info"></div>
+    </div>
+  </div>
+  <h3 data-t="81"><span class="h3-no">5-1</span>How many vacancies there are</h3>
+  <div class="prose" data-t="82">
+    <p>Vacancies are the one defect a crystal cannot get rid of. Making a vacancy costs an energy E<sub>v</sub> of about 1 eV, but a few vacancies raise the entropy, so at any temperature above absolute zero some are always present. Their fraction rises steeply with temperature: <span class="idx wrap">n<sub>v</sub> / N = C · exp(−E<sub>v</sub> / kT)</span>, where n<sub>v</sub> is the number of vacancies, N is the number of atom sites and k = 8.62 × 10⁻⁵ eV/K.</p>
+  </div>
+  <div class="panel">
+    <div class="ctl">
+      <span class="ctl-label"><span data-t="83">Temperature T</span> · <b id="pv-T-v"></b></span>
+      <input type="range" id="pv-T" min="300" max="1350" step="10" value="1000" aria-label="Temperature" data-ta="84">
+    </div>
+    <div class="ctl">
+      <span class="ctl-label"><span data-t="85">Formation energy E<sub>v</sub></span> · <b id="pv-E-v"></b></span>
+      <input type="range" id="pv-E" min="0.6" max="1.4" step="0.05" value="1" aria-label="Vacancy formation energy" data-ta="86">
+    </div>
+    <div class="readout" id="pv-out"></div>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="87"><p class="unit-no">06</p><h2>Dislocations: line defects</h2><p class="unit-tag">edge: b ⟂ line&emsp;screw: b ∥ line</p></header>
+  <div class="prose" data-t="88">
+    <p>To bend a metal, one part of the crystal has to slide over another. If a whole plane of atoms had to slide at once, every bond across that plane would break at the same moment, and metals would be far stronger than they are. Real crystals slide one row at a time. The boundary between the part that has already slipped and the part that has not is a line, and that line is a <span class="term">dislocation</span>. Dislocations form during solidification, during plastic deformation, and when vacancies collapse together.</p>
+    <dl class="defs">
+      <dt>Edge dislocation</dt><dd>An extra half-plane of atoms ends inside the crystal. The dislocation is the line along the bottom edge of that half-plane.</dd>
+      <dt>Screw dislocation</dt><dd>The crystal is cut part of the way through and one side is pushed along the cut. The atomic planes turn into one continuous spiral ramp around the line.</dd>
+      <dt>Mixed dislocation</dt><dd>Part edge and part screw. A curved dislocation line is screw where it runs along the slip direction, edge where it runs across it, and mixed in between.</dd>
+    </dl>
+    <p>The <span class="term">Burgers vector b</span> measures the slip. Walk a closed loop of atom-to-atom steps in a perfect crystal and you return to the start. Walk the same loop around a dislocation and you end up one step away. The step needed to close the loop is <b>b</b>. For an edge dislocation <b>b</b> is perpendicular to the line. For a screw dislocation it is parallel to the line.</p>
+  </div>
+  <aside class="mnote" data-t="89"><span class="lbl">AN ANALOGY</span><p>Dragging a large rug across the floor is hard. Pushing a wrinkle from one side to the other is easy, and when the wrinkle arrives the whole rug has moved a little. A dislocation is the wrinkle.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-dis"></div>
+      <div class="legend" data-t="90">
+        <span><i style="background:var(--c-body)"></i>Extra half-plane</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Dislocation line, Burgers vector b</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Slip plane (darker where it has slipped)</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Burgers circuit</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="91">Kind</span>
+        <div class="seg" id="di-s">
+          <button type="button" data-v="edge" aria-pressed="true" data-t="92">Edge</button>
+          <button type="button" data-v="screw" data-t="93">Screw</button>
+          <button type="button" data-v="mixed" data-t="94">Mixed</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="95">Position of the dislocation line</span>
+        <input type="range" id="di-x" min="-6.5" max="6.5" step="0.05" value="0.5" aria-label="Position of the dislocation line" data-ta="96">
+        <div class="row"><button type="button" class="btn" id="di-go"><span data-t="97">▶ Let it glide across</span></button></div>
+      </div>
+      <label class="check"><input type="checkbox" id="di-loop" checked><span data-t="98"> Draw the Burgers circuit</span></label>
+      <div class="readout" id="di-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="99"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Edge: <b>b</b> ⟂ dislocation line. Screw: <b>b</b> ∥ dislocation line. Mixed: in between.</li>
+      <li>Around an edge dislocation the side with the extra half-plane is squeezed and the other side is stretched. Around a screw dislocation there is only shear. This strain field is how dislocations feel each other and feel solute atoms.</li>
+      <li>When a dislocation has crossed the whole slip plane, one half of the crystal has moved by exactly <b>b</b> and the lattice inside is perfect again.</li>
+    </ul>
+  </div>
+  <h3 data-t="100"><span class="h3-no">6-1</span>Schmid's law: how much of the pull acts on the slip plane</h3>
+  <div class="prose" data-t="101">
+    <p>A dislocation moves when the shear stress on its slip plane, along its slip direction, is large enough. The smallest shear stress that makes a single crystal slip is the <span class="term">critical resolved shear stress</span> (CRSS). It depends on the crystal structure, the bonding, the temperature and the purity.</p>
+    <p>Pull on a crystal with a tensile stress σ. Only part of it acts as shear on a given slip system. Two angles decide how much: φ between the pull and the normal of the slip plane, and λ between the pull and the slip direction.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-sch"></div>
+      <div class="legend" data-t="102">
+        <span><i class="sq" style="background:var(--accent)"></i>Pulling force F</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Slip plane and its normal n</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Slip direction</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="103">Tilt of the slip plane φ</span> · <b id="sm-phi-v"></b></span>
+        <input type="range" id="sm-phi" min="5" max="75" step="1" value="45" aria-label="Angle between the pull and the plane normal" data-ta="104">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="105">Slip direction turned within the plane</span> · <b id="sm-be-v"></b></span>
+        <input type="range" id="sm-be" min="0" max="85" step="1" value="0" aria-label="Rotation of the slip direction within the slip plane" data-ta="106">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="107">Tensile stress σ</span> · <b id="sm-sig-v"></b></span>
+        <input type="range" id="sm-sig" min="0" max="250" step="1" value="60" aria-label="Tensile stress" data-ta="108">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="109">Crystal (CRSS from the slides)</span>
+        <div class="seg" id="sm-crss">
+          <button type="button" data-v="13.7" aria-pressed="true" data-t="110">Ti, 99.99% pure <small>13.7 MPa</small></button>
+          <button type="button" data-v="90.1" data-t="111">Ti, 99.9% pure <small>90.1 MPa</small></button>
+        </div>
+      </div>
+      <div class="readout" id="sm-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="112"><span class="key-tag">SCHMID'S LAW</span>
+    <ul>
+      <li><span class="idx wrap">τ<sub>r</sub> = (F cos λ) / (A<sub>0</sub> / cos φ) = σ cos λ cos φ</span>. Slip starts when τ<sub>r</sub> reaches the CRSS.</li>
+      <li>cos λ cos φ is at most 0.5, reached when φ = λ = 45°. A plane at 45° to the pull slips first.</li>
+      <li>A trace of impurity raises the CRSS of titanium from 13.7 to 90.1 MPa. Solute atoms pin dislocations.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="113"><p class="unit-no">07</p><h2>Planar defects</h2><p class="unit-tag">grain boundary · stacking fault · twin</p></header>
+  <div class="prose" data-t="114">
+    <p>A planar defect is a whole surface across which the crystal does not continue perfectly.</p>
+    <dl class="defs">
+      <dt>Free surface</dt><dd>Surface atoms have neighbors on one side only, so they sit at a higher energy and react easily. Nanomaterials are mostly surface, which is why they are so reactive.</dd>
+      <dt>Grain boundary</dt><dd>The seam between two grains of different orientation. In a <span class="term">tilt boundary</span> the rotation axis lies in the boundary. In a <span class="term">twist boundary</span> it is perpendicular to the boundary.</dd>
+      <dt>Stacking fault</dt><dd>One close-packed layer is missing or one extra layer is inserted, so the ABCABC order is broken at one place.</dd>
+      <dt>Twin boundary</dt><dd>The stacking order reverses, and the crystal on one side is the mirror image of the other. Every atom on the boundary still fits both sides, so it is a <span class="term">coherent boundary</span> with low energy.</dd>
+    </dl>
+    <p>A grain boundary with a small tilt angle is simply a row of edge dislocations. Each dislocation adds one half-plane and turns the lattice a little more. The larger the angle, the closer the dislocations have to be.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-gb"></div>
+      <div class="legend" data-t="115">
+        <span><i class="sq" style="background:var(--accent)"></i>Atomic planes that run up the page</span>
+        <span><i style="background:var(--hi)"></i>⊥ where a plane ends: one edge dislocation</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Boundary</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="116">Tilt angle θ</span> · <b id="gb-th-v"></b></span>
+        <input type="range" id="gb-th" min="4" max="36" step="0.5" value="12" aria-label="Tilt angle" data-ta="117">
+      </div>
+      <div class="readout" id="gb-info"></div>
+    </div>
+  </div>
+  <h3 data-t="118"><span class="h3-no">7-1</span>Stacking faults and twins</h3>
+  <div class="prose" data-t="119">
+    <p>Unit 4 of Chapter 3 built FCC by stacking close-packed layers in the order ABCABC. The model below looks at that stack from the side, so the three positions A, B and C show up as a sideways step from one layer to the next. In a perfect crystal the steps always go the same way. A fault is a place where they do not.</p>
+  </div>
+  <div class="lab flip wide">
+    <div class="stage-col">
+      <div class="stage" id="v-sf"></div>
+      <div class="legend" data-t="120">
+        <span><i style="background:var(--c-corner)"></i>Layer A</span>
+        <span><i style="background:var(--c-body)"></i>Layer B</span>
+        <span><i style="background:var(--c-face)"></i>Layer C</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Fault or twin plane</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="121">Stacking</span>
+        <div class="seg" id="sf-s">
+          <button type="button" data-v="ok" data-t="122">Perfect FCC</button>
+          <button type="button" data-v="in" data-t="123">One layer missing</button>
+          <button type="button" data-v="ex" data-t="124">One extra layer</button>
+          <button type="button" data-v="tw" aria-pressed="true" data-t="125">Twin</button>
+        </div>
+      </div>
+      <div class="readout" id="sf-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="126"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Low-angle tilt boundary: dislocation spacing <span class="idx wrap">D = b / θ</span> (θ in radians). The spacing falls and the dislocation density rises as the tilt angle grows.</li>
+      <li>Twin: <span class="idx wrap">ABCABC<b style="color:var(--hi)">A</b>CBA<b style="color:var(--hi)">C</b>AB</span>. The order reverses at each marked layer.</li>
+      <li>The slides show copper nanowires filled with coherent twin boundaries (Huang et al., 2018). The closer the twins, the fewer atomic steps on the surface, which becomes a zig-zag of low-index facets. Under TEM they look unchanged after a year in air, while nanocrystalline wires develop voids within days.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 08 ======================= -->
+<section class="unit" id="s8">
+  <header class="unit-head" data-t="127"><p class="unit-no">08</p><h2>Grain size and strength</h2><p class="unit-tag">N = 2<sup>n−1</sup>&emsp;σ<sub>y</sub> = σ<sub>0</sub> + k / √d</p></header>
+  <div class="prose" data-t="128">
+    <p>To see grains under an optical microscope, the sample is ground and polished flat and then etched with a chemical. The etchant attacks grain boundaries faster than the grains and leaves a small groove at each one. The groove scatters light away from the lens, so the boundary shows as a dark line. Grains of different orientation are also etched at different rates, so some grains look darker than others.</p>
+    <p>Two numbers describe the grain size.</p>
+    <dl class="defs">
+      <dt>ASTM grain size number n</dt><dd>Count the grains in one square inch of a micrograph taken at 100×. If the count is N, then <span class="idx wrap">N = 2<sup>n−1</sup></span>. A larger n means finer grains.</dd>
+      <dt>Average grain diameter d</dt><dd>Draw a line of known length on the micrograph and count the grains it crosses. With n<sub>L</sub> grains per unit length of line and a magnification M, <span class="idx wrap">d = C / (n<sub>L</sub> M)</span>, with C = 1.5.</dd>
+    </dl>
+    <p>A grain boundary stops dislocations, because the slip plane does not continue into the next grain. Smaller grains mean more boundary area per volume and a stronger metal. The <span class="term">Hall–Petch equation</span> fits this: <span class="idx wrap">σ<sub>y</sub> = σ<sub>0</sub> + k / √d</span>. Many small grains pointing in random directions also make the properties the same in every direction.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="gs-plot"><canvas id="gs-cv" role="img" aria-label="Simulated micrograph of an etched metal with a test line" data-ta="129"></canvas></div>
+      <div class="legend" data-t="130">
+        <span><i class="sq" style="background:var(--ink)"></i>Etched grain boundaries</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Test line with a tick at each boundary it crosses</span>
+        <span>Drawn as it would look at 100×. The picture is 1 inch tall.</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="131">ASTM grain size number n</span> · <b id="gs-n-v"></b></span>
+        <input type="range" id="gs-n" min="1" max="10" step="1" value="5" aria-label="ASTM grain size number" data-ta="132">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="133">Metal for the Hall–Petch estimate</span>
+        <div class="seg" id="gs-mat">
+          <button type="button" data-v="fe" aria-pressed="true" data-t="134">Mild steel</button>
+          <button type="button" data-v="cu" data-t="135">Copper</button>
+          <button type="button" data-v="ti" data-t="136">Titanium</button>
+        </div>
+      </div>
+      <div class="readout" id="gs-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 09 ======================= -->
+<section class="unit" id="s9">
+  <header class="unit-head" data-t="137"><p class="unit-no">09</p><h2>Microscopes: how the defects are seen</h2><p class="unit-tag">OM&emsp;SEM&emsp;TEM&emsp;STM&emsp;AFM</p></header>
+  <div class="prose" data-t="138">
+    <p>A microscope cannot show details much smaller than the wavelength of what it uses to look. Visible light has a wavelength of about 500 nm, and atoms are about 0.25 nm apart, so an optical microscope shows grains but never atoms. Two ways around this limit are used: electrons, which have a far shorter wavelength, and a sharp tip that feels the surface directly.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="139">
+    <table>
+      <thead><tr><th>Microscope</th><th>What it looks with</th><th>What is recorded</th><th>What it shows</th></tr></thead>
+      <tbody>
+        <tr><td>Optical (OM)</td><td>Visible light</td><td>Light reflected from a polished,<br>etched surface</td><td>Grains and grain boundaries</td></tr>
+        <tr><td>Scanning electron (SEM)</td><td>A fine electron beam scanned<br>over the surface line by line</td><td>Secondary electrons (SE)<br>Backscattered electrons (BSE)</td><td>SE (below 50 eV, from the top 5–50 nm): surface shape<br>BSE (bounced off nuclei): heavier atoms look brighter</td></tr>
+        <tr><td>Transmission electron (TEM)</td><td>Electrons sent through a foil<br>thinner than 100 nm</td><td>Electrons that pass through<br>or are diffracted</td><td>Dislocations, twins, rows of atoms.<br>Resolution about 0.2 nm.</td></tr>
+        <tr><td>Scanning tunneling (STM)</td><td>A metal tip less than 1 nm<br>above a conducting surface</td><td>Tunneling current between<br>tip and surface</td><td>Single atoms and vacancies<br>on a surface</td></tr>
+        <tr><td>Atomic force (AFM)</td><td>A tip on a soft cantilever</td><td>Bending of the cantilever, read with a laser.<br>Repulsion in contact, attraction a little further away.</td><td>Surface height, also on insulators.<br>Lateral resolution 0.1 to 10 nm.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 data-t="140"><span class="h3-no">9-1</span>Why electrons see more than light</h3>
+  <div class="prose" data-t="141">
+    <p>An electron is also a wave. Its wavelength is <span class="idx wrap">λ = h / p = h / √(2mE)</span>, so the higher the accelerating voltage, the shorter the wavelength. In an SEM the beam is scanned over a small area and the signal is drawn on a much larger screen. The magnification is simply the width of the screen divided by the width of the scanned area. A 10 cm screen showing a 10 µm scan is 10,000×.</p>
+    <p>A TEM does not reach its wavelength, because magnetic lenses are far from perfect. The resolution is about <span class="idx wrap">Δx = 0.6 C<sub>s</sub><sup>1/4</sup> λ<sup>3/4</sup></span>, where C<sub>s</sub> measures the spherical aberration of the lens. At 100 keV this gives about 2 Å, which is still enough to see rows of atoms.</p>
+  </div>
+  <div class="panel">
+    <div class="ctl">
+      <span class="ctl-label"><span data-t="142">Accelerating voltage</span> · <b id="em-kv-v"></b></span>
+      <input type="range" id="em-kv" min="1" max="300" step="1" value="100" aria-label="Accelerating voltage" data-ta="143">
+    </div>
+    <div class="readout" id="em-out"></div>
+  </div>
+  <h3 data-t="144"><span class="h3-no">9-2</span>Scanning tunneling microscope</h3>
+  <div class="prose" data-t="145">
+    <p>Bring a sharp metal tip to within a nanometer of a conducting surface and apply a small voltage. Electrons tunnel across the gap. The current falls about ten times for every 0.1 nm the gap widens, so it is an extremely sensitive measure of height. The tip is scanned in one of two ways.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-stm"></div>
+      <div class="legend" id="stm-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="146">Scan mode</span>
+        <div class="seg" id="stm-m">
+          <button type="button" data-v="cc" aria-pressed="true" data-t="147">Constant current</button>
+          <button type="button" data-v="ch" data-t="148">Constant height</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="149">Tip position</span>
+        <input type="range" id="stm-x" min="-6" max="6" step="0.05" value="1.2" aria-label="Tip position" data-ta="150">
+        <div class="row"><button type="button" class="btn" id="stm-go"><span data-t="151">▶ Scan the line</span></button></div>
+      </div>
+      <div class="readout" id="stm-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 10 ======================= -->
+<section class="unit" id="s10">
+  <header class="unit-head" data-t="152"><p class="unit-no">10</p><h2>Quiz</h2><p class="unit-tag">10 questions</p></header>
+  <p class="quiz-intro" data-t="153">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score">Answered 0 / 10, correct 0</p>
+  <div class="quiz" id="quiz"></div>
+  <p class="next" data-t="154"><a href="index.html">← Back to Chapter 3: Crystal Structure 3D Classroom</a></p>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="155">
+  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch.4 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019. The copper values used in Units 2 and 3 (T<sub>m</sub> = 1083 °C, ΔH<sub>f</sub> = 1826 J/cm³, γ = 177 × 10⁻⁷ J/cm², maximum undercooling 236 K), the Hall–Petch constants in Unit 8 and the interstitial sizes of iron in Unit 4 come from the textbook, not from the slides.</p>
+  <span class="lbl">MODELS</span>
+  <p>The dislocation models move the atoms of a simple cubic crystal by the displacement field of a straight dislocation in an elastic solid. The grain boundary, point defect and STM models are geometric sketches with hard spheres. They show where atoms sit, not exact relaxed positions.</p>
+  <span class="lbl">NOTE</span>
+  <p>Slide 66 gives λ = 0.037 Å for 100 keV electrons next to λ = h / √(2mE). That formula gives 0.0388 Å. The value 0.0370 Å includes the relativistic correction, which matters at this energy.</p>
+</footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={
+1:`章節`,
+2:`材料科學與工程導論（一）`,
+3:`第 3 章・晶體結構`,
+4:`第 4 章・凝固與缺陷`,
+5:`
+      <h1>凝固與缺陷<br><span class="d">3D</span>教室</h1>
+      <p class="lede">第 3 章把晶體畫得很完美。真實的金屬從液體開始，凝固成許多小晶體，每一顆裡面都有排錯的地方：少一個原子、多半片原子面、某一層疊錯位置。金屬有多強、怎麼彎，就由這些地方決定。這裡每個模型都能轉動，多數還有滑桿，可以自己移動缺陷。</p>
+      <p class="lede">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。</p>
+      <ul class="palette" aria-label="本章顏色約定">
+        <li class="palette-h">這一章的顏色都照這個約定</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>藍</b>　基底原子・A 層</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>橘</b>　溶質原子・多出來的半片原子面・B 層</span></li>
+        <li><i style="background:var(--c-face)"></i><span><b>綠</b>　第三種元素・C 層</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>紫</b>　滑移面、界面、臨界大小</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>紅</b>　缺陷本身、布格向量</span></li>
+      </ul>
+    `,
+6:`刃差排　多出半片原子面`,
+7:`一塊晶體，上半部多插進<b style="color:var(--c-body)">半片原子面</b>。這半片在晶體內部就結束了，結束的那條線（<b style="color:var(--hi)">紅色</b>）就是刃差排。第 6 單元可以把這條線推過整塊晶體，看上半部怎麼滑動一個原子間距。`,
+8:`單元`,
+9:`<span>01</span>凝固`,
+10:`<span>02</span>臨界晶核`,
+11:`<span>03</span>在表面上成核`,
+12:`<span>04</span>固溶體`,
+13:`<span>05</span>點缺陷`,
+14:`<span>06</span>差排`,
+15:`<span>07</span>面缺陷`,
+16:`<span>08</span>晶粒大小`,
+17:`<span>09</span>顯微鏡`,
+18:`<span>10</span>小測驗`,
+19:`語言`,
+20:`深色模式`,
+21:`<p class="unit-no">01</p><h2>從液體到晶粒</h2><p class="unit-tag">成核 → 成長 → 晶界</p>`,
+22:`
+    <p>熔融的金屬不會一瞬間整塊凝固。凝固分兩步。</p>
+    <dl class="defs">
+      <dt>成核</dt><dd>液體裡這裡那裡，有一小群原子排成晶體。大到能存活下來的那一群，叫<span class="term">晶核</span>。</dd>
+      <dt>晶體成長</dt><dd>液體原子一個個貼到晶核上，每個晶核越長越大，直到撞上鄰居。金屬晶體成長時常像樹一樣分枝，這種形狀叫<span class="term">樹枝狀晶</span>。</dd>
+    </dl>
+    <p>每個晶核一開始的方向都不一樣。兩顆成長中的晶體相遇時，晶格對不起來，中間那道接不上的縫就是<span class="term">晶界</span>。這時每顆晶體叫做一個<span class="term">晶粒</span>，整塊固體是多晶。</p>
+    <p>晶核的數量決定晶粒大小。晶核越多，晶粒越多，每顆能長的空間越小，晶粒就越細。鑄造廠就利用這一點：在鋁液裡加一點 Ti、B 或 Zr，讓液體多出許多可以成核的地方，鑄件的晶粒就變細。這類添加物叫<span class="term">晶粒細化劑</span>。</p>
+    <p>晶核出現在哪裡也有影響。模壁最冷，一下子長出許多晶核，形成各方向差不多大的小<span class="term">等軸晶</span>。再往裡面，液體冷得慢，熱從模壁散出去，已經存在的晶粒就順著這個方向往內長，變成長條形的<span class="term">柱狀晶</span>。</p>
+  `,
+23:`<span class="lbl">打個比方</span><p>窗戶上的霜從幾粒灰塵開始，往外擴散。兩片霜相遇的地方看得到一條線，因為兩邊的紋路方向不同。那條線就是晶界。</p>`,
+24:`原子從液體凝固成晶粒`,
+25:`
+        <span><i style="background:var(--ghost3d)"></i>液體原子（沒有秩序，一直在動）</span>
+        <span><i style="background:var(--c-corner)"></i>固體原子（排成晶格）</span>
+        <span><i class="sq" style="background:var(--accent)"></i>模壁</span>
+      `,
+26:`晶核出現在哪裡`,
+27:`少數幾個晶核`,
+28:`很多晶核 <small>加晶粒細化劑</small>`,
+29:`只在模壁上`,
+30:`時間`,
+31:`時間`,
+32:`↻ 重新凝固`,
+33:`
+    <p>有時候目標剛好相反：完全不要晶界。只從一個晶核長出來的固體叫<span class="term">單晶</span>。投影片介紹了三種做法。三種都讓固液界面只比熔點低一點點，這樣在已經長出來的晶體前方，新的晶核沒有機會出現。</p>
+  `,
+34:`
+    <table>
+      <thead><tr><th>方法</th><th>怎麼做</th><th>用途</th><th>要記得的事</th></tr></thead>
+      <tbody>
+        <tr><td>方向性凝固<br>加螺旋選晶器</td><td>模具慢慢拉出加熱爐。<br>螺旋通道只讓一顆晶粒通過。</td><td>燃氣渦輪葉片</td><td>沒有晶界，高溫下抗潛變。</td></tr>
+        <tr><td>柴可拉斯基法（柴氏法）</td><td>晶種浸入熔融的矽，邊旋轉邊往上拉，<br>速度約每分鐘幾毫米。</td><td>矽晶圓</td><td>直徑大時要外加磁場，<br>控制缺陷、雜質和氧含量。</td></tr>
+        <tr><td>浮區法</td><td>射頻線圈把多晶矽棒熔出一小段熔區，<br>熔區沿著棒子移動。</td><td>高電阻率的矽</td><td>不用坩堝，氧含量極低。<br>直徑受表面張力限制。</td></tr>
+      </tbody>
+    </table>
+  `,
+35:`<span class="key-tag">重點</span>
+    <ul>
+      <li>凝固＝成核＋成長。晶界是方向不同的晶體相遇的地方。</li>
+      <li>成核速率越高 → 晶粒越多 → 晶粒越小。</li>
+      <li>等軸晶出現在晶核多的地方，例如模壁。柱狀晶順著熱流方向長。</li>
+    </ul>
+  `,
+36:`<p class="unit-no">02</p><h2>晶核為什麼要夠大</h2><p class="unit-tag">ΔG<sub>T</sub> ＝ 體積項 ＋ 表面項</p>`,
+37:`
+    <p>溫度低於熔點時，固體的能量比較低，照理說液體應該立刻凝固。實際上不會，因為小晶體得先付出表面的代價。</p>
+    <dl class="defs">
+      <dt>體積項<small>負值</small></dt><dd>每一小塊液體變成固體都會放出能量。半徑 r 的球放出 (4/3)πr³ · ΔG<sub>v</sub>，其中 ΔG<sub>v</sub> 是負的。</dd>
+      <dt>表面項<small>正值</small></dt><dd>固體和液體之間多出一層新界面，每單位面積要花能量 γ。同一顆球要花 4πr² · γ。</dd>
+    </dl>
+    <p>很小的原子團幾乎全是表面，代價比較大，所以會再溶回去。這種原子團叫<span class="term">晶胚</span>。體積隨 r³ 增加，表面只隨 r² 增加，超過某個大小之後就是賺的，原子團會一直長下去。這個大小叫<span class="term">臨界半徑 r*</span>，比 r* 大的原子團才算晶核。</p>
+    <p>溫度比熔點低得越多，ΔG<sub>v</sub> 越負，r* 就越小。比熔點低多少度，叫做<span class="term">過冷度 ΔT</span>。拉動兩支滑桿，模型和曲線講的是同一件事。</p>
+  `,
+38:`<span class="lbl">打個比方</span><p>新開的店第一天就要付房租，收入卻要等店做大才慢慢累積。規模太小時房租贏，店會收掉；超過某個規模，每多一位客人都是賺的。</p>`,
+39:`
+        <span><i style="background:var(--hi)"></i>晶胚：比 r* 小，會溶回去</span>
+        <span><i style="background:var(--c-corner)"></i>晶核：比 r* 大，會繼續長</span>
+        <span><i style="background:var(--c-plane);opacity:.45"></i>半徑為 r* 的球</span>
+      `,
+40:`過冷度 ΔT`,
+41:`過冷度`,
+42:`這個原子團的半徑 r`,
+43:`原子團半徑`,
+44:`設成 r = r*`,
+45:`原子團的自由能對半徑的關係`,
+46:`<span class="key-tag">公式</span>
+    <dl>
+      <dt>總能量變化</dt><dd><span class="idx wrap">ΔG<sub>T</sub> = (4/3)πr³ ΔG<sub>v</sub> + 4πr² γ</span></dd>
+      <dt>臨界半徑</dt><dd><span class="idx wrap">r* = −2γ / ΔG<sub>v</sub> = 2γ T<sub>m</sub> / (ΔH<sub>f</sub> ΔT)</span>，由 d(ΔG<sub>T</sub>)/dr = 0 得到</dd>
+      <dt>能量障礙</dt><dd><span class="idx wrap">ΔG* = 16πγ³ / (3 ΔG<sub>v</sub>²)</span></dd>
+      <dt>驅動力</dt><dd>過冷度不大時 <span class="idx wrap">ΔG<sub>v</sub> ≈ −ΔH<sub>f</sub> ΔT / T<sub>m</sub></span>。ΔH<sub>f</sub> 是每單位體積的熔化潛熱。</dd>
+    </dl>
+  `,
+47:`<p class="unit-no">03</p><h2>在表面上成核</h2><p class="unit-tag">ΔG*<sub>het</sub> = ΔG*<sub>hom</sub> · f(θ)</p>`,
+48:`
+    <p>上一單元假設晶核獨自在液體中間形成，這叫<span class="term">均質成核</span>，銅需要兩百多度的過冷才辦得到。真實的鑄件只過冷幾度就開始凝固，因為晶核長在現成的東西上：模壁、不溶的雜質、晶粒細化劑。這叫<span class="term">異質成核</span>，被借用的表面叫<span class="term">成核劑</span>。</p>
+    <p>長在表面上的晶核是從球切下來的一塊球冠。它的曲率半徑和完整的球一樣是 r*，原子數卻少很多，所以需要碰巧湊在一起的原子少很多。</p>
+    <p>球還剩多少，看固體和表面之間的<span class="term">接觸角 θ</span>。這個角度由三種界面能的平衡決定（楊氏方程式）：<span class="idx wrap">γ<sub>na–L</sub> = γ<sub>na–S</sub> + γ<sub>SL</sub> cos θ</span>。固體越容易潤濕成核劑，θ 越小，球冠越扁。這裡的界面能和表面張力是同一個量：每單位面積的能量，等於每單位邊長上的力。</p>
+  `,
+49:`
+        <span><i style="background:var(--c-corner)"></i>球冠形晶核的原子</span>
+        <span><i style="background:var(--c-plane);opacity:.45"></i>同樣半徑 r* 的完整球</span>
+        <span><i class="sq" style="background:var(--ghost3d)"></i>成核劑（模壁、雜質）</span>
+      `,
+50:`接觸角 θ`,
+51:`接觸角`,
+52:`<span class="key-tag">重點</span>
+    <ul>
+      <li>形狀因子：<span class="idx wrap">f(θ) = (2 − 3 cos θ + cos³ θ) / 4</span>，從 0（θ = 0°）到 1（θ = 180°）。</li>
+      <li>均質和異質成核的 r* 相同。異質晶核的原子數比較少，N*<sub>het</sub> = N*<sub>hom</sub> · f(θ)；能量障礙也比較低，ΔG*<sub>het</sub> = ΔG*<sub>hom</sub> · f(θ)。</li>
+      <li>θ = 180° 時固體完全不潤濕表面，表面幫不上忙。</li>
+    </ul>
+  `,
+53:`<p class="unit-no">04</p><h2>固溶體與原子之間的空隙</h2><p class="unit-tag">置換型・間隙型・高熵</p>`,
+54:`
+    <p>實際使用的金屬大多是<span class="term">合金</span>，也就是兩種以上元素的混合物。彈殼黃銅是 70% Cu 加 30% Zn。鎳基超合金 Inconel 含有大約 10 種元素。最簡單的合金是<span class="term">固溶體</span>：加進去的原子（溶質）分散在主要元素（溶劑）的晶體裡，整體仍然是單一相、單一晶體結構。</p>
+    <p>溶質原子可以待在兩種位置。</p>
+    <dl class="defs">
+      <dt>置換型</dt><dd>溶質取代溶劑原子，佔據晶格位置。晶格稍微變形，但結構不變。</dd>
+      <dt>間隙型</dt><dd>C、N、H 這類小原子擠在溶劑原子之間的空隙裡。這些空隙叫<span class="term">間隙位置</span>。</dd>
+    </dl>
+    <p>置換型固溶體能容納多少溶質，叫<span class="term">固溶度</span>。<span class="term">休姆–羅瑟里法則</span>說明什麼條件下固溶度高：</p>
+    <ul>
+      <li>原子半徑相差不超過 15%。</li>
+      <li>兩種元素的晶體結構相近。</li>
+      <li>電負度相近。</li>
+      <li>價數相同。要完全互溶必須符合這一條。</li>
+    </ul>
+  `,
+55:`
+    <table>
+      <thead><tr><th>系統</th><th>原子半徑差</th><th>電負度差</th><th>固溶度</th><th>怎麼看</th></tr></thead>
+      <tbody>
+        <tr><td>Cu–Ni</td><td class="num">−2.3%</td><td class="num">0</td><td class="num">100%</td><td>每一條都符合，任何比例都能互溶。</td></tr>
+        <tr><td>Cu–Zn</td><td class="num">3.9%</td><td class="num">0.1</td><td class="num">38.3%</td><td>大小相近，但 Zn 是 HCP，價數也不同。</td></tr>
+        <tr><td>Cu–Pb</td><td class="num">36.7%</td><td class="num">0.2</td><td class="num">0.1%</td><td>大小相差遠超過 15%。</td></tr>
+      </tbody>
+    </table>
+  `,
+56:`<span class="h3-no">4-1</span>混合很多種元素：組態熵`,
+57:`
+    <p>能不能混合看 <span class="idx wrap">ΔG<sub>mix</sub> = ΔH<sub>mix</sub> − T ΔS<sub>mix</sub></span>。原子的排法越多，熵 ΔS<sub>mix</sub> 越大，混合狀態的自由能越低。n 種元素等量混合時，光是排列方式帶來的熵就是 <span class="idx wrap">ΔS<sub>conf</sub> = R ln n</span>，R = 8.31 J/mol·K。</p>
+    <p><span class="term">高熵合金</span>（HEA）至少有 5 種主要元素，每一種佔 5 到 35 原子百分比。這時熵夠大，合金傾向形成單一的固溶體，而不是分成好幾種化合物。</p>
+    <p>各元素不等量時，公式是 <span class="idx wrap">ΔS<sub>conf</sub> = −R Σ x<sub>i</sub> ln x<sub>i</sub></span>，x<sub>i</sub> 是每種元素的原子分率。照這個標準，傳統合金大多是低熵：七三黃銅 0.61R，304 不鏽鋼 0.96R。Inconel 718 這類鎳基超合金到 1.31R，算中熵。</p>
+  `,
+58:`元素數目 n`,
+59:`元素數目`,
+60:`重新打散原子`,
+61:`<span class="key-tag">四個核心效應</span>
+    <dl>
+      <dt>高熵效應</dt><dd>T ΔS<sub>mix</sub> 很大，把 ΔG<sub>mix</sub> 壓低，有利於形成固溶體。</dd>
+      <dt>遲緩擴散</dt><dd>相變進行得慢，析出物停留在奈米到次微米大小。</dd>
+      <dt>晶格扭曲</dt><dd>大小不同的原子共用一套晶格，導電和導熱都變差。</dd>
+      <dt>雞尾酒效應</dt><dd>元素之間互相作用，合金可能出現超過單純平均的性質。</dd>
+    </dl>
+  `,
+62:`<span class="h3-no">4-2</span>間隙原子待在哪裡`,
+63:`
+    <p>排得再密也留有空隙。空隙有兩種，用周圍原子圍成的形狀命名：<span class="term">八面體間隙</span>有 6 個鄰居，<span class="term">四面體間隙</span>有 4 個。模型標出一個間隙、圍住它的原子，以及不把鄰居撐開的前提下放得進去的最大球。</p>
+  `,
+64:`
+        <span><i style="background:var(--hi)"></i>間隙位置</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>鄰居圍成的多面體</span>
+        <span><i style="background:var(--c-corner)"></i><i style="background:var(--c-face);margin-left:-4px"></i><i style="background:var(--c-body);margin-left:-4px"></i>基底原子（角落、面心、體心）</span>
+      `,
+65:`基底結構`,
+66:`間隙種類`,
+67:`八面體`,
+68:`四面體`,
+69:` 真實大小的硬球`,
+70:` 顯示晶胞裡所有這種間隙`,
+71:`<p class="unit-no">05</p><h2>點缺陷</h2><p class="unit-tag">n<sub>v</sub> / N = C · exp(−E<sub>v</sub> / kT)</p>`,
+72:`
+    <p>真實的晶體沒有完美的。缺陷依照延伸的維度分類：</p>
+    <ul>
+      <li><strong>零維，點缺陷</strong>：空位、間隙原子。這個單元。</li>
+      <li><strong>一維，線缺陷</strong>：差排。第 6 單元。</li>
+      <li><strong>二維，面缺陷</strong>：晶界、疊差、雙晶界、表面。第 7 單元。</li>
+      <li><strong>三維，體缺陷</strong>：裂縫、孔洞、析出物。</li>
+    </ul>
+    <p>點缺陷是一兩個原子位置出了錯。周圍的原子會跟著挪一點，所以每個點缺陷都帶著一小圈應變。</p>
+    <dl class="defs">
+      <dt>空位</dt><dd>晶格位置上沒有原子。凝固時會產生，塑性變形、急速冷卻、粒子轟擊也會產生。空位聚在一起就成了微孔洞。</dd>
+      <dt>自間隙原子</dt><dd>晶體自己的原子擠進空隙。晶格被撐得很厲害，所以多半在高能輻射或離子轟擊之後才出現。</dd>
+      <dt>雜質原子</dt><dd>外來的原子，可能佔據晶格位置，也可能待在空隙裡。它們就是第 4 單元的溶質原子。</dd>
+      <dt>蕭特基缺陷</dt><dd>離子晶體裡，一個陽離子和一個陰離子一起消失。成對消失，晶體才能維持電中性。</dd>
+      <dt>法蘭克缺陷</dt><dd>離子晶體裡，一個陽離子離開原位，擠進附近的空隙，原位留下一個空位。</dd>
+    </dl>
+  `,
+73:`金屬裡`,
+74:`空位`,
+75:`自間隙原子`,
+76:`置換型雜質`,
+77:`間隙型雜質`,
+78:`離子晶體裡`,
+79:`蕭特基`,
+80:`法蘭克`,
+81:`<span class="h3-no">5-1</span>空位有多少`,
+82:`
+    <p>空位是晶體唯一甩不掉的缺陷。產生一個空位要花能量 E<sub>v</sub>，大約 1 eV；但有幾個空位會讓熵變大，所以只要溫度高於絕對零度，就一定有空位。空位的比例隨溫度急遽上升：<span class="idx wrap">n<sub>v</sub> / N = C · exp(−E<sub>v</sub> / kT)</span>，其中 n<sub>v</sub> 是空位數，N 是原子位置數，k = 8.62 × 10⁻⁵ eV/K。</p>
+  `,
+83:`溫度 T`,
+84:`溫度`,
+85:`形成能 E<sub>v</sub>`,
+86:`空位形成能`,
+87:`<p class="unit-no">06</p><h2>差排：線缺陷</h2><p class="unit-tag">刃：b ⟂ 差排線　螺旋：b ∥ 差排線</p>`,
+88:`
+    <p>要把金屬弄彎，晶體的一部分得滑過另一部分。如果整個原子面必須同時滑動，面上所有的鍵要在同一瞬間斷開，金屬會比實際上強得多。真實的晶體一次只滑一排。已經滑過的區域和還沒滑的區域之間有一條分界線，這條線就是<span class="term">差排</span>。差排在凝固時產生，塑性變形時產生，空位聚集崩塌時也會產生。</p>
+    <dl class="defs">
+      <dt>刃差排</dt><dd>多出來的半片原子面在晶體內部結束。差排就是這半片原子面底邊的那條線。</dd>
+      <dt>螺旋差排</dt><dd>把晶體切開一部分，再把一側沿著切口推一格。原子面繞著這條線連成一道螺旋坡道。</dd>
+      <dt>混合差排</dt><dd>一部分是刃、一部分是螺旋。一條彎曲的差排線，順著滑移方向的那段是螺旋，橫過滑移方向的那段是刃，中間是混合。</dd>
+    </dl>
+    <p><span class="term">布格向量 b</span> 用來量滑移的大小和方向。在完美晶體裡，沿著原子一步一步走一個封閉迴路，會回到起點。繞著差排走同樣的迴路，最後會差一步。補上這一步才能封閉迴路，這一步就是 <b>b</b>。刃差排的 <b>b</b> 垂直於差排線，螺旋差排的 <b>b</b> 平行於差排線。</p>
+  `,
+89:`<span class="lbl">打個比方</span><p>要把一大張地毯整張拖過地板很費力。在一邊推出一道皺摺，把皺摺趕到另一邊就輕鬆多了；皺摺走到底，整張地毯也挪了一點。差排就是那道皺摺。</p>`,
+90:`
+        <span><i style="background:var(--c-body)"></i>多出來的半片原子面</span>
+        <span><i class="sq" style="background:var(--hi)"></i>差排線、布格向量 b</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>滑移面（已滑過的部分顏色較深）</span>
+        <span><i class="sq" style="background:var(--accent)"></i>布格迴路</span>
+      `,
+91:`種類`,
+92:`刃差排`,
+93:`螺旋差排`,
+94:`混合差排`,
+95:`差排線的位置`,
+96:`差排線的位置`,
+97:`▶ 讓它滑過去`,
+98:` 畫出布格迴路`,
+99:`<span class="key-tag">重點</span>
+    <ul>
+      <li>刃差排：<b>b</b> ⟂ 差排線。螺旋差排：<b>b</b> ∥ 差排線。混合差排介於兩者之間。</li>
+      <li>刃差排周圍，多出半片原子面的那一側受壓，另一側受拉；螺旋差排周圍只有剪應變。差排靠這個應變場感覺到彼此，也感覺到溶質原子。</li>
+      <li>差排走完整個滑移面之後，晶體的一半剛好移動了 <b>b</b>，內部的晶格又是完美的。</li>
+    </ul>
+  `,
+100:`<span class="h3-no">6-1</span>施密特定律：拉力有多少作用在滑移面上`,
+101:`
+    <p>滑移面上、沿著滑移方向的剪應力夠大，差排才會動。讓單晶開始滑移的最小剪應力叫<span class="term">臨界分解剪應力</span>（CRSS），它和晶體結構、鍵結、溫度、純度有關。</p>
+    <p>用拉應力 σ 拉一顆晶體，只有一部分會變成某個滑移系統上的剪應力。有多少由兩個角度決定：拉力和滑移面法線的夾角 φ，以及拉力和滑移方向的夾角 λ。</p>
+  `,
+102:`
+        <span><i class="sq" style="background:var(--accent)"></i>拉力 F</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>滑移面和它的法線 n</span>
+        <span><i class="sq" style="background:var(--hi)"></i>滑移方向</span>
+      `,
+103:`滑移面的傾斜角 φ`,
+104:`拉力和滑移面法線的夾角`,
+105:`滑移方向在面內轉過的角度`,
+106:`滑移方向在滑移面內的轉角`,
+107:`拉應力 σ`,
+108:`拉應力`,
+109:`晶體（CRSS 取自投影片）`,
+110:`Ti，純度 99.99% <small>13.7 MPa</small>`,
+111:`Ti，純度 99.9% <small>90.1 MPa</small>`,
+112:`<span class="key-tag">施密特定律</span>
+    <ul>
+      <li><span class="idx wrap">τ<sub>r</sub> = (F cos λ) / (A<sub>0</sub> / cos φ) = σ cos λ cos φ</span>。τ<sub>r</sub> 達到 CRSS 就開始滑移。</li>
+      <li>cos λ cos φ 最大是 0.5，出現在 φ = λ = 45°。和拉力夾 45° 的面最先滑移。</li>
+      <li>只多一點點雜質，鈦的 CRSS 就從 13.7 升到 90.1 MPa。溶質原子會釘住差排。</li>
+    </ul>
+  `,
+113:`<p class="unit-no">07</p><h2>面缺陷</h2><p class="unit-tag">晶界・疊差・雙晶</p>`,
+114:`
+    <p>面缺陷是一整個面，晶體在這個面的兩側接不完美。</p>
+    <dl class="defs">
+      <dt>自由表面</dt><dd>表面原子只有一側有鄰居，能量比較高，容易起反應。奈米材料幾乎都是表面，所以特別活潑。</dd>
+      <dt>晶界</dt><dd>兩顆方向不同的晶粒之間的接縫。<span class="term">傾斜晶界</span>的旋轉軸躺在晶界面內；<span class="term">扭轉晶界</span>的旋轉軸垂直於晶界面。</dd>
+      <dt>疊差</dt><dd>少了一層或多了一層最密排面，ABCABC 的順序在某處被打斷。</dd>
+      <dt>雙晶界</dt><dd>堆疊順序在這裡反轉，一側的晶體是另一側的鏡像。界面上每個原子都同時符合兩側的晶格，所以是能量很低的<span class="term">共格界面</span>。</dd>
+    </dl>
+    <p>傾斜角很小的晶界，其實就是一排刃差排。每個差排多塞進半片原子面，讓晶格多轉一點。角度越大，差排就得排得越密。</p>
+  `,
+115:`
+        <span><i class="sq" style="background:var(--accent)"></i>往上延伸的原子面</span>
+        <span><i style="background:var(--hi)"></i>⊥ 原子面結束的地方：一個刃差排</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>晶界</span>
+      `,
+116:`傾斜角 θ`,
+117:`傾斜角`,
+118:`<span class="h3-no">7-1</span>疊差與雙晶`,
+119:`
+    <p>第 3 章第 4 單元用 ABCABC 的順序把最密排面疊成 FCC。下面的模型從側面看這疊原子層，A、B、C 三種位置看起來就是每往上一層往旁邊跨一步。完美晶體裡每一步都往同一邊跨。跨錯邊的地方就是缺陷。</p>
+  `,
+120:`
+        <span><i style="background:var(--c-corner)"></i>A 層</span>
+        <span><i style="background:var(--c-body)"></i>B 層</span>
+        <span><i style="background:var(--c-face)"></i>C 層</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>疊差面或雙晶面</span>
+      `,
+121:`堆疊方式`,
+122:`完美的 FCC`,
+123:`少一層`,
+124:`多一層`,
+125:`雙晶`,
+126:`<span class="key-tag">重點</span>
+    <ul>
+      <li>小角度傾斜晶界：差排間距 <span class="idx wrap">D = b / θ</span>（θ 用弧度）。傾斜角越大，間距越小，差排密度越高。</li>
+      <li>雙晶：<span class="idx wrap">ABCABC<b style="color:var(--hi)">A</b>CBA<b style="color:var(--hi)">C</b>AB</span>。順序在每個標紅的那一層反轉。</li>
+      <li>投影片介紹了布滿共格雙晶界的銅奈米線（Huang 等人，2018）。雙晶界排得越密，表面的原子台階越少，表面變成低指數晶面組成的鋸齒狀小平面。在 TEM 下，放在空氣中一年看起來沒有變化；奈米晶的銅線幾天內就出現孔洞。</li>
+    </ul>
+  `,
+127:`<p class="unit-no">08</p><h2>晶粒大小與強度</h2><p class="unit-tag">N = 2<sup>n−1</sup>　σ<sub>y</sub> = σ<sub>0</sub> + k / √d</p>`,
+128:`
+    <p>要在光學顯微鏡下看到晶粒，試片得先研磨、拋光到平整，再用化學藥品腐蝕。腐蝕液侵蝕晶界比晶粒內部快，在每條晶界留下一道小溝。溝會把光散射到鏡頭外，晶界看起來就是一條暗線。方向不同的晶粒被腐蝕的快慢也不同，所以有些晶粒看起來比較暗。</p>
+    <p>晶粒大小用兩個數字描述。</p>
+    <dl class="defs">
+      <dt>ASTM 晶粒度號數 n</dt><dd>在 100 倍的顯微照片上，數一平方英吋裡有幾顆晶粒。如果是 N 顆，那麼 <span class="idx wrap">N = 2<sup>n−1</sup></span>。n 越大，晶粒越細。</dd>
+      <dt>平均晶粒直徑 d</dt><dd>在照片上畫一條已知長度的線，數它穿過幾顆晶粒。每單位長度穿過 n<sub>L</sub> 顆、放大倍率 M，則 <span class="idx wrap">d = C / (n<sub>L</sub> M)</span>，C = 1.5。</dd>
+    </dl>
+    <p>晶界會擋住差排，因為滑移面到了隔壁晶粒就接不下去。晶粒越小，單位體積裡的晶界面積越多，金屬越強。<span class="term">霍爾–貝曲方程式</span>描述這個關係：<span class="idx wrap">σ<sub>y</sub> = σ<sub>0</sub> + k / √d</span>。許多方向隨機的小晶粒，也讓材料在每個方向的性質都一樣。</p>
+  `,
+129:`模擬的金屬腐蝕後顯微照片，上面有一條測試線`,
+130:`
+        <span><i class="sq" style="background:var(--ink)"></i>腐蝕出來的晶界</span>
+        <span><i class="sq" style="background:var(--hi)"></i>測試線，每穿過一條晶界畫一個刻度</span>
+        <span>照 100 倍下的樣子畫，圖高 1 英吋。</span>
+      `,
+131:`ASTM 晶粒度號數 n`,
+132:`ASTM 晶粒度號數`,
+133:`用哪種金屬估算霍爾–貝曲`,
+134:`低碳鋼`,
+135:`銅`,
+136:`鈦`,
+137:`<p class="unit-no">09</p><h2>顯微鏡：怎麼看到缺陷</h2><p class="unit-tag">OM　SEM　TEM　STM　AFM</p>`,
+138:`
+    <p>顯微鏡用什麼東西來看，就分辨不出比那個東西的波長小太多的細節。可見光的波長大約 500 nm，原子間距大約 0.25 nm，所以光學顯微鏡看得到晶粒，永遠看不到原子。繞過這個限制的辦法有兩種：改用波長短得多的電子，或是用一根尖針直接去感覺表面。</p>
+  `,
+139:`
+    <table>
+      <thead><tr><th>顯微鏡</th><th>用什麼看</th><th>記錄什麼</th><th>看得到什麼</th></tr></thead>
+      <tbody>
+        <tr><td>光學顯微鏡（OM）</td><td>可見光</td><td>拋光、腐蝕過的表面<br>反射回來的光</td><td>晶粒和晶界</td></tr>
+        <tr><td>掃描式電子顯微鏡（SEM）</td><td>很細的電子束，<br>一行一行掃過表面</td><td>二次電子（SE）<br>背向散射電子（BSE）</td><td>SE（能量低於 50 eV，來自表面 5–50 nm）：表面起伏<br>BSE（被原子核彈回來）：越重的原子越亮</td></tr>
+        <tr><td>穿透式電子顯微鏡（TEM）</td><td>電子穿過厚度<br>不到 100 nm 的薄片</td><td>穿透或被繞射的電子</td><td>差排、雙晶、原子排列。<br>解析度約 0.2 nm。</td></tr>
+        <tr><td>掃描穿隧顯微鏡（STM）</td><td>金屬探針，離導電表面<br>不到 1 nm</td><td>探針和表面之間的<br>穿隧電流</td><td>表面上的單一原子和空位</td></tr>
+        <tr><td>原子力顯微鏡（AFM）</td><td>裝在軟懸臂上的探針</td><td>懸臂的彎曲量，用雷射讀出。<br>接觸時是斥力，稍遠一點是吸力。</td><td>表面高度，絕緣體也能量。<br>橫向解析度 0.1 到 10 nm。</td></tr>
+      </tbody>
+    </table>
+  `,
+140:`<span class="h3-no">9-1</span>電子為什麼看得比光清楚`,
+141:`
+    <p>電子也是波，波長是 <span class="idx wrap">λ = h / p = h / √(2mE)</span>，所以加速電壓越高，波長越短。SEM 讓電子束掃過一小塊區域，再把訊號畫在大得多的螢幕上。放大倍率就是螢幕的寬度除以掃描區域的寬度。10 cm 的螢幕顯示 10 µm 的掃描範圍，就是一萬倍。</p>
+    <p>TEM 的解析度到不了電子的波長，因為磁透鏡離完美還很遠。解析度大約是 <span class="idx wrap">Δx = 0.6 C<sub>s</sub><sup>1/4</sup> λ<sup>3/4</sup></span>，C<sub>s</sub> 代表透鏡的球面像差。100 keV 時大約 2 Å，還是足以看到一排排原子。</p>
+  `,
+142:`加速電壓`,
+143:`加速電壓`,
+144:`<span class="h3-no">9-2</span>掃描穿隧顯微鏡`,
+145:`
+    <p>把很尖的金屬探針移到離導電表面不到一奈米的地方，加上一點電壓，電子就會穿隧跳過這段空隙。空隙每變寬 0.1 nm，電流大約掉到十分之一，所以電流對高度極為敏感。探針有兩種掃描方式。</p>
+  `,
+146:`掃描模式`,
+147:`定電流`,
+148:`定高度`,
+149:`探針位置`,
+150:`探針位置`,
+151:`▶ 掃過這一行`,
+152:`<p class="unit-no">10</p><h2>小測驗</h2><p class="unit-tag">10 題</p>`,
+153:`每題只能作答一次，選完會顯示解說。`,
+154:`<a href="index.html">← 回到第 3 章：晶體結構 3D 教室</a>`,
+155:`
+  <span class="lbl">資料來源</span>
+  <p>國立清華大學「材料科學與工程導論（一）」第 4 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019。第 2、3 單元用的銅的數值（T<sub>m</sub> = 1083 °C、ΔH<sub>f</sub> = 1826 J/cm³、γ = 177 × 10⁻⁷ J/cm²、最大過冷度 236 K）、第 8 單元的霍爾–貝曲常數、第 4 單元鐵的間隙大小，取自課本，不在投影片裡。</p>
+  <span class="lbl">關於模型</span>
+  <p>差排模型把簡單立方晶體的原子，照彈性體中一條直線差排的位移場移動。晶界、點缺陷和 STM 的模型是用硬球畫的幾何示意，表達原子待在哪裡，不是精確的鬆弛後位置。</p>
+  <span class="lbl">備註</span>
+  <p>投影片第 66 頁在 λ = h / √(2mE) 旁邊寫 100 keV 電子的 λ = 0.037 Å。用這條公式算出來是 0.0388 Å；0.0370 Å 是加上相對論修正後的值，在這個能量下修正不能忽略。</p>
+`
+  }, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title='凝固與缺陷 3D 教室';var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="ch4.js"></script>
+
+</body></html>
