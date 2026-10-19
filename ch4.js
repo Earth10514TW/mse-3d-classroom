@@ -392,11 +392,16 @@
      ===================================================================== */
   function canvas2d(cv, draw) {
     const fit = () => {
+      if (!cv || !cv.parentElement) return;
       const r = cv.parentElement.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+      if (!r.width || !r.height) return;
       cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
       const x = cv.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); draw(x, r.width, r.height);
     };
-    new ResizeObserver(fit).observe(cv.parentElement);
+    if (cv && cv.parentElement) {
+      new ResizeObserver(fit).observe(cv.parentElement);
+      requestAnimationFrame(fit);
+    }
     return fit;
   }
   const FONT = (w, s) => tx(`${w} ${s}px "IBM Plex Sans",system-ui,sans-serif`, `${w} ${s}px "Noto Sans TC","PingFang TC",sans-serif`);
@@ -560,6 +565,94 @@
     requestAnimationFrame(frame);
     tS.value = st.t; onLang(() => { shown = ''; text(); });
     return () => { fit(); text(); };
+  }
+
+  /* =====================================================================
+     01-1 Driving force: G of solid and liquid against T (copper)
+     The absolute value of G has no meaning, so both lines are drawn through
+     G = 0 at T_m. The solid slope is a free choice; only the slope
+     difference ΔS = ΔH_f / T_m matters, and that is the real copper value.
+     ===================================================================== */
+  function secDG() {
+    const tS = $('#dg-T'), info = $('#dg-info');
+    const T0 = 1050, T1 = 1450, THOM = 1356 - 236, sS = 0.4;
+    const dS = () => CU.Hf / CU.Tm;
+    const gS = t => -sS * (t - CU.Tm), gL = t => -(sS + dS()) * (t - CU.Tm);
+    const calc = () => { const t = +tS.value, dT = CU.Tm - t; return { t, dT, Gv: dT === 0 ? 0 : -CU.Hf * dT / CU.Tm }; };
+    const head = (x, x0, y0, x1, y1, s) => { const a = Math.atan2(y1 - y0, x1 - x0); x.beginPath(); x.moveTo(x1, y1); x.lineTo(x1 - s * Math.cos(a - 0.45), y1 - s * Math.sin(a - 0.45)); x.lineTo(x1 - s * Math.cos(a + 0.45), y1 - s * Math.sin(a + 0.45)); x.closePath(); x.fill(); };
+    function paint(x, W, H) {
+      const c = calc(), Tm = CU.Tm;
+      x.clearRect(0, 0, W, H); x.fillStyle = T.stage; x.fillRect(0, 0, W, H);
+      const ml = 34, mr = 16, mt = 34, mb = 40, y1 = 590, y0 = -200;
+      const X = t => ml + (t - T0) / (T1 - T0) * (W - ml - mr), Y = g => mt + (y1 - g) / (y1 - y0) * (H - mt - mb);
+      // the solid-stable side, lightly shaded
+      x.save(); x.globalAlpha = 0.55; x.fillStyle = T.surface; x.fillRect(ml, mt, X(Tm) - ml, H - mt - mb); x.restore();
+      x.font = MFONT(400, 11); x.fillStyle = T.muted; x.strokeStyle = T.grid; x.lineWidth = 1; x.textAlign = 'center';
+      const every = W < 520 ? 100 : 50;
+      for (let t = T0; t <= T1; t += 50) { if ((t - T0) % every) continue; x.beginPath(); x.moveTo(X(t), mt); x.lineTo(X(t), H - mb); x.stroke(); x.fillText(t, X(t), H - mb + 16); }
+      x.fillText(tx('temperature T (K)', '溫度 T（K）'), (ml + W - mr) / 2, H - 5);
+      x.save(); x.translate(13, (mt + H - mb) / 2); x.rotate(-Math.PI / 2); x.fillText(tx('G (relative)', 'G（相對值）'), 0, 0); x.restore();
+      x.font = MFONT(500, 11); x.textAlign = 'left'; x.fillText(tx('SOLID IS STABLE', '固體穩定'), ml + 6, mt - 14);
+      x.textAlign = 'right'; x.fillText(tx('LIQUID IS STABLE', '液體穩定'), W - mr - 6, mt - 14);
+      // T_m and the homogeneous-nucleation limit of copper (Unit 2)
+      x.setLineDash([4, 4]); x.lineWidth = 1.2;
+      x.strokeStyle = T.edge3d; x.beginPath(); x.moveTo(X(Tm), mt); x.lineTo(X(Tm), H - mb); x.stroke();
+      x.strokeStyle = COL.plane; x.beginPath(); x.moveTo(X(THOM), mt); x.lineTo(X(THOM), H - mb); x.stroke(); x.setLineDash([]);
+      x.font = MFONT(600, 11); x.textAlign = 'left'; x.fillStyle = T.ink; x.fillText('Tm = 1356 K', X(Tm) + 5, mt + 13);
+      x.fillStyle = COL.plane; x.font = FONT(500, 11); x.fillText(tx('Cu nucleates by itself', '銅自己成核'), X(THOM) + 5, mt + 13);
+      x.save(); x.beginPath(); x.rect(ml, mt, W - ml - mr, H - mt - mb); x.clip();
+      const line = (f, col) => { x.strokeStyle = col; x.lineWidth = 2.4; x.beginPath(); x.moveTo(X(T0), Y(f(T0))); x.lineTo(X(T1), Y(f(T1))); x.stroke(); };
+      line(gL, T.edge3d); line(gS, COL.corner);
+      // the gap at the chosen temperature
+      const xs = X(c.t), ys = Y(gS(c.t)), yl = Y(gL(c.t));
+      x.strokeStyle = T.ink; x.globalAlpha = 0.25; x.lineWidth = 1; x.beginPath(); x.moveTo(xs, mt); x.lineTo(xs, H - mb); x.stroke(); x.globalAlpha = 1;
+      if (c.dT !== 0) { x.strokeStyle = T.accent; x.lineWidth = 5; x.beginPath(); x.moveTo(xs, ys); x.lineTo(xs, yl); x.stroke(); }
+      const dot = (y, col, fill) => { x.beginPath(); x.arc(xs, y, 6, 0, 7); x.fillStyle = fill ? col : T.stage; x.fill(); x.strokeStyle = fill ? T.stage : col; x.lineWidth = 2; x.stroke(); };
+      dot(yl, T.edge3d, c.dT < 0); dot(ys, COL.corner, c.dT >= 0);
+      x.restore();
+      // line labels at the right end, where the solid line is the upper one
+      x.font = FONT(600, 12); x.textAlign = 'right';
+      x.fillStyle = COL.corner; x.fillText(tx('GS  solid', 'GS 固體'), W - mr - 6, Y(gS(T1 - 10)) - 9);
+      x.fillStyle = T.edge3d; x.fillText(tx('GL  liquid', 'GL 液體'), W - mr - 6, Y(gL(T1 - 10)) + 18);
+      if (c.dT !== 0) {
+        // both lines fall to the right, so the space above-right of the upper dot is clear;
+        // near the right edge put it at the top of the guide line, under the T_m label
+        const lab = `|ΔGv| = ${Math.abs(c.Gv).toFixed(0)} J/cm³`;
+        x.font = MFONT(600, 12); x.fillStyle = T.accent;
+        const fits = xs + 14 + x.measureText(lab).width < W - mr;
+        x.textAlign = fits ? 'left' : 'right';
+        x.fillText(lab, xs + (fits ? 12 : -8), fits ? Math.min(ys, yl) - 8 : mt + 32);
+      }
+      // ΔT bracket along the bottom
+      if (Math.abs(c.dT) >= 6) {
+        const yb = H - mb - 12, xa = X(c.t), xb = X(Tm);
+        x.strokeStyle = T.ink; x.fillStyle = T.ink; x.lineWidth = 1.4;
+        x.beginPath(); x.moveTo(xa, yb); x.lineTo(xb, yb); x.stroke(); head(x, xb, yb, xa, yb, 7); head(x, xa, yb, xb, yb, 7);
+        x.font = MFONT(600, 12); x.textAlign = 'center'; x.fillText(`ΔT = ${c.dT < 0 ? '−' + -c.dT : c.dT} K`, (xa + xb) / 2, yb - 7);
+      }
+    }
+    function text() {
+      const c = calc(), s = dS(), mol = s * 7.09;
+      const minus = v => (v < 0 ? '−' : '') + Math.abs(v).toFixed(0);
+      const dTs = c.dT < 0 ? `(−${-c.dT})` : `${c.dT}`;
+      $('#dg-T-v').textContent = c.t + ' K';
+      const st = c.dT > 0 ? 'S' : c.dT < 0 ? 'L' : '0';
+      const eq = `ΔS = ΔH<sub>f</sub> / T<sub>m</sub> = 1826 / 1356 = ${s.toFixed(2)} J/(cm³·K)<br>ΔG<sub>v</sub> ≈ −ΔS · ΔT = −${s.toFixed(2)} × ${dTs} = ${minus(c.Gv)} J/cm³`;
+      info.innerHTML = tx(`<p>${st === 'S' ? '<span class="pill ok">Solid is stable</span> Below T<sub>m</sub> the solid line is lower. Freezing would lower G by the gap.' : st === 'L' ? '<span class="pill bad">Liquid is stable</span> Above T<sub>m</sub> the liquid line is lower. A solid here would melt.' : '<span class="pill">Equilibrium</span> The lines cross. Solid and liquid can coexist, and nothing drives freezing or melting.'}</p>
+        <dl class="stats"><dt>Undercooling ΔT</dt><dd>${minus(c.dT)} K</dd><dt>Driving force ΔG<sub>v</sub></dt><dd>${minus(c.Gv)} J/cm³</dd><dt>ΔG<sub>v</sub> per kelvin of ΔT</dt><dd>−${s.toFixed(2)} J/(cm³·K), at every T</dd></dl>
+        <div class="eq">${eq}</div>
+        <p class="note">${c.t <= THOM ? 'This far below T<sub>m</sub>, pure copper nucleates on its own (about 236 K of undercooling, Unit 2).' : `Per mole the same ΔS is ${s.toFixed(2)} × 7.09 cm³/mol = ${mol.toFixed(1)} J/(mol·K), about ${(mol / 8.314).toFixed(1)} R. This is the “≈ R” on the slides.`}</p>`,
+        `<p>${st === 'S' ? '<span class="pill ok">固體穩定</span>　低於 T<sub>m</sub>，固體的線比較低。凝固可以讓 G 降低這段距離。' : st === 'L' ? '<span class="pill bad">液體穩定</span>　高於 T<sub>m</sub>，液體的線比較低。這裡的固體會熔化。' : '<span class="pill">平衡</span>　兩條線相交。固體和液體可以共存，沒有東西推動凝固或熔化。'}</p>
+        <dl class="stats"><dt>過冷度 ΔT</dt><dd>${minus(c.dT)} K</dd><dt>驅動力 ΔG<sub>v</sub></dt><dd>${minus(c.Gv)} J/cm³</dd><dt>每過冷 1 K 的 ΔG<sub>v</sub></dt><dd>−${s.toFixed(2)} J/(cm³·K)，每個溫度都一樣</dd></dl>
+        <div class="eq">${eq}</div>
+        <p class="note">${c.t <= THOM ? '比 T<sub>m</sub> 低這麼多，純銅會自己成核（過冷約 236 K，見第 2 單元）。' : `換成每莫耳，同一個 ΔS 是 ${s.toFixed(2)} × 7.09 cm³/mol = ${mol.toFixed(1)} J/(mol·K)，約 ${(mol / 8.314).toFixed(1)} R，就是投影片上的「≈ R」。`}</p>`);
+    }
+    const draw = canvas2d($('#dg-cv'), paint);
+    const up = () => { draw(); text(); };
+    tS.addEventListener('input', up);
+    $('#dg-m').addEventListener('click', () => { tS.value = CU.Tm; up(); });
+    draw(); text(); onLang(text);
+    return () => draw();
   }
 
   /* =====================================================================
@@ -1246,7 +1339,7 @@
       const fallback = () => $$('.stage').forEach(s => { s.innerHTML = tx('<div class="stage-fallback">This browser cannot show 3D (WebGL). Please use a recent version of Chrome, Safari, Edge or Firefox.</div>', '<div class="stage-fallback">這個瀏覽器無法顯示 3D（WebGL）。請改用新版 Chrome、Safari、Edge 或 Firefox。</div>'); });
       fallback(); onLang(fallback);
     }
-    redraw2D.push(secSolid(), secNuc(), secGrain());
+    redraw2D.push(secSolid(), secDG(), secNuc(), secGrain());
     secHet(); secVac(); secEM(); secQuiz(); toc();
   }
 

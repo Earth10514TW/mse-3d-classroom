@@ -333,7 +333,8 @@ footer p{grid-column:2;max-width:56em}
 
 #so-plot,#gs-plot{height:400px}
 #nu-plot{height:320px}
-@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}}
+#dg-plot{height:360px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}#dg-plot{height:300px}}
 .ctl-label b{font-weight:600;color:var(--ink)}
 .unit > .panel{max-width:40em}
 </style>
@@ -439,6 +440,45 @@ footer p{grid-column:2;max-width:56em}
       <li>Solidification = nucleation + growth. Grain boundaries are where crystals with different orientations meet.</li>
       <li>Higher nucleation rate → more grains → smaller grains.</li>
       <li>Equiaxed grains form where many nuclei form, such as at the mold wall. Columnar grains grow along the direction of heat flow.</li>
+    </ul>
+  </div>
+  <h3 data-t="156"><span class="h3-no">1-1</span><span>Why the liquid has to be colder than T<sub>m</sub>: the driving force</span></h3>
+  <div class="prose" data-t="157">
+    <p>Pure water in a clean bottle can sit in a freezer below 0 °C and stay liquid. Tap the bottle and it turns to ice within seconds. Tiny droplets of pure water stay liquid down to about −40 °C. A liquid below its melting point is <span class="term">undercooled</span>, and how far below is the <span class="term">undercooling ΔT = T<sub>m</sub> − T</span>. To see why undercooling matters, compare the free energy of the two phases.</p>
+    <p>General chemistry gave the rule: at fixed temperature and pressure, the phase with the lower Gibbs free energy <span class="idx wrap">G = H − TS</span> is the stable one. Plot G against T for the solid and for the liquid. Near T<sub>m</sub> both are close to straight lines.</p>
+    <dl class="defs">
+      <dt>Both lines slope down</dt><dd>A higher T makes the −TS term more negative. The slope of each line is −S.</dd>
+      <dt>The liquid line is steeper</dt><dd>Liquid atoms are disordered, so the liquid has more entropy than the solid.</dd>
+      <dt>They cross at T<sub>m</sub></dt><dd>There the two phases have the same G, so ΔG = 0 and they can coexist. Above T<sub>m</sub> the liquid line is lower and the liquid is stable. Below T<sub>m</sub> the solid line is lower.</dd>
+    </dl>
+    <p>At T<sub>m</sub>, ΔG = ΔH<sub>f</sub> − T<sub>m</sub>ΔS = 0, so ΔS = ΔH<sub>f</sub> / T<sub>m</sub>. This is the same step general chemistry uses for a boiling point, T<sub>b</sub> = ΔH<sub>vap</sub> / ΔS<sub>vap</sub>. Below T<sub>m</sub>, the gap between the two lines is the driving force for freezing. Two straight lines that cross move apart in proportion to the distance from the crossing: the gap is the difference in slope times ΔT, that is ΔS · ΔT. Put in ΔS and you get the formula on the slides. Drag the temperature and watch the gap.</p>
+  </div>
+  <aside class="mnote" data-t="158"><span class="lbl">AN ANALOGY</span><p>Two roads leave the same junction, one steeper than the other. At the junction they are at the same height. Walk a distance ΔT and they differ in height by (difference in slope) × ΔT. The further you walk, the larger the difference.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="dg-plot"><canvas id="dg-cv" role="img" aria-label="Free energy of solid and liquid copper against temperature" data-ta="159"></canvas></div>
+      <div class="legend" data-t="160">
+        <span><i class="sq" style="background:var(--c-corner)"></i>G<sub>S</sub>, solid</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>G<sub>L</sub>, liquid</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Gap between them = |ΔG<sub>v</sub>|</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="161">Temperature T</span> · <b id="dg-T-v"></b></span>
+        <input type="range" id="dg-T" min="1050" max="1450" step="2" value="1256" aria-label="Temperature" data-ta="162">
+        <div class="row"><button type="button" class="btn" id="dg-m"><span data-t="163">Set T = T<sub>m</sub></span></button></div>
+      </div>
+      <div class="readout" id="dg-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="164"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>The phase with the lower G is stable. The G lines of solid and liquid cross at T<sub>m</sub>. The liquid line is steeper because the liquid has more entropy.</li>
+      <li>At T<sub>m</sub>: ΔS = ΔH<sub>f</sub> / T<sub>m</sub>. Below T<sub>m</sub>: <span class="idx wrap">|ΔG<sub>v</sub>| ≈ ΔS · ΔT = ΔH<sub>f</sub> ΔT / T<sub>m</sub></span>. The driving force grows in proportion to the undercooling.</li>
+      <li>Watch the sign. The slides write ΔG<sub>v</sub> ≈ ΔH<sub>f</sub> ΔT / T<sub>m</sub>, the size of the gap, with the latent heat ΔH<sub>f</sub> taken as positive. For liquid → solid, ΔG<sub>v</sub> = G<sub>S</sub> − G<sub>L</sub> is negative, so Unit 2 writes ΔG<sub>v</sub> ≈ −ΔH<sub>f</sub> ΔT / T<sub>m</sub>.</li>
+      <li>Watch the units. ΔH<sub>f</sub> here is per unit volume (J/cm³), so ΔG<sub>v</sub> comes out in J/cm³. The “entropy of fusion ≈ R” on the slides counts the same entropy per mole instead.</li>
+      <li>The straight lines assume ΔH and ΔS do not change with temperature, which holds while ΔT is small compared with T<sub>m</sub>. A driving force alone still does not make the liquid freeze. Unit 2 shows the price a new crystal has to pay first.</li>
     </ul>
   </div>
 </section>
@@ -945,7 +985,7 @@ footer p{grid-column:2;max-width:56em}
 
 <footer class="wrap" data-t="155">
   <span class="lbl">SOURCES</span>
-  <p>Lecture slides for Ch.4 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019. The copper values used in Units 2 and 3 (T<sub>m</sub> = 1083 °C, ΔH<sub>f</sub> = 1826 J/cm³, γ = 177 × 10⁻⁷ J/cm², maximum undercooling 236 K), the Hall–Petch constants in Unit 8 and the interstitial sizes of iron in Unit 4 come from the textbook, not from the slides.</p>
+  <p>Lecture slides for Ch.4 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019. The copper values used in Section 1-1 and Units 2 and 3 (T<sub>m</sub> = 1083 °C, ΔH<sub>f</sub> = 1826 J/cm³, γ = 177 × 10⁻⁷ J/cm², maximum undercooling 236 K), the Hall–Petch constants in Unit 8 and the interstitial sizes of iron in Unit 4 come from the textbook, not from the slides.</p>
   <span class="lbl">MODELS</span>
   <p>The dislocation models move the atoms of a simple cubic crystal by the displacement field of a straight dislocation in an elastic solid. The grain boundary, point defect and STM models are geometric sketches with hard spheres. They show where atoms sit, not exact relaxed positions.</p>
   <span class="lbl">NOTE</span>
@@ -1333,12 +1373,42 @@ window.XI18N=(function(){
 154:`<a href="index.html">← 回到第 3 章：晶體結構 3D 教室</a>`,
 155:`
   <span class="lbl">資料來源</span>
-  <p>國立清華大學「材料科學與工程導論（一）」第 4 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019。第 2、3 單元用的銅的數值（T<sub>m</sub> = 1083 °C、ΔH<sub>f</sub> = 1826 J/cm³、γ = 177 × 10⁻⁷ J/cm²、最大過冷度 236 K）、第 8 單元的霍爾–貝曲常數、第 4 單元鐵的間隙大小，取自課本，不在投影片裡。</p>
+  <p>國立清華大學「材料科學與工程導論（一）」第 4 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019。1-1 節與第 2、3 單元用的銅的數值（T<sub>m</sub> = 1083 °C、ΔH<sub>f</sub> = 1826 J/cm³、γ = 177 × 10⁻⁷ J/cm²、最大過冷度 236 K）、第 8 單元的霍爾–貝曲常數、第 4 單元鐵的間隙大小，取自課本，不在投影片裡。</p>
   <span class="lbl">關於模型</span>
   <p>差排模型把簡單立方晶體的原子，照彈性體中一條直線差排的位移場移動。晶界、點缺陷和 STM 的模型是用硬球畫的幾何示意，表達原子待在哪裡，不是精確的鬆弛後位置。</p>
   <span class="lbl">備註</span>
   <p>投影片第 66 頁在 λ = h / √(2mE) 旁邊寫 100 keV 電子的 λ = 0.037 Å。用這條公式算出來是 0.0388 Å；0.0370 Å 是加上相對論修正後的值，在這個能量下修正不能忽略。</p>
-`
+`,
+156:`<span class="h3-no">1-1</span><span>液體為什麼要比 T<sub>m</sub> 更冷：驅動力</span>`,
+157:`
+    <p>乾淨瓶子裝的純水放進冷凍庫，低於 0 °C 還可以是液體；拿出來敲一下，幾秒內就結成冰。很小的純水滴甚至能冷到大約 −40 °C 才結冰。低於熔點還沒凝固的液體叫做<span class="term">過冷</span>液體，比熔點低多少度叫<span class="term">過冷度 ΔT = T<sub>m</sub> − T</span>。要知道過冷為什麼重要，得比較兩個相的自由能。</p>
+    <p>普化學過：溫度和壓力固定時，吉布斯自由能 <span class="idx wrap">G = H − TS</span> 比較低的相比較穩定。把固體和液體的 G 對溫度 T 作圖，在 T<sub>m</sub> 附近兩條都很接近直線。</p>
+    <dl class="defs">
+      <dt>兩條線都往下斜</dt><dd>溫度越高，−TS 這一項越負。每條線的斜率就是 −S。</dd>
+      <dt>液體那條比較陡</dt><dd>液體的原子排得亂，熵比固體大。</dd>
+      <dt>兩條線在 T<sub>m</sub> 相交</dt><dd>交點上兩相的 G 一樣，ΔG = 0，可以共存。高於 T<sub>m</sub>，液體的線比較低，液體穩定；低於 T<sub>m</sub>，固體的線比較低。</dd>
+    </dl>
+    <p>在 T<sub>m</sub>，ΔG = ΔH<sub>f</sub> − T<sub>m</sub>ΔS = 0，所以 ΔS = ΔH<sub>f</sub> / T<sub>m</sub>。普化算沸點用的 T<sub>b</sub> = ΔH<sub>vap</sub> / ΔS<sub>vap</sub> 是同一步。低於 T<sub>m</sub> 時，兩條線之間的距離就是凝固的驅動力。兩條相交的直線，離交點越遠分得越開，距離和離交點多遠成正比：距離＝斜率差 × ΔT，也就是 ΔS · ΔT。把 ΔS 代進去，就是投影片上的公式。拖動溫度，看這段距離怎麼變。</p>
+  `,
+158:`<span class="lbl">打個比方</span><p>兩條路從同一個路口出發，一條比較陡。在路口兩條一樣高；往前走 ΔT，高度就差（坡度差）× ΔT。走得越遠，差得越多。</p>`,
+159:`銅的固體與液體自由能對溫度的關係`,
+160:`
+        <span><i class="sq" style="background:var(--c-corner)"></i>G<sub>S</sub>，固體</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>G<sub>L</sub>，液體</span>
+        <span><i class="sq" style="background:var(--accent)"></i>兩線之間的距離 = |ΔG<sub>v</sub>|</span>
+      `,
+161:`溫度 T`,
+162:`溫度`,
+163:`設成 T = T<sub>m</sub>`,
+164:`<span class="key-tag">重點</span>
+    <ul>
+      <li>G 比較低的相比較穩定。固體和液體的 G 線在 T<sub>m</sub> 相交；液體的熵比較大，所以那條線比較陡。</li>
+      <li>在 T<sub>m</sub>：ΔS = ΔH<sub>f</sub> / T<sub>m</sub>。低於 T<sub>m</sub>：<span class="idx wrap">|ΔG<sub>v</sub>| ≈ ΔS · ΔT = ΔH<sub>f</sub> ΔT / T<sub>m</sub></span>。驅動力和過冷度成正比。</li>
+      <li>注意正負號。投影片寫 ΔG<sub>v</sub> ≈ ΔH<sub>f</sub> ΔT / T<sub>m</sub>，是距離的大小，潛熱 ΔH<sub>f</sub> 取正值。從液體變固體，ΔG<sub>v</sub> = G<sub>S</sub> − G<sub>L</sub> 是負的，所以第 2 單元寫成 ΔG<sub>v</sub> ≈ −ΔH<sub>f</sub> ΔT / T<sub>m</sub>。</li>
+      <li>注意單位。這裡的 ΔH<sub>f</sub> 是每單位體積（J/cm³），算出來的 ΔG<sub>v</sub> 也是 J/cm³。投影片上「熔化熵 ≈ R」是同一個熵，只是改成每莫耳來算。</li>
+      <li>畫成直線，等於假設 ΔH 和 ΔS 不隨溫度變；ΔT 比 T<sub>m</sub> 小很多時成立。光有驅動力，液體還是不會凝固，第 2 單元說明新晶體得先付出什麼代價。</li>
+    </ul>
+  `
   }, KEY='xtal-lang';
   function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
   function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
@@ -1355,6 +1425,6 @@ window.XI18N=(function(){
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="ch4.js"></script>
+<script src="ch4.js?v=20261019-2"></script>
 
 </body></html>
