@@ -1339,31 +1339,53 @@
      07 Hexagonal 4-index notation
      ===================================================================== */
   function secHex() {
-    const v = new Viewer($('#v-hex'), { view: [1, 0.3, 0.45] });
+    const v = new Viewer($('#v-hex'), { view: [1, 0.58, 0.5] });
     const st = { mode: 'plane', dir: [2, -1, -1, 0], pl: [1, 0, -1, 0] };
     const c = HC, a1 = GL ? V3(1, 0, 0) : null, a2 = GL ? V3(-0.5, S3 / 2, 0) : null, a3 = GL ? V3(-0.5, -S3 / 2, 0) : null, cz = GL ? V3(0, 0, c) : null;
     const info = $('#hx-info');
-    const dirPre = [[2, -1, -1, 0], [-1, 2, -1, 0], [-1, -1, 2, 0], [0, 0, 0, 1], [1, 1, -2, 0], [1, -1, 0, 0], [-1, -1, 2, 1]];
+    const dirPre = [[2, -1, -1, 0], [-1, 2, -1, 0], [-1, -1, 2, 0], [0, 0, 0, 1], [1, 1, -2, 0], [1, -1, 0, 0], [-1, -1, 2, 1], [-1, -1, 2, 3]];
     const plPre = [[0, 0, 0, 1], [1, 0, -1, 0], [0, 1, -1, 0], [1, -1, 0, 0], [1, 1, -2, 0], [1, 0, -1, 1]];
     $('#hx-dirpre').innerHTML = dirPre.map(d => `<button type="button" data-v="${d.join(',')}">${idxHTML(d, '[]')}</button>`).join('');
     $('#hx-plpre').innerHTML = plPre.map(d => `<button type="button" data-v="${d.join(',')}">${idxHTML(d, '()')}</button>`).join('');
+    // Walk u steps along a₁, v along a₂, t along a₃, then w along c. The walk ends at u·a₁ + v·a₂ + t·a₃ + w·c.
+    function walk() {
+      const [u, vv, t, w] = st.dir; let P = V3(0, 0, 0); const legs = [];
+      [[a1, u, 'a₁'], [a2, vv, 'a₂'], [a3, t, 'a₃'], [cz, w, 'c']].forEach(([a, n, nm]) => {
+        if (!n) return; const Q = P.clone().addScaledVector(a, n); legs.push({ P, Q, a, n, nm }); P = Q;
+      });
+      return { legs, tip: P };
+    }
+    const dirOK = () => st.dir[0] + st.dir[1] + st.dir[2] === 0 && st.dir.some(x => x);
     v.rebuild = () => {
       v.clear(); const g = v.root, em = mStd(T.edge3d);
-      hexEdges(g, c, 0.01, em);
-      [[a1, 'a₁'], [a2, 'a₂'], [a3, 'a₃']].forEach(([a, t]) => { arrow(g, V3(0, 0, 0), a.clone().multiplyScalar(1.28), 0.011, T.accent); label(g, t, a.clone().multiplyScalar(1.42), { color: T.accent, size: 0.15 }); });
-      arrow(g, V3(0, 0, 0), V3(0, 0, c + 0.4), 0.011, T.accent); label(g, 'c', V3(0, 0, c + 0.55), { color: T.accent, size: 0.15 });
-      if (st.mode === 'dir') {
-        const [u, vv, t, w] = st.dir;
-        if (u + vv + t === 0 && st.dir.some(x => x)) {
-          const vec = V3(0, 0, 0).addScaledVector(a1, u).addScaledVector(a2, vv).addScaledVector(a3, t).addScaledVector(cz, w);
-          const O = V3(0, 0, c / 2); let tm = Infinity;
-          if (vec.z > EPS) tm = Math.min(tm, (c / 2) / vec.z); if (vec.z < -EPS) tm = Math.min(tm, (c / 2) / -vec.z);
-          for (let i = 0; i < 6; i++) { const th = (30 + 60 * i) * D2R, nd = vec.x * Math.cos(th) + vec.y * Math.sin(th); if (nd > EPS) tm = Math.min(tm, (S3 / 2) / nd); }
-          const E = O.clone().addScaledVector(vec, tm);
-          atom(g, O, 0.04, T.hi); arrow(g, O, E, 0.022, T.hi);
-          label(g, idxText(st.dir, '[]'), E.clone().add(vec.clone().normalize().multiplyScalar(0.26)), { color: T.hi, size: 0.15 });
-        }
-      } else {
+      const W = st.mode === 'dir' && dirOK() ? walk() : null;
+      // Frame the prism plus the whole walk; labels and arrows grow with the frame so they stay readable
+      const lo = V3(-1.42, -1.42, 0), hi = V3(1.42, 1.42, c + 0.55);
+      if (W) W.legs.forEach(L => { lo.min(L.Q); hi.max(L.Q); });
+      if (W) hi.z = Math.max(hi.z, W.tip.z + 0.4); // room for the index label above the tip
+      const ctr = lo.clone().add(hi).multiplyScalar(0.5), R = Math.max(Math.hypot(1.35, c / 2 + 0.3), hi.clone().sub(lo).length() / 2);
+      const k = R / Math.hypot(1.35, c / 2 + 0.3), fs = 0.15 * k;
+      hexEdges(g, c, 0.01 * Math.sqrt(k), em);
+      [[a1, 'a₁'], [a2, 'a₂'], [a3, 'a₃']].forEach(([a, t]) => {
+        arrow(g, V3(0, 0, 0), a.clone().multiplyScalar(1.28), 0.011 * Math.sqrt(k), T.accent); label(g, t, a.clone().multiplyScalar(1.42), { color: T.accent, size: fs });
+        dashed(g, [[V3(0, 0, 0), a.clone().multiplyScalar(-1.28)]], T.accent, { opacity: 0.55 }); label(g, '−' + t, a.clone().multiplyScalar(-1.42), { color: T.muted, size: fs * 0.85 });
+      });
+      arrow(g, V3(0, 0, 0), V3(0, 0, c + 0.4), 0.011 * Math.sqrt(k), T.accent); label(g, 'c', V3(0, 0, c + 0.55), { color: T.accent, size: fs });
+      if (W) {
+        const O = V3(0, 0, 0), r = 0.022 * Math.sqrt(k);
+        W.legs.forEach(L => {
+          arrow(g, L.P, L.Q, r * 0.5, T.hi, { opacity: 0.75 });
+          for (let j = 1; j < Math.abs(L.n); j++) atom(g, L.P.clone().addScaledVector(L.a, Math.sign(L.n) * j), r * 1.3, T.hi, { opacity: 0.6 });
+          const m = L.P.clone().lerp(L.Q, 0.5), up = L.nm === 'c';
+          // Beside the leg: outward for the c leg, to the left of the walking direction for the a legs
+          const off = up ? V3(L.P.x || 1, L.P.y, 0).normalize().multiplyScalar(0.2 * k) : V3(-L.a.y * L.n, L.a.x * L.n, 0).normalize().multiplyScalar(0.17 * k).setZ(0.05 * k);
+          label(g, `${L.n < 0 ? '−' : ''}${Math.abs(L.n) === 1 ? '' : Math.abs(L.n)}${L.nm}`, m.add(off), { color: T.hi, size: fs * 0.8 });
+        });
+        atom(g, O, 0.04 * Math.sqrt(k), T.hi); arrow(g, O, W.tip, r, T.hi);
+        label(g, idxText(st.dir, '[]'), W.tip.clone().add(W.tip.clone().normalize().multiplyScalar(0.3 * k)), { color: T.hi, size: fs });
+      }
+      if (st.mode === 'dir') v.frame(ctr, R);
+      else {
         const [h, k, i, l] = st.pl;
         if (i === -(h + k) && st.pl.some(x => x)) {
           const Vc = a1.clone().cross(a2).dot(cz), b1 = a2.clone().cross(cz).divideScalar(Vc), b2 = cz.clone().cross(a1).divideScalar(Vc), b3 = a1.clone().cross(a2).divideScalar(Vc);
@@ -1372,10 +1394,24 @@
           const pts = slice(P.v, P.e, n, 1 + n.dot(O));
           if (pts) { poly(g, pts, COL.plane, 0.4); const ce = pts.reduce((s, p) => s.add(p), V3(0, 0, 0)).multiplyScalar(1 / pts.length); label(g, idxText(st.pl, '()'), ce.add(V3(0, 0, 0.1)), { color: COL.plane, size: 0.15 }); }
         }
+        v.frame(V3(0, 0, c / 2), Math.hypot(1.35, c / 2 + 0.3));
       }
-      v.frame(V3(0, 0, c / 2), Math.hypot(1.35, c / 2 + 0.3));
     };
     function reduce(a) { const g = gcdN(a) || 1; return a.map(x => x / g); }
+    // "−2a₁ + a₂ + a₃ + c" for the current direction
+    function walkTxt() {
+      const t = st.dir.map((n, j) => [n, ['a₁', 'a₂', 'a₃', 'c'][j]]).filter(([n]) => n)
+        .map(([n, nm], j) => `${n < 0 ? (j ? ' − ' : '−') : (j ? ' + ' : '')}${Math.abs(n) === 1 ? '' : Math.abs(n)}${nm}`).join('');
+      return `<b>r</b> = ${t}`;
+    }
+    // The direction from the origin to the top corner above a₃ is a₃ + c, which is [1̄1̄23], not [1̄1̄21]
+    function topTxt(lang) {
+      const d = st.dir.join(','); if (d !== '-1,-1,2,1' && d !== '-1,-1,2,3') return '';
+      const s23 = idxHTML([-1, -1, 2, 3], '[]'), s21 = idxHTML([-1, -1, 2, 1], '[]'), s3 = idxHTML([-1, -1, 1], '[]');
+      return lang === 'en'
+        ? `<p class="note">The direction from the origin to the top corner above a₃ is a₃ + c = −a₁ − a₂ + c, or ${s3} in three indices. Converting gives u = (2U − V)/3 = −1/3, v = −1/3, t = 2/3, w = 1, which is ${s23} after multiplying by 3. ${s21} is 3a₃ + c and lies much flatter.</p>`
+        : `<p class="note">從原點指到 a₃ 上方頂角的方向是 a₃ + c = −a₁ − a₂ + c，三軸寫成 ${s3}。代入 u = (2U − V)/3 = −1/3、v = −1/3、t = 2/3、w = 1，乘 3 得 ${s23}。${s21} 是 3a₃ + c，斜度平很多。</p>`;
+    }
     function refresh() {
       $('#hx-dirctl').hidden = st.mode !== 'dir'; $('#hx-plctl').hidden = st.mode !== 'plane';
       if (st.mode === 'dir') {
@@ -1383,8 +1419,8 @@
         if (!st.dir.some(x => x)) { info.innerHTML = tx('<p class="warn">The four indices cannot all be 0.</p>', '<p class="warn">四個指數不能同時為 0。</p>'); return; }
         if (u + vv + t !== 0) { info.innerHTML = tx(`<p class="warn">u + v + t = ${u + vv + t}, but it must equal 0. Try changing t to ${-(u + vv)}.</p>`, `<p class="warn">u + v + t = ${u + vv + t}，必須等於 0。試著把 t 改成 ${-(u + vv)}。</p>`); return; }
         const U = u - t, V = vv - t, W = w, r3 = reduce([U, V, W]);
-        info.innerHTML = tx(`<h4>Direction ${idxHTML(st.dir, '[]')}</h4><div class="eq">Check: u + v + t = ${u} + (${vv}) + (${t}) = 0 ✓<br>Three-index form: U = u − t = ${U}, V = v − t = ${V}, W = w = ${W}<br>→ ${idxHTML(r3, '[]')}${gcdN([U, V, W]) > 1 ? ' (reduced to the smallest integers)' : ''}</div><p class="note">The arrow starts at the center of the hexagonal prism and shows direction only. Its length is set so that it reaches the surface of the prism.</p>
-          <p>In four-index form the three base axes a₁, a₂, a₃ are ${idxHTML([2, -1, -1, 0], '[]')}, ${idxHTML([-1, 2, -1, 0], '[]')}, ${idxHTML([-1, -1, 2, 0], '[]')}. The numbers only change places. In three-index form they are ${idxHTML([1, 0, 0], '[]')}, ${idxHTML([0, 1, 0], '[]')}, ${idxHTML([-1, -1, 0], '[]')}, and nothing shows that they are equivalent.</p>`, `<h4>方向 ${idxHTML(st.dir, '[]')}</h4><div class="eq">檢查：u + v + t = ${u} + (${vv}) + (${t}) = 0 ✓<br>換成三軸：U = u − t = ${U}，V = v − t = ${V}，W = w = ${W}<br>→ ${idxHTML(r3, '[]')}${gcdN([U, V, W]) > 1 ? '（已約成最小整數）' : ''}</div><p class="note">箭頭從六角柱正中心出發，只表示方向；長度已調整到碰到六角柱表面。</p>
+        info.innerHTML = tx(`<h4>Direction ${idxHTML(st.dir, '[]')}</h4><div class="eq">Check: u + v + t = ${u} + (${vv}) + (${t}) = 0 ✓<br>Three-index form: U = u − t = ${U}, V = v − t = ${V}, W = w = ${W}<br>→ ${idxHTML(r3, '[]')}${gcdN([U, V, W]) > 1 ? ' (reduced to the smallest integers)' : ''}</div><p class="note">The arrow starts at the origin, where the axes meet. The thin arrows, placed tip to tail, walk u steps along a₁, v along a₂, t along a₃ and w along c; the dots mark single steps. The thick arrow ends where the walk ends: ${walkTxt('en')}.</p>${topTxt('en')}
+          <p>In four-index form the three base axes a₁, a₂, a₃ are ${idxHTML([2, -1, -1, 0], '[]')}, ${idxHTML([-1, 2, -1, 0], '[]')}, ${idxHTML([-1, -1, 2, 0], '[]')}. The numbers only change places. In three-index form they are ${idxHTML([1, 0, 0], '[]')}, ${idxHTML([0, 1, 0], '[]')}, ${idxHTML([-1, -1, 0], '[]')}, and nothing shows that they are equivalent.</p>`, `<h4>方向 ${idxHTML(st.dir, '[]')}</h4><div class="eq">檢查：u + v + t = ${u} + (${vv}) + (${t}) = 0 ✓<br>換成三軸：U = u − t = ${U}，V = v − t = ${V}，W = w = ${W}<br>→ ${idxHTML(r3, '[]')}${gcdN([U, V, W]) > 1 ? '（已約成最小整數）' : ''}</div><p class="note">箭頭從原點（晶軸交點）出發。細箭頭首尾相接，依序沿 a₁ 走 u 步、沿 a₂ 走 v 步、沿 a₃ 走 t 步、沿 c 走 w 步，中間的點標出每一步；粗箭頭指到走完的位置：${walkTxt('zh')}。</p>${topTxt('zh')}
           <p>三條底面軸 a₁、a₂、a₃ 寫成四軸是 ${idxHTML([2, -1, -1, 0], '[]')}、${idxHTML([-1, 2, -1, 0], '[]')}、${idxHTML([-1, -1, 2, 0], '[]')}，數字只是換位置；三軸寫法卻是 ${idxHTML([1, 0, 0], '[]')}、${idxHTML([0, 1, 0], '[]')}、${idxHTML([-1, -1, 0], '[]')}，看不出它們是等價的。</p>`);
       } else {
         const [h, k, i, l] = st.pl;
