@@ -1339,7 +1339,7 @@
      07 Hexagonal 4-index notation
      ===================================================================== */
   function secHex() {
-    const v = new Viewer($('#v-hex'), { view: [1, 0.58, 0.5] });
+    const v = new Viewer($('#v-hex'), { view: [1, -0.4, 0.5] });
     const st = { mode: 'plane', dir: [2, -1, -1, 0], pl: [1, 0, -1, 0] };
     const c = HC, a1 = GL ? V3(1, 0, 0) : null, a2 = GL ? V3(-0.5, S3 / 2, 0) : null, a3 = GL ? V3(-0.5, -S3 / 2, 0) : null, cz = GL ? V3(0, 0, c) : null;
     const info = $('#hx-info');
