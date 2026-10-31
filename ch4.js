@@ -1134,7 +1134,7 @@
   }
 
   function secSF() {
-    const v = new Viewer($('#v-sf'), { view: [1, -0.16, 0.08], label: () => tx('Close-packed layers seen from the side', '從側面看的最密排原子層') });
+    const v = new Viewer($('#v-sf'), { view: [1, -0.16, 0.08], label: () => tx('Close-packed layers seen from the side', '從側面看的最密堆積原子層') });
     const st = { s: 'tw' }, info = $('#sf-info'), h = Math.sqrt(2 / 3);
     // [stacking from bottom to top, layers marked red, heights of the fault planes in layers]
     const SEQ = { ok: ['ABCABCABCABCA', [], []], in: ['ABCABABCABCAB', [], [4.5]], ex: ['ABCABCACBCABC', [7], [7]], tw: ['ABCABCACBACAB', [6, 10], [6, 10]] };
@@ -1325,7 +1325,14 @@
   function toc() {
     const links = $$('.toc a'), map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
     const ob = new IntersectionObserver(es => {
-      es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.remove('on')); const a = map.get(e.target.id); if (a) { a.classList.add('on'); const ol = a.closest('ol'); if (a.offsetLeft < ol.scrollLeft || a.offsetLeft + a.offsetWidth > ol.scrollLeft + ol.clientWidth) ol.scrollTo({ left: a.offsetLeft - 16, behavior: REDUCED ? 'auto' : 'smooth' }); } } });
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        links.forEach(a => a.classList.remove('on')); const a = map.get(e.target.id); if (!a) return;
+        a.classList.add('on');
+        // measure against the scrolling list itself: offsetLeft counts from nav.toc and is off by the centred column's margin
+        const ol = a.closest('ol'), x = a.getBoundingClientRect().left - ol.getBoundingClientRect().left + ol.scrollLeft;
+        if (x < ol.scrollLeft || x + a.offsetWidth > ol.scrollLeft + ol.clientWidth) ol.scrollTo({ left: x - (ol.clientWidth - a.offsetWidth) / 2, behavior: REDUCED ? 'auto' : 'smooth' });
+      });
     }, { rootMargin: '-40% 0px -55% 0px' });
     $$('section.unit').forEach(s => ob.observe(s));
   }

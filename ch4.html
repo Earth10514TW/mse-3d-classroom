@@ -341,7 +341,7 @@ footer p{grid-column:2;max-width:56em}
 <script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
 
 <header class="hero hc">
-  <nav class="course" aria-label="Chapters" data-ta="1"><span class="course-h" data-t="2">Materials Science and Engineering I</span><a href="index.html" data-t="3">Ch 3 · Crystal structures</a><a href="ch4.html" aria-current="page" data-t="4">Ch 4 · Solidification and defects</a></nav>
+  <nav class="course" aria-label="Chapters" data-ta="1"><span class="course-h" data-t="2">Materials Science and Engineering I</span><a href="ch1.html" data-t="165">Ch 1 · Introduction</a><a href="ch2.html" data-t="166">Ch 2 · Atoms and bonding</a><a href="index.html" data-t="3">Ch 3 · Crystal structures</a><a href="ch4.html" aria-current="page" data-t="4">Ch 4 · Solidification and defects</a></nav>
   <div class="hero-in">
     <div class="hero-text" data-t="5">
       <h1>Solidification &amp; Defects<br><span class="d">3D</span> Classroom</h1>
@@ -1279,7 +1279,7 @@ window.XI18N=(function(){
     <dl class="defs">
       <dt>自由表面</dt><dd>表面原子只有一側有鄰居，能量比較高，容易起反應。奈米材料幾乎都是表面，所以特別活潑。</dd>
       <dt>晶界</dt><dd>兩顆方向不同的晶粒之間的接縫。<span class="term">傾斜晶界</span>的旋轉軸躺在晶界面內；<span class="term">扭轉晶界</span>的旋轉軸垂直於晶界面。</dd>
-      <dt>疊差</dt><dd>少了一層或多了一層最密排面，ABCABC 的順序在某處被打斷。</dd>
+      <dt>疊差</dt><dd>少了一層或多了一層最密堆積面，ABCABC 的順序在某處被打斷。</dd>
       <dt>雙晶界</dt><dd>堆疊順序在這裡反轉，一側的晶體是另一側的鏡像。界面上每個原子都同時符合兩側的晶格，所以是能量很低的<span class="term">共格界面</span>。</dd>
     </dl>
     <p>傾斜角很小的晶界，其實就是一排刃差排。每個差排多塞進半片原子面，讓晶格多轉一點。角度越大，差排就得排得越密。</p>
@@ -1293,7 +1293,7 @@ window.XI18N=(function(){
 117:`傾斜角`,
 118:`<span class="h3-no">7-1</span>疊差與雙晶`,
 119:`
-    <p>第 3 章第 4 單元用 ABCABC 的順序把最密排面疊成 FCC。下面的模型從側面看這疊原子層，A、B、C 三種位置看起來就是每往上一層往旁邊跨一步。完美晶體裡每一步都往同一邊跨。跨錯邊的地方就是缺陷。</p>
+    <p>第 3 章第 4 單元用 ABCABC 的順序把最密堆積面疊成 FCC。下面的模型從側面看這疊原子層，A、B、C 三種位置看起來就是每往上一層往旁邊跨一步。完美晶體裡每一步都往同一邊跨。跨錯邊的地方就是缺陷。</p>
   `,
 120:`
         <span><i style="background:var(--c-corner)"></i>A 層</span>
@@ -1408,7 +1408,9 @@ window.XI18N=(function(){
       <li>注意單位。這裡的 ΔH<sub>f</sub> 是每單位體積（J/cm³），算出來的 ΔG<sub>v</sub> 也是 J/cm³。投影片上「熔化熵 ≈ R」是同一個熵，只是改成每莫耳來算。</li>
       <li>畫成直線，等於假設 ΔH 和 ΔS 不隨溫度變；ΔT 比 T<sub>m</sub> 小很多時成立。光有驅動力，液體還是不會凝固，第 2 單元說明新晶體得先付出什麼代價。</li>
     </ul>
-  `
+  `,
+165:`第 1 章・導論`,
+166:`第 2 章・原子與鍵結`
   }, KEY='xtal-lang';
   function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
   function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
@@ -1425,6 +1427,6 @@ window.XI18N=(function(){
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="ch4.js?v=20261019-2"></script>
+<script src="ch4.js?v=20261026-1"></script>
 
 </body></html>

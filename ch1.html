@@ -1,0 +1,703 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Introduction to Materials 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+
+#so-plot,#gs-plot{height:400px}
+#nu-plot{height:320px}
+#dg-plot{height:360px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}#dg-plot{height:300px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<style>
+#tr-plot{height:380px}
+#ec-plot{height:300px}
+#li-plot{height:320px}
+@media (max-width:520px){#tr-plot{height:330px}#ec-plot{height:340px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+.card ul{margin:0;padding-left:1.1em;display:grid;gap:4px;font-size:.92rem}
+</style>
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="62"><span class="course-h" data-t="1">Materials Science and Engineering I</span><a href="ch1.html" aria-current="page" data-t="2">Ch 1 · Introduction</a><a href="ch2.html" data-t="3">Ch 2 · Atoms and bonding</a><a href="index.html" data-t="4">Ch 3 · Crystal structures</a><a href="ch4.html" data-t="5">Ch 4 · Solidification and defects</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="6">      <h1>What Is Materials Science<br><span class="d">3D</span> Classroom</h1>
+      <p class="lede">A chip, a turbine blade, a battery and a sword all work, or fail, because of how their atoms are arranged and how that arrangement was made. Materials science studies that chain: processing sets the structure, the structure sets the properties, and the properties set how well the part performs. This chapter maps the field. The next chapters zoom in, from atoms to crystals to defects.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for this chapter">
+        <li class="palette-h">Colors mean the same thing on every page of this chapter</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>atoms of the main material · metal ion cores</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>a second kind of atom · cations</span></li>
+        <li><i style="background:var(--c-face)"></i><span><b>Green</b>a third phase · reinforcing fibers</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>links in the materials tetrahedron</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>free electrons, the thing to watch</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <span class="plate-tag" data-t="7">SAME ATOMS<br>two arrangements</span>
+      </div>
+      <figcaption data-t="8">One block of identical atoms. On the right they sit in a repeating lattice, a <b>crystal</b>. On the left they are jumbled with no long-range order, an <b>amorphous</b> solid, like glass. Same atoms, different arrangement, different properties. Unit 3 lets you compare them.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="63">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="9"><span>01</span>Why materials matter</a></li>
+    <li><a href="#s2" data-t="10"><span>02</span>The tetrahedron</a></li>
+    <li><a href="#s3" data-t="11"><span>03</span>Crystal or amorphous</a></li>
+    <li><a href="#s4" data-t="12"><span>04</span>Four families</a></li>
+    <li><a href="#s5" data-t="13"><span>05</span>Conductivity</a></li>
+    <li><a href="#s6" data-t="14"><span>06</span>Materials by function</a></li>
+    <li><a href="#s7" data-t="15"><span>07</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="64"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="65"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="16"><p class="unit-no">01</p><h2>Why materials matter: fifty years of chips</h2><p class="unit-tag">2 300 transistors (1971) → 20 billion (2024)</p></header>
+  <div class="prose" data-t="17">    <p>The first microprocessor, Intel's 4004 of 1971, held 2 300 transistors made with 10 µm features. Apple's A18 of 2024 holds about 20 billion, made on TSMC's 3 nm process. The count has doubled roughly every two years for half a century.</p>
+    <p>Every step of that shrink was a materials problem: purer silicon single crystals, thinner and better insulating oxides, copper wiring to replace aluminium, new transistor shapes such as the FinFET (2012) and now gate-all-around nanosheets. A chip's speed, power use, reliability and lifetime all trace back to the conductivity, dielectric strength and mechanical strength of the materials inside it.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="tr-plot"><canvas id="tr-cv" role="img" aria-label="Transistor count and process node of processors from 1971 to 2024 on logarithmic scales" data-ta="66"></canvas></div>
+      <div class="legend" data-t="18">        <span><i style="background:var(--c-corner)"></i>Transistors per chip (left axis)</span>
+        <span><i style="background:var(--c-body)"></i>Process node (right axis)</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Doubling every two years</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="19">Year</span> · <b id="tr-y-v"></b></span>
+        <input type="range" id="tr-y" min="0" max="20" step="1" value="0" aria-label="Chip" data-ta="67">
+      </div>
+      <div class="readout" id="tr-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="20"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>From 10 µm (1971) to 3 nm (2023–24) the feature size shrank more than 3000 times, and the transistor count grew almost ten million times.</li>
+      <li>Every new node needed new materials or new structures: Cu interconnects, high-k gate oxides, FinFETs (22 nm, 2012), and next gate-all-around nanosheets and possibly 2D materials.</li>
+      <li>Materials decide performance: signal speed, power consumption, reliability and lifetime.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="21"><p class="unit-no">02</p><h2>The materials tetrahedron</h2><p class="unit-tag">processing → structure → properties → performance</p></header>
+  <div class="prose" data-t="22">    <p><span class="term">Materials science</span> builds basic knowledge of the internal structure, properties and processing of materials. <span class="term">Materials engineering</span> applies that knowledge to turn materials into products. The two meet in one picture with four corners:</p>
+    <dl class="defs">
+      <dt>Processing</dt><dd>How the material is made and shaped: casting, forging, heat treatment, quenching, deposition.</dd>
+      <dt>Structure</dt><dd>How its atoms are arranged, from the bonds between atoms through crystals and grains to defects and phases.</dd>
+      <dt>Properties</dt><dd>How it responds: strength, hardness, conductivity, optical and magnetic behavior.</dd>
+      <dt>Performance</dt><dd>How well the finished part does its job, and for how long.</dd>
+    </dl>
+    <p>In the middle sit <span class="term">characterization, modeling and simulation</span>, the tools for seeing structure and predicting properties. Pick an example to follow the chain around the tetrahedron.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-pspp"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="23">Example</span>
+        <div class="seg" id="ps-ex">
+          <button type="button" data-v="sword" aria-pressed="true" data-t="24">Forged steel sword</button>
+          <button type="button" data-v="cu" data-t="25">Nano-twinned Cu</button>
+          <button type="button" data-v="solder" data-t="26">Pb–Sn solder</button>
+          <button type="button" data-v="si" data-t="27">Silicon wafer</button>
+        </div>
+      </div>
+      <div class="readout" id="ps-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="28"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Processing → structure → properties → performance. Change one corner and the others follow.</li>
+      <li>The same composition can behave very differently. Forging and quenching change the microstructure of steel, not its chemistry.</li>
+      <li>Characterization, modeling and simulation sit in the middle: they connect what we see to what we predict.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="29"><p class="unit-no">03</p><h2>Crystal or amorphous: how far the order reaches</h2><p class="unit-tag">amorphous · polycrystal · single crystal</p></header>
+  <div class="prose" data-t="30">    <p>Solids differ in how far a regular arrangement of atoms extends.</p>
+    <dl class="defs">
+      <dt>Amorphous</dt><dd>No long-range periodic order. Each atom has neighbors at about the usual distance, but the pattern does not repeat. Glass and many polymers.</dd>
+      <dt>Polycrystal</dt><dd>Long-range order inside many small crystals, called grains, each pointing a different way. Most metals and ceramics.</dd>
+      <dt>Single crystal</dt><dd>One lattice runs through the entire piece without interruption. Silicon wafers, turbine blades.</dd>
+    </dl>
+    <p>Grain size is itself a design choice. Nanocrystalline copper with 30 nm grains is much stronger than ordinary copper with 400 nm grains, and nano-twinned copper with twin layers about 15 nm wide keeps that strength while conducting electricity almost as well as pure copper.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-ar"></div>
+      <div class="legend" data-t="31">        <span><i style="background:var(--c-corner)"></i><i style="background:var(--c-face)"></i><i style="background:var(--c-body)"></i>Atoms, colored by the grain they belong to</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="32">Arrangement</span>
+        <div class="seg" id="ar-mode">
+          <button type="button" data-v="am" data-t="33">Amorphous</button>
+          <button type="button" data-v="poly" aria-pressed="true" data-t="34">Polycrystal</button>
+          <button type="button" data-v="single" data-t="35">Single crystal</button>
+        </div>
+      </div>
+      <div class="readout" id="ar-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="36"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Amorphous: no long-range periodic order. Crystalline: long-range periodic order in small domains (polycrystal) or in the whole piece (single crystal).</li>
+      <li>Grain boundaries are where grains of different orientation meet. Their number, set by processing, changes strength and conductivity.</li>
+      <li>Chapter 3 describes the lattices themselves, Chapter 4 the grains and defects.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="37"><p class="unit-no">04</p><h2>Four families of materials</h2><p class="unit-tag">metals · ceramics · polymers · composites</p></header>
+  <div class="prose" data-t="38">    <p>The basic classification groups materials by what they are made of and how their atoms are bonded. Chapter 2 explains the bonds. Here, look at the arrangement of each family and connect it to its typical properties.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-fam"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="39">Family</span>
+        <div class="seg" id="fam-mode">
+          <button type="button" data-v="metal" aria-pressed="true" data-t="40">Metal</button>
+          <button type="button" data-v="ceramic" data-t="41">Ceramic</button>
+          <button type="button" data-v="polymer" data-t="42">Polymer</button>
+          <button type="button" data-v="comp" data-t="43">Composite</button>
+        </div>
+      </div>
+      <div class="readout" id="fam-info"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" data-t="44">    <table>
+      <thead><tr><th></th><th>Metals</th><th>Ceramics</th><th>Polymers</th><th>Composites</th></tr></thead>
+      <tbody>
+        <tr><td>Made of</td><td>Metallic elements (Fe, Cu, Al),<br>sometimes with nonmetals (FeSi₂)</td><td>Metallic + nonmetallic elements<br>chemically bonded</td><td>Giant organic molecules<br>(chains of C, H, …)</td><td>Two or more materials<br>that bond but do not dissolve</td></tr>
+        <tr><td>Structure</td><td>Crystalline</td><td>Crystalline or glassy</td><td>Mostly noncrystalline</td><td>Fibers or particles in a matrix</td></tr>
+        <tr><td>Conduction</td><td>Good electrical and thermal conductors</td><td>Very good insulators</td><td>Poor conductors (dielectrics)</td><td>Depends on the parts</td></tr>
+        <tr><td>Mechanical</td><td>Strong, ductile</td><td>Hard, strong, wear resistant, brittle</td><td>Strength and ductility vary widely;<br>low density</td><td>Light and strong</td></tr>
+        <tr><td>Examples</td><td>Steel, cast iron, Cu, Al,<br>Ni superalloys, Ti alloys</td><td>Porcelain, glass, Si₃N₄,<br>furnace linings, abrasives</td><td>PVC, polyester,<br>fabrics, DVDs</td><td>Fiberglass, concrete,<br>aircraft wings</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="45"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Metals: free electrons → conduct well and bend. Ceramics: ionic or covalent bonds → hard, insulating, brittle. Polymers: long chains → light, insulating, properties vary widely.</li>
+      <li>Composites combine a filler (fibers or particles) with a binding matrix. The matrix can be a metal, ceramic or polymer.</li>
+      <li>Stretching a polymer lines its chains up. More aligned, more crystalline chains make it stronger and less flexible.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="46"><p class="unit-no">05</p><h2>One property, 24 orders of magnitude: conductivity</h2><p class="unit-tag">σ from 10<sup>−16</sup> to 10<sup>8</sup> S/m</p></header>
+  <div class="prose" data-t="47">    <p>Few properties span a range as wide as electrical conductivity σ. Copper conducts about 10<sup>24</sup> times better than polyethylene. Metals are conductors, ceramics, glasses and polymers are insulators, and semiconductors such as Si and Ge sit in between. What makes semiconductors useful is that their conductivity can be tuned: adding a few dopant atoms per million raises it by many orders of magnitude. Drag the doping slider and watch silicon cross the chart.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="ec-plot"><canvas id="ec-cv" role="img" aria-label="Electrical conductivity of materials on a logarithmic scale" data-ta="68"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="48">Dopant atoms in silicon</span> · <b id="ec-d-v"></b></span>
+        <input type="range" id="ec-d" min="0" max="10" step="0.05" value="0" aria-label="Doping level" data-ta="69">
+      </div>
+      <div class="readout" id="ec-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="49"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Conductors (metals) about 10<sup>7</sup>–10<sup>8</sup> S/m; semiconductors about 10<sup>−6</sup>–10<sup>4</sup> S/m; insulators (ceramics, glasses, polymers) below 10<sup>−8</sup> S/m. 1 S/m = 1 Ω<sup>−1</sup>·m<sup>−1</sup>.</li>
+      <li>Semiconductors are useful because doping, alloying and junction design tailor their electronic properties.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="50"><p class="unit-no">06</p><h2>Materials by function</h2><p class="unit-tag">electronic · green energy · bio</p></header>
+  <div class="prose" data-t="51">    <p>Besides what they are made of, materials are also grouped by what they do. Three functional groups run through modern materials research.</p>
+  </div>
+  <div class="cards wide" data-t="52">    <div class="card"><span class="card-no">ELECTRONIC · OPTOELECTRONIC</span><h4>Semiconductors</h4>
+      <ul><li>Mostly semiconductors, above all silicon.</li><li>Properties tuned by doping, alloying and junction design.</li><li>Si single crystals grown by the Czochralski method (pulled at about mm/min), then sliced into wafers.</li><li>Devices: BJTs and MOSFETs, for amplifying signals and for fast on–off switching.</li></ul></div>
+    <div class="card"><span class="card-no">GREEN ENERGY</span><h4>Energy conversion</h4>
+      <ul><li>Solar cell: light → electricity. Fill factor FF = I<sub>m</sub>V<sub>m</sub> / (I<sub>SC</sub>V<sub>OC</sub>).</li><li>Battery, fuel cell: chemical energy → electricity. A hydrogen fuel cell gives E° = 1.229 V.</li><li>Photoelectrochemistry: light → chemical energy, such as splitting water or converting CO₂.</li><li>Thermoelectrics: heat ↔ electricity, for self-powered sensors and chip cooling.</li></ul></div>
+    <div class="card"><span class="card-no">BIOMATERIALS</span><h4>Materials for and from life</h4>
+      <ul><li>Bio-mimetic materials copy nature: gecko feet that stick, lotus leaves that shed water, climbing-fish fins for underwater robots.</li><li>Tissue engineering grows new tissue, including blood vessels, on a scaffold such as a hydrogel.</li><li>Bio-sensing detects and images biological substances, down to single bacteria.</li></ul></div>
+  </div>
+  <h3 data-t="53"><span class="h3-no">6-1</span><span>Inside a lithium-ion battery</span></h3>
+  <div class="prose" data-t="54">    <p>A lithium-ion battery is a materials story. Lithium ions shuttle through the electrolyte between two layered crystals: graphite (C<sub>6</sub>) and lithium cobalt oxide (LiCoO<sub>2</sub>). Electrons cannot cross the electrolyte, so they take the outside circuit and do work on the way.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="li-plot"><canvas id="li-cv" role="img" aria-label="Lithium ions moving between graphite and lithium cobalt oxide" data-ta="70"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="55">Mode</span>
+        <div class="seg" id="li-mode">
+          <button type="button" data-v="dis" aria-pressed="true" data-t="56">Discharge: powering a device</button>
+          <button type="button" data-v="chg" data-t="57">Charge: plugged in</button>
+        </div>
+      </div>
+      <div class="readout" id="li-info"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="58"><p class="unit-no">07</p><h2>Quiz</h2><p class="unit-tag">6 questions</p></header>
+  <p class="quiz-intro" data-t="59">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score"></p>
+  <div class="quiz" id="quiz"></div>
+  <p class="next" data-t="60"><a href="ch2.html">Next, Chapter 2: Atoms and Bonding 3D Classroom →</a></p>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="61">  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch. 1 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019. Process nodes and chips in Unit 1 follow the slide's table; the transistor counts plotted are from Wikipedia, “Transistor count”, the source the slide cites. Nano-twinned Cu: L. Lu et al., <i>Science</i> 304, 422 (2004). Conductivities in Unit 5 are typical room-temperature values; doped silicon uses the Caughey–Thomas electron mobility, which falls as doping rises.</p>
+  <span class="lbl">MODELS</span>
+  <p>The atom arrangements in Units 3 and 4 are geometric sketches with hard spheres. The amorphous model places atoms at random with a minimum spacing; the polycrystal cuts rotated lattices along the boundaries between grain seeds.</p></footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={"1":"材料科學與工程導論（一）",
+"2":"第 1 章・導論",
+"3":"第 2 章・原子與鍵結",
+"4":"第 3 章・晶體結構",
+"5":"第 4 章・凝固與缺陷",
+"6":"      <h1>什麼是材料科學<br><span class=\"d\">3D<\/span>教室<\/h1>\n      <p class=\"lede\">晶片、渦輪葉片、電池、一把劍，能用或壞掉，都取決於原子怎麼排，以及這種排法是怎麼做出來的。材料科學研究的就是這條鏈：製程決定結構，結構決定性質，性質決定零件用起來好不好。這一章先畫出整個領域的地圖，後面幾章再一路放大：原子、晶體、缺陷。<\/p>\n      <p class=\"lede\">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。<\/p>\n      <ul class=\"palette\" aria-label=\"本章顏色約定\">\n        <li class=\"palette-h\">這一章的顏色都照這個約定<\/li>\n        <li><i style=\"background:var(--c-corner)\"><\/i><span><b>藍<\/b>　主要材料的原子・金屬離子核<\/span><\/li>\n        <li><i style=\"background:var(--c-body)\"><\/i><span><b>橘<\/b>　第二種原子・陽離子<\/span><\/li>\n        <li><i style=\"background:var(--c-face)\"><\/i><span><b>綠<\/b>　第三相・強化纖維<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i><span><b>紫<\/b>　材料四面體的連線<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--hi)\"><\/i><span><b>紅<\/b>　自由電子、要注意看的東西<\/span><\/li>\n      <\/ul>\n    ",
+"7":"同樣的原子<br>兩種排法",
+"8":"一整塊相同的原子。右半邊排成不斷重複的晶格，是<b>晶體<\/b>；左半邊亂成一團，沒有長程規律，是像玻璃那樣的<b>非晶質<\/b>固體。原子一樣、排法不同，性質就不同。第 3 單元可以比較看看。",
+"9":"<span>01<\/span>材料為什麼重要",
+"10":"<span>02<\/span>材料四面體",
+"11":"<span>03<\/span>晶體或非晶",
+"12":"<span>04<\/span>四大類材料",
+"13":"<span>05<\/span>導電率",
+"14":"<span>06<\/span>依功能分類",
+"15":"<span>07<\/span>小測驗",
+"16":"<p class=\"unit-no\">01<\/p><h2>材料為什麼重要：晶片的五十年<\/h2><p class=\"unit-tag\">2 300 個電晶體（1971）→ 200 億個（2024）<\/p>",
+"17":"    <p>第一顆微處理器，Intel 1971 年的 4004，有 2 300 個電晶體，線寬 10 µm。Apple 2024 年的 A18 大約有 200 億個，用台積電 3 nm 製程製造。半個世紀以來，電晶體數目大約每兩年翻一倍。<\/p>\n    <p>縮小的每一步都是材料問題：更純的矽單晶、更薄更絕緣的氧化層、用銅取代鋁做導線、新的電晶體形狀，例如 FinFET（2012）和現在的環繞式閘極奈米片。晶片的速度、耗電、可靠度和壽命，都可以追到裡面材料的導電率、介電強度和機械強度。",
+"18":"        <span><i style=\"background:var(--c-corner)\"><\/i>每顆晶片的電晶體數（左軸）<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>製程節點（右軸）<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>每兩年翻一倍<\/span>\n      ",
+"19":"年份",
+"20":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>從 10 µm（1971）到 3 nm（2023–24），線寬縮小超過 3000 倍，電晶體數增加將近一千萬倍。<\/li>\n      <li>每個新節點都需要新材料或新結構：銅導線、高介電常數閘極氧化層、FinFET（22 nm，2012），接下來是環繞式閘極奈米片，可能還有二維材料。<\/li>\n      <li>材料決定性能：訊號速度、耗電、可靠度和壽命。<\/li>\n    <\/ul>\n  ",
+"21":"<p class=\"unit-no\">02<\/p><h2>材料四面體<\/h2><p class=\"unit-tag\">製程 → 結構 → 性質 → 性能<\/p>",
+"22":"    <p><span class=\"term\">材料科學<\/span>建立關於材料內部結構、性質和製程的基礎知識；<span class=\"term\">材料工程<\/span>把這些知識拿來把材料做成產品。兩者在一張有四個角的圖裡交會：<\/p>\n    <dl class=\"defs\">\n      <dt>製程<\/dt><dd>材料怎麼做出來、怎麼成形：鑄造、鍛造、熱處理、淬火、鍍膜。<\/dd>\n      <dt>結構<\/dt><dd>原子怎麼排：從原子之間的鍵，到晶體、晶粒，再到缺陷和相。<\/dd>\n      <dt>性質<\/dt><dd>材料怎麼反應：強度、硬度、導電性、光學和磁性。<\/dd>\n      <dt>性能<\/dt><dd>做成的零件工作得多好、能撐多久。<\/dd>\n    <\/dl>\n    <p>中間是<span class=\"term\">分析鑑定、建模與模擬<\/span>，用來看見結構、預測性質。選一個例子，沿著四面體走一圈。",
+"23":"例子",
+"24":"鍛造鋼劍",
+"25":"奈米雙晶銅",
+"26":"鉛錫銲料",
+"27":"矽晶圓",
+"28":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>製程 → 結構 → 性質 → 性能。改變一個角，其他角跟著變。<\/li>\n      <li>同樣的成分可以表現得很不一樣。鍛造和淬火改變的是鋼的微結構，不是化學成分。<\/li>\n      <li>分析鑑定、建模與模擬位在中間：把看到的和預測的連起來。<\/li>\n    <\/ul>\n  ",
+"29":"<p class=\"unit-no\">03<\/p><h2>晶體或非晶：規律能延伸多遠<\/h2><p class=\"unit-tag\">非晶・多晶・單晶<\/p>",
+"30":"    <p>固體的差別，在於原子的規律排列能延伸多遠。<\/p>\n    <dl class=\"defs\">\n      <dt>非晶質<\/dt><dd>沒有長程週期規律。每個原子的鄰居大約在一般的距離上，但圖樣不會重複。玻璃和許多高分子。<\/dd>\n      <dt>多晶<\/dt><dd>在許多小晶體（晶粒）內部有長程規律，每顆晶粒方向不同。大部分金屬和陶瓷。<\/dd>\n      <dt>單晶<\/dt><dd>一套晶格貫穿整塊材料，中間沒有中斷。矽晶圓、渦輪葉片。<\/dd>\n    <\/dl>\n    <p>晶粒大小本身就是設計選項。晶粒 30 nm 的奈米晶銅比晶粒 400 nm 的一般銅強得多；而雙晶層寬約 15 nm 的奈米雙晶銅，保有這個強度，導電性又幾乎和純銅一樣好。",
+"31":"        <span><i style=\"background:var(--c-corner)\"><\/i><i style=\"background:var(--c-face)\"><\/i><i style=\"background:var(--c-body)\"><\/i>原子，依所屬晶粒上色<\/span>\n      ",
+"32":"排法",
+"33":"非晶質",
+"34":"多晶",
+"35":"單晶",
+"36":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>非晶質：沒有長程週期規律。晶體：在小區域（多晶）或整塊（單晶）有長程週期規律。<\/li>\n      <li>晶界是方向不同的晶粒相接的地方。晶界多寡由製程決定，會改變強度和導電性。<\/li>\n      <li>第 3 章描述晶格本身，第 4 章談晶粒和缺陷。<\/li>\n    <\/ul>\n  ",
+"37":"<p class=\"unit-no\">04<\/p><h2>四大類材料<\/h2><p class=\"unit-tag\">金屬・陶瓷・高分子・複合材料<\/p>",
+"38":"    <p>基本分類依材料的組成和原子的鍵結方式來分。第 2 章會解釋這些鍵；這裡先看每一類的原子排法，把它和典型性質連起來。",
+"39":"類別",
+"40":"金屬",
+"41":"陶瓷",
+"42":"高分子",
+"43":"複合材料",
+"44":"    <table>\n      <thead><tr><th><\/th><th>金屬<\/th><th>陶瓷<\/th><th>高分子<\/th><th>複合材料<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>組成<\/td><td>金屬元素（Fe、Cu、Al），<br>有時加上非金屬（FeSi₂）<\/td><td>金屬與非金屬元素<br>以化學鍵結合<\/td><td>巨大的有機分子<br>（C、H…… 組成的長鏈）<\/td><td>兩種以上材料，<br>彼此結合但不互溶<\/td><\/tr>\n        <tr><td>結構<\/td><td>晶體<\/td><td>晶體或玻璃態<\/td><td>大多非晶<\/td><td>纖維或顆粒分布在基材中<\/td><\/tr>\n        <tr><td>傳導<\/td><td>導電、導熱都好<\/td><td>非常好的絕緣體<\/td><td>導電差（介電材料）<\/td><td>看組成而定<\/td><\/tr>\n        <tr><td>機械性質<\/td><td>強、有延展性<\/td><td>硬、強、耐磨，但脆<\/td><td>強度和延展性差異很大；<br>密度低<\/td><td>輕而強<\/td><\/tr>\n        <tr><td>例子<\/td><td>鋼、鑄鐵、Cu、Al、<br>鎳基超合金、鈦合金<\/td><td>瓷器、玻璃、Si₃N₄、<br>爐襯、研磨材<\/td><td>PVC、聚酯纖維、<br>布料、DVD<\/td><td>玻璃纖維、混凝土、<br>飛機機翼<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"45":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>金屬：自由電子 → 導電好、能彎。陶瓷：離子鍵或共價鍵 → 硬、絕緣、脆。高分子：長鏈 → 輕、絕緣、性質範圍很廣。<\/li>\n      <li>複合材料把填充物（纖維或顆粒）和黏結的基材結合在一起。基材可以是金屬、陶瓷或高分子。<\/li>\n      <li>拉伸高分子會讓分子鏈排整齊。排得越整齊、結晶越多，就越強也越不柔軟。<\/li>\n    <\/ul>\n  ",
+"46":"<p class=\"unit-no\">05<\/p><h2>一個性質，跨 24 個數量級：導電率<\/h2><p class=\"unit-tag\">σ 從 10<sup>−16<\/sup> 到 10<sup>8<\/sup> S/m<\/p>",
+"47":"    <p>很少有性質的範圍像導電率 σ 這麼廣：銅的導電能力大約是聚乙烯的 10<sup>24<\/sup> 倍。金屬是導體，陶瓷、玻璃、高分子是絕緣體，Si、Ge 這類半導體介於中間。半導體有用的地方在於導電率可以調：每一百萬個原子加進幾個摻雜原子，導電率就升高好幾個數量級。拖動摻雜滑桿，看矽怎麼橫越整張圖。",
+"48":"矽裡的摻雜原子",
+"49":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>導體（金屬）約 10<sup>7<\/sup>–10<sup>8<\/sup> S/m；半導體約 10<sup>−6<\/sup>–10<sup>4<\/sup> S/m；絕緣體（陶瓷、玻璃、高分子）低於 10<sup>−8<\/sup> S/m。1 S/m = 1 Ω<sup>−1<\/sup>·m<sup>−1<\/sup>。<\/li>\n      <li>半導體有用，是因為摻雜、合金化和接面設計可以調整它的電性。<\/li>\n    <\/ul>\n  ",
+"50":"<p class=\"unit-no\">06<\/p><h2>依功能分類<\/h2><p class=\"unit-tag\">電子・綠能・生醫<\/p>",
+"51":"    <p>除了依組成分類，材料也常依用途分類。現代材料研究有三個主要的功能類別。",
+"52":"    <div class=\"card\"><span class=\"card-no\">電子・光電<\/span><h4>半導體<\/h4>\n      <ul><li>以半導體為主，最重要的是矽。<\/li><li>性質靠摻雜、合金化和接面設計來調整。<\/li><li>矽單晶用柴氏法長成（每分鐘拉約 mm），再切成晶圓。<\/li><li>元件：BJT 和 MOSFET，用來放大訊號和快速開關。<\/li><\/ul><\/div>\n    <div class=\"card\"><span class=\"card-no\">綠能<\/span><h4>能量轉換<\/h4>\n      <ul><li>太陽能電池：光 → 電。填充因子 FF = I<sub>m<\/sub>V<sub>m<\/sub> / (I<sub>SC<\/sub>V<sub>OC<\/sub>)。<\/li><li>電池、燃料電池：化學能 → 電。氫燃料電池 E° = 1.229 V。<\/li><li>光電化學：光 → 化學能，例如分解水、轉化 CO₂。<\/li><li>熱電材料：熱 ↔ 電，用在自供電感測器和晶片散熱。<\/li><\/ul><\/div>\n    <div class=\"card\"><span class=\"card-no\">生醫材料<\/span><h4>為生命、仿生命的材料<\/h4>\n      <ul><li>仿生材料模仿自然：會黏的壁虎腳、不沾水的荷葉、仿台灣爬岩鰍魚鰭的水下吸附機器人。<\/li><li>組織工程在水凝膠等支架上長出新組織，包括血管。<\/li><li>生物感測偵測並成像生物物質，靈敏到單一細菌。<\/li><\/ul><\/div>\n  ",
+"53":"<span class=\"h3-no\">6-1<\/span><span>鋰離子電池裡面<\/span>",
+"54":"    <p>鋰離子電池就是一個材料故事。鋰離子穿過電解質，在兩種層狀晶體之間來回：石墨（C<sub>6<\/sub>）和鋰鈷氧化物（LiCoO<sub>2<\/sub>）。電子過不了電解質，只能走外部電路，在路上做功。",
+"55":"狀態",
+"56":"放電：供電給裝置",
+"57":"充電：插上電源",
+"58":"<p class=\"unit-no\">07<\/p><h2>小測驗<\/h2><p class=\"unit-tag\">6 題<\/p>",
+"59":"每題只能作答一次，選完會顯示解說。",
+"60":"<a href=\"ch2.html\">下一章，第 2 章：原子結構與鍵結 3D 教室 →<\/a>",
+"61":"  <span class=\"lbl\">資料來源<\/span>\n  <p>國立清華大學「材料科學與工程導論（一）」第 1 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering<\/i>, 6th ed., McGraw-Hill, 2019。第 1 單元的製程節點與晶片依投影片的表；圖上的電晶體數取自投影片所引用的 Wikipedia「Transistor count」。奈米雙晶銅：L. Lu et al., <i>Science<\/i> 304, 422 (2004)。第 5 單元的導電率是室溫下的典型值；摻雜矽的電子遷移率用 Caughey–Thomas 公式，摻雜越多遷移率越低。<\/p>\n  <span class=\"lbl\">關於模型<\/span>\n  <p>第 3、4 單元的原子排列是用硬球畫的幾何示意。非晶模型以最小間距隨機放置原子；多晶模型沿晶粒種子之間的邊界切開旋轉過的晶格。<\/p>",
+"62":"章節",
+"63":"單元",
+"64":"語言",
+"65":"深色模式",
+"66":"1971 到 2024 年處理器的電晶體數與製程節點（對數座標）",
+"67":"晶片",
+"68":"各種材料的導電率（對數座標）",
+"69":"摻雜濃度",
+"70":"鋰離子在石墨與鋰鈷氧化物之間移動"}, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title="材料科學導論 3D 教室";var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="ch1.js?v=20261028-1"></script>
+
+</body></html>

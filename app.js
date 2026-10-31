@@ -2120,7 +2120,7 @@
     { q: tx('A plane cuts the x axis at 1 and the y axis at 1/2, and is parallel to the z axis. What are its Miller indices?', '某平面和 x 軸交於 1、y 軸交於 1/2、與 z 軸平行。它的米勒指數是？'), o: ['(1 ½ 0)', '(1 2 0)', '(2 1 0)', '(1 2 ∞)'], a: 1, e: tx('The reciprocals of the intercepts 1, ½, ∞ are 1, 2, 0, so the plane is (120).', '截距 1、½、∞ 取倒數得 1、2、0，所以是 (120)。') },
     { q: tx('In the cubic system, what is the normal direction of the (111) plane?', '立方晶系中，(111) 平面的法線方向是？'), o: ['[100]', '[110]', '[111]', tx('[1̄1̄1̄], unrelated to (111)', '[1̄1̄1̄]，和 (111) 無關')], a: 2, e: tx('In the cubic system the normal to (hkl) is [hkl].', '立方晶系裡 (hkl) 的法線就是 [hkl]。') },
     { q: tx('A cubic crystal has a lattice constant a = 0.40 nm. What is the interplanar spacing of its (200) planes?', '晶格常數 a = 0.40 nm 的立方晶體，(200) 面的面間距是多少？'), o: ['0.40 nm', '0.28 nm', '0.20 nm', '0.10 nm'], a: 2, e: tx('d = a / √(2² + 0 + 0) = 0.40 / 2 = 0.20 nm.', 'd = a / √(2² + 0 + 0) = 0.40 / 2 = 0.20 nm。') },
-    { q: tx('In what order do the close-packed planes of HCP stack?', 'HCP 的最密排平面是照什麼順序往上疊？'), o: ['AAAA…', 'ABAB…', 'ABCABC…', 'ABCDABCD…'], a: 1, e: tx('HCP is ABAB. FCC is ABCABC.', 'HCP 是 ABAB；FCC 是 ABCABC。') },
+    { q: tx('In what order do the close-packed planes of HCP stack?', 'HCP 的最密堆積平面是照什麼順序往上疊？'), o: ['AAAA…', 'ABAB…', 'ABCABC…', 'ABCDABCD…'], a: 1, e: tx('HCP is ABAB. FCC is ABCABC.', 'HCP 是 ABAB；FCC 是 ABCABC。') },
     { q: tx('Cu Kα X-rays (λ = 0.154 nm) hit crystal planes with d = 0.20 nm. About what is θ for first-order (n = 1) diffraction?', '用 Cu Kα（λ = 0.154 nm）照射 d = 0.20 nm 的晶面，第一階（n = 1）繞射的 θ 約是多少？'), o: ['11.1°', '22.6°', '45.2°', '50.4°'], a: 1, e: tx('sinθ = λ / 2d = 0.154 / 0.40 = 0.385, so θ ≈ 22.6°. The horizontal axis of the pattern is 2θ, so the peak shows at about 45.2°.', 'sinθ = λ / 2d = 0.154 / 0.40 = 0.385，θ ≈ 22.6°。圖譜橫軸是 2θ，會在約 45.2° 看到峰。') },
     { q: tx('Why is no (100) diffraction peak measured from a BCC crystal?', 'BCC 晶體為什麼量不到 (100) 繞射峰？'), o: [tx('The X-ray wavelength is not short enough', 'X 光波長不夠短'), tx('The waves scattered by the corner and body-center atoms are 180° out of phase and cancel', '角落與體心原子的散射波相位差 180°，互相抵消'), tx('There are no atoms on the (100) plane', '(100) 面上沒有原子'), tx('BCC has no (100) plane', 'BCC 沒有 (100) 面')], a: 1, e: tx('The body-center atom is at (½,½,½). Its phase is 2π × ½ = π, exactly opposite to the corner atom, so F = f(1 + e^{iπ}) = 0.', '體心原子在 (½,½,½)，相位 2π × ½ = π，與角落原子剛好相反，F = f(1 + e^{iπ}) = 0。') },
     { q: tx('In the XRD pattern of silicon (diamond structure), which of these peaks does not appear?', '矽（鑽石結構）的 XRD 圖譜中，下列哪個峰「不會」出現？'), o: ['(111)', '(220)', '(200)', '(311)'], a: 2, e: tx('(200) is all even, but h + k + l = 2 is not a multiple of 4, so the second FCC lattice of the diamond structure cancels it.', '(200) 全偶但 h + k + l = 2 不是 4 的倍數，被鑽石結構的第二套 FCC 抵消。') }
@@ -2155,7 +2155,14 @@
   function toc() {
     const links = $$('.toc a'), map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
     const ob = new IntersectionObserver(es => {
-      es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.remove('on')); const a = map.get(e.target.id); if (a) { a.classList.add('on'); const ol = a.closest('ol'); if (a.offsetLeft < ol.scrollLeft || a.offsetLeft + a.offsetWidth > ol.scrollLeft + ol.clientWidth) ol.scrollTo({ left: a.offsetLeft - 16, behavior: REDUCED ? 'auto' : 'smooth' }); } } });
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        links.forEach(a => a.classList.remove('on')); const a = map.get(e.target.id); if (!a) return;
+        a.classList.add('on');
+        // measure against the scrolling list itself: offsetLeft counts from nav.toc and is off by the centred column's margin
+        const ol = a.closest('ol'), x = a.getBoundingClientRect().left - ol.getBoundingClientRect().left + ol.scrollLeft;
+        if (x < ol.scrollLeft || x + a.offsetWidth > ol.scrollLeft + ol.clientWidth) ol.scrollTo({ left: x - (ol.clientWidth - a.offsetWidth) / 2, behavior: REDUCED ? 'auto' : 'smooth' });
+      });
     }, { rootMargin: '-40% 0px -55% 0px' });
     $$('section.unit').forEach(s => ob.observe(s));
   }

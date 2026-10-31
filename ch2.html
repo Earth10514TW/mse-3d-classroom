@@ -1,0 +1,1169 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Atoms and Bonding 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+
+#so-plot,#gs-plot{height:400px}
+#nu-plot{height:320px}
+#dg-plot{height:360px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}#dg-plot{height:300px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<style>
+#cl-plot{height:300px}
+#lv-plot{height:420px}
+#wp-plot{height:330px}
+#rad-plot{height:280px}
+#pen-plot{height:260px}
+#pe-plot{height:400px}
+#sl-plot{height:330px}
+@media (max-width:520px){#lv-plot{height:400px}#pe-plot{height:340px}#sl-plot{height:300px}#cl-plot{height:340px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.lab.stack{grid-template-columns:1fr}
+.lab.stack .panel{grid-template-columns:auto minmax(0,1fr);align-items:start}
+.lab.stack .readout{border-top:0;padding-top:0}
+@media (max-width:620px){.lab.stack .panel{grid-template-columns:1fr}}
+.unit > .panel{max-width:40em}
+.seg.tight button{padding:4px 9px;min-width:2.3em}
+.boxes{display:grid;gap:8px;font-family:var(--f-mono);font-size:.82rem}
+.boxes .sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.boxes .sub > span:first-child{width:2.6em;color:var(--muted)}
+.boxes .bx{display:inline-flex}
+.boxes .bx i{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--rule);margin-left:-1px;font-style:normal;font-size:.9rem;letter-spacing:-.18em;padding-right:.18em}
+.boxes .sub.val > span:first-child{color:var(--ink);font-weight:600}
+.boxes .sub.val .bx i{background:var(--surface-2)}
+.conf{font-family:var(--f-mono);font-size:.95rem;line-height:1.9;word-break:break-word}
+.conf sup{font-size:.7em}
+.spec{display:block;height:10px;border-radius:1px;background:linear-gradient(90deg,#7a00c8,#2b3cff 15%,#00a7ff 28%,#00d16a 42%,#e6e600 60%,#ff8a00 75%,#ff1d00 90%,#a80000)}
+</style>
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="136"><span class="course-h" data-t="1">Materials Science and Engineering I</span><a href="ch1.html" data-t="2">Ch 1 · Introduction</a><a href="ch2.html" aria-current="page" data-t="3">Ch 2 · Atoms and bonding</a><a href="index.html" data-t="4">Ch 3 · Crystal structures</a><a href="ch4.html" data-t="5">Ch 4 · Solidification and defects</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="6">      <h1>Atoms &amp; Bonding<br><span class="d">3D</span> Classroom</h1>
+      <p class="lede">An electron in an atom is not a tiny ball on a track. It is a wave that has to fit around the nucleus, and only waves that fit are allowed. That one rule gives atoms their sharp energy levels, the shapes of their electron clouds, the order of the periodic table, and finally the bonds that hold every material together. Each model here can be turned, and most have a slider.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for this chapter">
+        <li class="palette-h">Colors mean the same thing on every page of this chapter</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>wave function ψ &gt; 0 · anions · metal ion cores</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>wave function ψ &lt; 0 · cations</span></li>
+        <li><i style="background:var(--c-face)"></i><span><b>Green</b>a second kind of atom, named in each model</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>Bohr orbits and reference radii</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>the electron, the photon, the thing to watch</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <span class="plate-tag" data-t="7">HYDROGEN 3d<sub>z²</sub><br>n = 3, l = 2, m = 0</span>
+      </div>
+      <figcaption data-t="8">Where the electron of a hydrogen atom can be found when it sits in the 3d<sub>z²</sub> orbital. Each dot is one place the electron could turn up if you looked. <b style="color:var(--c-corner)">Blue</b> and <b style="color:var(--c-body)">orange</b> mark the two signs of the wave. Unit 5 builds every orbital from n = 1 to 4.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="137">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="9"><span>01</span>Inside the atom</a></li>
+    <li><a href="#s2" data-t="10"><span>02</span>Why orbits are quantized</a></li>
+    <li><a href="#s3" data-t="11"><span>03</span>Energy levels</a></li>
+    <li><a href="#s4" data-t="12"><span>04</span>Matter waves</a></li>
+    <li><a href="#s5" data-t="13"><span>05</span>Electron clouds</a></li>
+    <li><a href="#s6" data-t="14"><span>06</span>Configurations</a></li>
+    <li><a href="#s7" data-t="15"><span>07</span>Electronegativity</a></li>
+    <li><a href="#s8" data-t="16"><span>08</span>Ionic bonds</a></li>
+    <li><a href="#s9" data-t="17"><span>09</span>Covalent bonds</a></li>
+    <li><a href="#s10" data-t="18"><span>10</span>Metallic bonds</a></li>
+    <li><a href="#s11" data-t="19"><span>11</span>Secondary bonds</a></li>
+    <li><a href="#s12" data-t="20"><span>12</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="138"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="139"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="21"><p class="unit-no">01</p><h2>What is inside an atom</h2><p class="unit-tag">Thomson's pudding vs Rutherford's nucleus</p></header>
+  <div class="prose" data-t="22">    <p>Around 1900 nobody knew what an atom looked like inside. Cathode-ray tubes had shown that electrons can be pulled out of any atom, so an atom must be made of a negative part (electrons) and a positive part. The question was how the positive part is arranged.</p>
+    <dl class="defs">
+      <dt>Thomson, 1897<small>“raisin pudding”</small></dt><dd>The positive charge is spread evenly through the whole atom, with electrons sprinkled inside like raisins. Nothing in such an atom is dense enough to turn a fast α particle around.</dd>
+      <dt>Rutherford, 1911<small>nuclear model</small></dt><dd>Almost all the mass and all the positive charge sit in a tiny <span class="term">nucleus</span> at the center. The rest of the atom is nearly empty, occupied only by electrons.</dd>
+    </dl>
+    <p>Rutherford's group fired α particles (He<sup>2+</sup>) at a thin gold foil. Most went straight through. A few bounced back, which Rutherford compared to a shell fired at tissue paper coming back at you. An α particle is about 7300 times heavier than an electron, and a heavy projectile can only be turned back by something heavier than itself. So the positive charge and the mass had to be concentrated in a nucleus. Fire both models below and compare.</p>
+  </div>
+  <aside class="mnote" data-t="23"><span class="lbl">A SENSE OF SCALE</span><p>If the nucleus were a marble 1 cm across, the atom would be a stadium 100 m across, and the electrons would be somewhere in the stands.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-ru"></div>
+      <div class="legend" data-t="24">        <span><i style="background:var(--c-body)"></i>Positive charge (nucleus, or the pudding)</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>α particle that went nearly straight</span>
+        <span><i class="sq" style="background:var(--hi)"></i>α particle turned by more than 10°</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="25">Model of the gold atom</span>
+        <div class="seg" id="ru-mode">
+          <button type="button" data-v="th" data-t="26">Thomson pudding</button>
+          <button type="button" data-v="ru" aria-pressed="true" data-t="27">Rutherford nucleus</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="row"><button type="button" class="btn" id="ru-fire"><span data-t="28">▶ Fire 400 α particles</span></button></div>
+      </div>
+      <div class="readout" id="ru-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="29"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>An atom is about 100 pm (10<sup>−10</sup> m) across. Its nucleus is about 0.01 pm, some 10 000 times smaller.</li>
+      <li>Proton and electron carry the same charge, ±1.602 × 10<sup>−19</sup> C, but a proton is 1836 times heavier.</li>
+      <li>Back-scattered α particles prove that positive charge and mass are concentrated in a nucleus. The model still has a fatal flaw, shown in Unit 2.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="30"><p class="unit-no">02</p><h2>Why the orbits have to be quantized</h2><p class="unit-tag">nλ = 2πr&emsp;→&emsp;L = mvr = nh / 2π</p></header>
+  <div class="prose" data-t="31">    <p>Rutherford's atom has electrons circling the nucleus like planets. Classical physics says this cannot last. An electron going around a circle is always accelerating toward the center, and an accelerating charge radiates light. The electron would lose energy, spiral inward and hit the nucleus in about 10<sup>−11</sup> s. On the way down its orbit frequency rises smoothly, so the light it gives off should be a continuous smear of colors.</p>
+    <p>Real atoms do neither. They are stable, and hot hydrogen gives off light at a few sharp wavelengths only. Something forbids most orbits.</p>
+  </div>
+  <div class="lab wide stack">
+    <div class="stage-col">
+      <div class="plot" id="cl-plot"><canvas id="cl-cv" role="img" aria-label="A classical electron spiralling into the nucleus, and the spectrum it would give compared with the real hydrogen spectrum" data-ta="140"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <div class="row"><button type="button" class="btn" id="cl-go"><span data-t="32">▶ Let a classical electron go</span></button></div>
+      </div>
+      <div class="readout" id="cl-info"></div>
+    </div>
+  </div>
+  <h3 data-t="33"><span class="h3-no">2-1</span><span>The rule: the electron wave has to close on itself</span></h3>
+  <div class="prose" data-t="34">    <p>In 1923 de Broglie proposed that an electron also behaves like a wave, with wavelength <span class="idx wrap">λ = h / mv</span> (Unit 4). Bohr's allowed orbits then have a simple meaning. A wave running around a circle meets its own tail after one lap. If the circumference holds a whole number of wavelengths, crest lands on crest and the wave reinforces itself every lap: a stable <span class="term">standing wave</span>. If not, each lap arrives shifted, and after many laps the crests and troughs cancel. That orbit cannot exist.</p>
+    <p>Drag the slider through non-whole numbers and watch the red line, which is what is left after the laps are added. It survives only at n = 1, 2, 3, …</p>
+  </div>
+  <aside class="mnote" data-t="35"><span class="lbl">AN ANALOGY</span><p>A guitar string fixed at both ends can only ring at notes whose half-waves fit its length. The ring around the nucleus has no ends, so a whole number of full waves has to fit instead.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-sw"></div>
+      <div class="legend" data-t="36">        <span><i class="sq" style="background:var(--c-corner)"></i>First lap of the wave</span>
+        <span><i class="sq" style="background:var(--ghost3d)"></i>Later laps</span>
+        <span><i class="sq" style="background:var(--hi)"></i>All laps added: what survives</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Orbit</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="37">Wavelengths that fit in one lap, 2πr / λ</span> · <b id="sw-q-v"></b></span>
+        <input type="range" id="sw-q" min="1" max="6" step="0.01" value="3.4" aria-label="Wavelengths per lap" data-ta="141">
+        <div class="row"><button type="button" class="btn" id="sw-snap"><span data-t="38">Round to the nearest n</span></button></div>
+      </div>
+      <label class="check"><input type="checkbox" id="sw-laps" checked><span data-t="39">Show the later laps</span></label>
+      <div class="readout" id="sw-info"></div>
+    </div>
+  </div>
+  <div class="prose" data-t="40">    <p>The rule turns into Bohr's condition in one line. Put λ = h / mv into nλ = 2πr:</p>
+    <p class="eq big">n · h / (mv) = 2πr&emsp;⇒&emsp;L = mvr = n · h / 2π</p>
+    <p>The angular momentum L of the electron can only be a whole multiple of h / 2π. Combine this with the Coulomb pull of the nucleus providing the centripetal force, and the radius and energy of each orbit follow (Unit 3).</p>
+  </div>
+  <div class="key" data-t="41"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Classical orbits collapse in about 10<sup>−11</sup> s and would give a continuous spectrum. Real atoms are stable and give sharp lines.</li>
+      <li>An electron wave survives only if a whole number of wavelengths fits around the orbit: nλ<sub>n</sub> = 2πr<sub>n</sub>.</li>
+      <li>With λ = h / mv this is L = mvr = nh / 2π, Bohr's quantization of angular momentum. n = 1, 2, 3, … is the <span class="term">principal quantum number</span>.</li>
+      <li>Quantization is not an extra assumption once the electron is a wave. It is the same reason a guitar string has notes.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="42"><p class="unit-no">03</p><h2>Energy levels and the hydrogen spectrum</h2><p class="unit-tag">r<sub>n</sub> = n²a<sub>0</sub> / Z&emsp;E<sub>n</sub> = −13.6 Z² / n² eV</p></header>
+  <div class="prose" data-t="43">    <p>Set the Coulomb pull equal to the centripetal force, mv² / r = Ze² / (4πε<sub>0</sub>r²), and use mvr = nh / 2π to remove v. Only these radii and energies are allowed:</p>
+    <dl class="defs">
+      <dt>Radius<small>grows as n²</small></dt><dd><span class="idx wrap">r<sub>n</sub> = n² h² ε<sub>0</sub> / (Zπme²) = n² a<sub>0</sub> / Z</span>, with the <span class="term">Bohr radius</span> a<sub>0</sub> = 0.0529 nm.</dd>
+      <dt>Energy<small>negative, crowds toward 0</small></dt><dd><span class="idx wrap">E<sub>n</sub> = −Ze² / (8πε<sub>0</sub> r<sub>n</sub>) = −13.6 Z² / n² eV</span>. Negative means bound: it takes energy to pull the electron out. E = 0 is a free electron at rest far away.</dd>
+    </dl>
+    <p>An electron can only jump between levels. Jumping down, it gives the difference away as one photon; jumping up, it has to absorb exactly that difference. The photon energy fixes its wavelength:</p>
+    <p class="eq big">ΔE = hc / λ&emsp;⇒&emsp;λ (nm) = 1240 / ΔE (eV)</p>
+    <p>Because only certain ΔE exist, only certain wavelengths appear. Pick a jump and watch both the orbit picture and the level diagram.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-bo"></div>
+      <div class="legend" data-t="44">        <span><i style="background:var(--c-body)"></i>Nucleus (proton)</span>
+        <span><i style="background:var(--hi)"></i>Electron</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Allowed orbits, drawn to scale (r ∝ n²)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="45">Upper level</span>
+        <div class="seg tight" id="bo-up">
+          <button type="button" data-v="2">2</button><button type="button" data-v="3" aria-pressed="true">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button><button type="button" data-v="6">6</button><button type="button" data-v="99">∞</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="46">Lower level</span>
+        <div class="seg tight" id="bo-lo">
+          <button type="button" data-v="1">1</button><button type="button" data-v="2" aria-pressed="true">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="47">Direction</span>
+        <div class="seg" id="bo-dir">
+          <button type="button" data-v="em" aria-pressed="true" data-t="48">Emit: jump down</button>
+          <button type="button" data-v="ab" data-t="49">Absorb: jump up</button>
+        </div>
+        <div class="row"><button type="button" class="btn" id="bo-go"><span data-t="50">▶ Make the jump</span></button></div>
+      </div>
+      <div class="readout" id="bo-info"></div>
+    </div>
+  </div>
+  <div class="plot wide" id="lv-plot"><canvas id="lv-cv" role="img" aria-label="Energy-level diagram of hydrogen with the Lyman, Balmer and Paschen series, and the resulting line spectrum" data-ta="142"></canvas></div>
+  <div class="key" data-t="51"><span class="key-tag">FORMULAS</span>
+    <dl>
+      <dt>Orbit radius</dt><dd><span class="idx wrap">r<sub>n</sub> = n² a<sub>0</sub> / Z</span>, a<sub>0</sub> = 0.0529 nm</dd>
+      <dt>Level energy</dt><dd><span class="idx wrap">E<sub>n</sub> = −13.6 Z² / n² eV</span> (one electron only: H, He<sup>+</sup>, Li<sup>2+</sup>)</dd>
+      <dt>Photon</dt><dd><span class="idx wrap">ΔE = 13.6 (1/n<sub>low</sub>² − 1/n<sub>up</sub>²) eV = hc / λ</span>; λ (nm) = 1240 / ΔE (eV)</dd>
+      <dt>Example 3 → 2</dt><dd>ΔE = 13.6 (1/4 − 1/9) = 1.89 eV = 3.02 × 10<sup>−19</sup> J, λ = 656 nm, the red Balmer line H<sub>α</sub></dd>
+      <dt>Ionization energy</dt><dd>From n = 1 to n = ∞: 13.6 eV. This is the energy needed to remove the electron completely.</dd>
+    </dl>
+  </div>
+  <div class="key" data-t="52"><span class="key-tag">WATCH OUT</span>
+    <ul>
+      <li>Levels get closer together as n grows, but orbits get farther apart. Energy goes as −1/n², radius as n².</li>
+      <li>A larger jump in n does not always mean a shorter wavelength across series. 2 → 1 (122 nm, ultraviolet) has far more energy than ∞ → 2 (365 nm), because the bottom step is the big one.</li>
+      <li>The Bohr model gets hydrogen's energies exactly right, but the picture of a circular path is wrong. Unit 5 replaces it with a cloud.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="53"><p class="unit-no">04</p><h2>Matter waves and uncertainty</h2><p class="unit-tag">λ = h / p&emsp;Δx · Δp ≥ h / 4π</p></header>
+  <div class="prose" data-t="54">    <p>De Broglie's idea is that any moving particle with momentum p has a wavelength <span class="idx wrap">λ = h / p</span>, with Planck's constant h = 6.63 × 10<sup>−34</sup> J·s. For everyday objects λ is absurdly small. For an electron it is about the size of an atom, so inside atoms the wave behavior decides everything.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="55">    <table>
+      <thead><tr><th>Object</th><th>Speed or energy</th><th>λ = h / p</th><th>Compared with an atom (0.1 nm)</th></tr></thead>
+      <tbody>
+        <tr><td>Baseball, 145 g</td><td>40 m/s</td><td class="num">1.1 × 10<sup>−34</sup> m</td><td>10<sup>24</sup> times smaller: no wave effects</td></tr>
+        <tr><td>Electron in hydrogen, n = 1</td><td>2.19 × 10<sup>6</sup> m/s (13.6 eV)</td><td class="num">0.332 nm</td><td>Exactly 2πa<sub>0</sub>: one wave fits the first orbit</td></tr>
+        <tr><td>Electron, 54 eV</td><td>Davisson–Germer, 1927</td><td class="num">0.167 nm</td><td>Same as atom spacing, so a crystal diffracts it</td></tr>
+        <tr><td>Electron, 100 keV</td><td>TEM beam</td><td class="num">0.0037 nm</td><td>Short enough to image single atom columns</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 data-t="56"><span class="h3-no">4-1</span><span>A particle made of waves: the wave packet</span></h3>
+  <div class="prose" data-t="57">    <p>A single wave of one wavelength goes on forever, so it says nothing about where the particle is. Schrödinger's approach is to build the particle out of many waves. Waves with slightly different wavelengths agree in one region and cancel elsewhere, which gives a <span class="term">wave packet</span>. The wave function ψ is the amplitude, and |ψ|² is the <span class="term">probability density</span> of finding the particle there.</p>
+    <p>To squeeze the packet into a smaller region you have to mix in a wider range of wavelengths, that is, a wider range of momenta. Position and momentum cannot both be sharp: <span class="idx wrap">Δx · Δp ≥ h / 4π</span>, the <span class="term">Heisenberg uncertainty principle</span>. This is why an electron in an atom cannot follow a definite path, and why Unit 5 draws a cloud.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="wp-plot"><canvas id="wp-cv" role="img" aria-label="Waves of slightly different wavelength adding up to a wave packet" data-ta="143"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="58">Spread of wavelengths mixed in, Δk</span> · <b id="wp-dk-v"></b></span>
+        <input type="range" id="wp-dk" min="0" max="1" step="0.01" value="0.35" aria-label="Spread of wave numbers" data-ta="144">
+      </div>
+      <label class="check"><input type="checkbox" id="wp-comp" checked><span data-t="59">Show the individual waves</span></label>
+      <div class="readout" id="wp-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="60"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>λ = h / p for every moving particle. For electrons in atoms λ is about atomic size, so wave behavior cannot be ignored.</li>
+      <li>ψ is a probability amplitude. |ψ|² = ψψ* is the probability density.</li>
+      <li>A narrow packet needs a wide spread of momenta: Δx · Δp ≥ h / 4π. Electrons in atoms have no trajectories, only probability clouds.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="61"><p class="unit-no">05</p><h2>The electron cloud: orbitals</h2><p class="unit-tag">ψ<sub>nlm</sub>(r, θ, φ) = R<sub>nl</sub>(r) · Y<sub>lm</sub>(θ, φ)</p></header>
+  <div class="prose" data-t="62">    <p>Solve Schrödinger's equation for the hydrogen atom and the standing-wave condition of Unit 2 comes back, now in three dimensions. A wave in 3D has to fit in three directions, so it needs three whole numbers instead of one:</p>
+    <dl class="defs">
+      <dt>n<small>principal</small></dt><dd>Fits the wave in the radial direction. Sets the energy (−13.6 / n² eV in hydrogen) and the overall size, about n² a<sub>0</sub>.</dd>
+      <dt>l<small>orbital, 0 … n−1</small></dt><dd>How many times the wave changes sign going around: the shape. l = 0, 1, 2, 3 are called s, p, d, f.</dd>
+      <dt>m<sub>l</sub><small>magnetic, −l … +l</small></dt><dd>Which way the shape points. There are 2l + 1 of them: one s, three p, five d, seven f.</dd>
+    </dl>
+    <p>The result is an <span class="term">orbital</span>: not a path, but a region where |ψ|² tells you how likely the electron is to be found. Below, each dot is one place the electron could turn up. Where dots are dense, the electron is likely to be. Where the wave changes sign (blue to orange), |ψ|² drops to zero, and there is a <span class="term">node</span> with no dots at all.</p>
+  </div>
+  <aside class="mnote" data-t="63"><span class="lbl">AN ANALOGY</span><p>Take a photo of a moving fan blade with a long exposure. You will not see the blade, only a blur that is darker where the blade spends more time. An orbital is that blur, for an electron.</p></aside>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-orb"></div>
+      <div class="legend" data-t="64">        <span><i style="background:var(--c-corner)"></i>ψ &gt; 0</span>
+        <span><i style="background:var(--c-body)"></i>ψ &lt; 0</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Bohr orbit of the same n, radius n²a<sub>0</sub></span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="65">Principal quantum number n</span>
+        <div class="seg tight" id="orb-n"><button type="button" data-v="1">1</button><button type="button" data-v="2" aria-pressed="true">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="66">Orbital quantum number l</span>
+        <div class="seg tight" id="orb-l"><button type="button" data-v="0">0 · s</button><button type="button" data-v="1" aria-pressed="true">1 · p</button><button type="button" data-v="2">2 · d</button><button type="button" data-v="3">3 · f</button></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="67">Magnetic quantum number m<sub>l</sub></span>
+        <div class="seg tight" id="orb-m"></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="68">How to draw it</span>
+        <div class="seg" id="orb-view">
+          <button type="button" data-v="dots" aria-pressed="true" data-t="69">Dot cloud</button>
+          <button type="button" data-v="surf" data-t="70">90% surface</button>
+          <button type="button" data-v="slice" data-t="71">Cut in half</button>
+          <button type="button" data-v="plane" data-t="72">Density map</button>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="orb-bohr"><span data-t="73">Show the Bohr orbit for comparison</span></label>
+      <div class="readout" id="orb-info"></div>
+    </div>
+  </div>
+  <div class="plot wide" id="rad-plot"><canvas id="rad-cv" role="img" aria-label="Radial probability of the chosen orbital and of the other orbitals with the same n" data-ta="145"></canvas></div>
+  <div class="prose" data-t="74">    <p>The curve above is the <span class="term">radial probability</span> P(r) = r²R<sub>nl</sub>²: the chance of finding the electron in a thin shell at distance r, whatever the direction. It links the cloud back to Bohr. For 1s the peak sits exactly at a<sub>0</sub>, Bohr's first radius. Bohr got the size right, but the electron is spread over a range of r rather than fixed on a circle. The number of humps is n − l, so the s orbitals of high n have small inner humps close to the nucleus. Unit 6 shows why that matters.</p>
+  </div>
+  <div class="key" data-t="75"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>An orbital is a standing wave in 3D. Three quantum numbers fix it: n (size and energy), l (shape: s p d f), m<sub>l</sub> (orientation).</li>
+      <li>Dots are dense where |ψ|² is large. Where ψ changes sign there is a node with |ψ|² = 0.</li>
+      <li>Total nodes = n − 1: radial nodes (spheres) n − l − 1, plus angular nodes (planes or cones) l.</li>
+      <li>In hydrogen all orbitals with the same n have the same energy. In atoms with more electrons this is no longer true (Unit 6).</li>
+      <li>A fourth number, the spin m<sub>s</sub> = ±½, does not change the shape. It lets each orbital hold two electrons.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="76"><p class="unit-no">06</p><h2>Filling the orbitals: electron configuration</h2><p class="unit-tag">1s 2s 2p 3s 3p 4s 3d 4p</p></header>
+  <div class="prose" data-t="77">    <p>An atom with Z electrons puts them into orbitals following three rules:</p>
+    <dl class="defs">
+      <dt>Lowest energy first</dt><dd>Fill the lowest available level before the next one (aufbau).</dd>
+      <dt>Pauli exclusion</dt><dd>No two electrons share all four quantum numbers, so each orbital holds at most two, with opposite spin (↑↓). A shell n holds 2n² electrons.</dd>
+      <dt>Hund's rule</dt><dd>In a set of equal-energy orbitals (the three p, the five d), electrons spread out one per orbital with parallel spins before any pairs up.</dd>
+    </dl>
+    <p>With more than one electron, orbitals of the same n no longer have the same energy. Inner electrons <span class="term">shield</span> the outer ones from the full nuclear charge. An orbital that spends some time close to the nucleus feels more of that charge and drops lower. The 4s orbital has small humps deep inside (look at the curve below), while 3d stays outside. So 4s fills before 3d, even though n = 4 &gt; 3.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="panel" style="min-height:100%">
+        <div class="boxes" id="ec-boxes"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="78">Atomic number Z</span> · <b id="ec-z-v"></b></span>
+        <input type="range" id="ec-z" min="1" max="36" step="1" value="26" aria-label="Atomic number" data-ta="146">
+        <div class="row"><button type="button" class="btn sm" data-z="11">Na</button><button type="button" class="btn sm" data-z="17">Cl</button><button type="button" class="btn sm" data-z="24">Cr</button><button type="button" class="btn sm" data-z="26">Fe</button><button type="button" class="btn sm" data-z="29">Cu</button><button type="button" class="btn sm" data-z="10">Ne</button></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="79">Ion charge</span>
+        <div class="seg tight" id="ec-q"><button type="button" data-v="-2">2−</button><button type="button" data-v="-1">1−</button><button type="button" data-v="0" aria-pressed="true">0</button><button type="button" data-v="1">1+</button><button type="button" data-v="2">2+</button><button type="button" data-v="3">3+</button></div>
+      </div>
+      <div class="readout" id="ec-info"></div>
+    </div>
+  </div>
+  <div class="plot wide" id="pen-plot"><canvas id="pen-cv" role="img" aria-label="Radial probability of 3d and 4s showing that 4s reaches closer to the nucleus" data-ta="147"></canvas></div>
+  <div class="key" data-t="80"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Fill order: 1s 2s 2p 3s 3p <b>4s 3d</b> 4p. Each orbital holds two electrons; shell n holds 2n².</li>
+      <li>Noble gases (He 1s², Ne … Kr ending in s²p⁶) have full outer shells: high ionization energy, no electron affinity, chemically quiet.</li>
+      <li>Transition metals lose 4s electrons first when they form cations: Fe [Ar]3d⁶4s², Fe<sup>2+</sup> [Ar]3d⁶, Fe<sup>3+</sup> [Ar]3d⁵. Last in is not first out.</li>
+      <li>Cr and Cu are exceptions: [Ar]3d⁵4s¹ and [Ar]3d¹⁰4s¹, because a half-full or full d set is extra stable.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="81"><p class="unit-no">07</p><h2>Electronegativity: who pulls harder</h2><p class="unit-tag">% ionic = 1 − exp(−¼ (X<sub>A</sub> − X<sub>B</sub>)²)</p></header>
+  <div class="prose" data-t="82">    <p>The electron configuration decides how an atom behaves in a reaction. Atoms with one or two electrons beyond a full shell give them away easily and become cations: they are <span class="term">electropositive</span> (Na, K, Ca). Atoms one or two electrons short of a full shell grab electrons and become anions: they are <span class="term">electronegative</span> (F, O, Cl).</p>
+    <p><span class="term">Electronegativity</span> X measures how strongly an atom pulls shared electrons toward itself, on a scale from about 0.7 (Fr, Cs) to 4.0 (F). It rises to the right across a period and up a group. When two atoms bond, the difference ΔX decides the bond type: large ΔX means the electron is transferred (ionic), small ΔX means it is shared (covalent). Pauling's formula turns ΔX into a percentage of ionic character.</p>
+    <p>Click two bars in the model, or pick a pair from the list.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-en"></div>
+      <div class="legend" data-t="83">        <span><i class="sq" style="background:var(--c-corner)"></i>Bar height = electronegativity X</span>
+        <span><i style="background:var(--hi)"></i>Atom A</span>
+        <span><i style="background:var(--c-face)"></i>Atom B</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="84">Pairs</span>
+        <div class="seg" id="en-pre">
+          <button type="button" data-v="Na,Cl" aria-pressed="true">NaCl</button><button type="button" data-v="Mg,O">MgO</button><button type="button" data-v="Ga,As">GaAs</button><button type="button" data-v="Zn,Se">ZnSe</button><button type="button" data-v="Si,O">SiO₂</button><button type="button" data-v="H,F">HF</button><button type="button" data-v="C,H">C–H</button><button type="button" data-v="Si,Si">Si–Si</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="85">Or choose any two</span>
+        <div class="row"><select id="en-a" aria-label="Atom A" data-ta="148"></select><select id="en-b" aria-label="Atom B" data-ta="149"></select></div>
+      </div>
+      <div class="readout" id="en-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="86"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Electronegativity rises toward the upper right of the periodic table (F = 4.0) and falls toward the lower left (Cs, Fr ≈ 0.7). Noble gases are left out.</li>
+      <li>Most real bonds are mixed. GaAs (ΔX = 0.4) is 4% ionic, ZnSe (ΔX = 0.8) is 15% ionic, NaCl (ΔX = 2.1) is about 67% ionic.</li>
+      <li>Two different elements always give some ionic character. Only bonds between identical atoms (Si–Si, H–H) are purely covalent.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 08 ======================= -->
+<section class="unit" id="s8">
+  <header class="unit-head" data-t="87"><p class="unit-no">08</p><h2>Ionic bonds: one curve explains many properties</h2><p class="unit-tag">E<sub>net</sub> = Z<sub>1</sub>Z<sub>2</sub>e² / (4πε<sub>0</sub>a) + b / a<sup>n</sup></p></header>
+  <div class="prose" data-t="88">    <p>Na (3s¹) gives its electron to Cl (3s²3p⁵). Both ions now have noble-gas configurations, Na<sup>+</sup> like Ne and Cl<sup>−</sup> like Ar, and they attract each other by Coulomb's law. They cannot merge, because when their filled electron shells start to overlap a strong repulsion sets in. Two terms compete as a function of the distance a between the ion centers:</p>
+    <dl class="defs">
+      <dt>Attraction<small>long range</small></dt><dd><span class="idx wrap">F<sub>att</sub> = −Z<sub>1</sub>Z<sub>2</sub>e² / (4πε<sub>0</sub>a²)</span>, energy <span class="idx wrap">Z<sub>1</sub>Z<sub>2</sub>e² / (4πε<sub>0</sub>a)</span>, which is negative because Z<sub>1</sub>Z<sub>2</sub> &lt; 0.</dd>
+      <dt>Repulsion<small>short range</small></dt><dd><span class="idx wrap">F<sub>rep</sub> = −nb / a<sup>n+1</sup></span>, energy <span class="idx wrap">b / a<sup>n</sup></span>, with n = 7 to 10. It only matters when a is small.</dd>
+    </dl>
+    <p>The forces balance where F<sub>net</sub> = 0, which is the same place E<sub>net</sub> is lowest: the equilibrium spacing a<sub>0</sub>. Energy is the integral of force, so a zero of the force curve is a minimum of the energy curve. The shape of this one curve predicts how the material behaves.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="pe-plot"><canvas id="pe-cv" role="img" aria-label="Force and potential energy of an ion pair against distance" data-ta="150"></canvas></div>
+      <div class="legend" data-t="89">        <span><i class="sq" style="background:var(--c-corner)"></i>Attraction</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Repulsion</span>
+        <span><i class="sq" style="background:var(--accent)"></i>Net</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Vibration at temperature T and its mean position</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="90">Ion pair</span>
+        <div class="seg" id="pe-z">
+          <button type="button" data-v="1" aria-pressed="true" data-t="91">Na⁺ Cl⁻ <small>Z₁Z₂ = −1</small></button>
+          <button type="button" data-v="4" data-t="92">Mg²⁺ O²⁻ <small>Z₁Z₂ = −4</small></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="93">Repulsion exponent n</span> · <b id="pe-n-v"></b></span>
+        <input type="range" id="pe-n" min="6" max="12" step="1" value="9" aria-label="Repulsion exponent" data-ta="151">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="94">Temperature (vibration energy)</span> · <b id="pe-T-v"></b></span>
+        <input type="range" id="pe-T" min="0" max="1" step="0.01" value="0.3" aria-label="Temperature" data-ta="152">
+      </div>
+      <div class="readout" id="pe-info"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" data-t="95">    <table>
+      <thead><tr><th>Feature of the curve</th><th>Property it sets</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Depth of the well, E<sub>0</sub></td><td>Bond energy, melting point</td><td>A deeper well needs more thermal energy to pull the ions apart.</td></tr>
+        <tr><td>Curvature at the bottom</td><td>Stiffness (elastic modulus)</td><td>Steep sides mean a large restoring force for a small stretch.</td></tr>
+        <tr><td>Lopsidedness of the well</td><td>Thermal expansion</td><td>The outer wall is gentler, so a vibrating pair spends more time stretched.<br>Its mean spacing grows with temperature.</td></tr>
+        <tr><td>Position of the bottom, a<sub>0</sub></td><td>Ion spacing, lattice constant</td><td>The sum of the two ionic radii.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 data-t="96"><span class="h3-no">8-1</span><span>How many anions fit around a cation: radius ratio</span></h3>
+  <div class="prose" data-t="97">    <p>An ionic bond pulls equally in every direction, so an ionic solid packs as many anions around each cation as it can, while keeping the whole crystal neutral. The limit is geometry. The anions must touch the cation. If the cation is too small for a given arrangement, the anions bump into each other before they reach it, the cation rattles in its cage, and the structure is unstable. The smallest cation that still touches all its neighbors gives the <span class="term">critical radius ratio</span> for each <span class="term">coordination number</span> (CN).</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-cn"></div>
+      <div class="legend" data-t="98">        <span><i style="background:var(--c-body)"></i>Cation (r<sub>C</sub>)</span>
+        <span><i style="background:var(--c-corner)"></i>Anions (r<sub>A</sub>)</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Gap: the cation does not touch</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="99">Radius ratio r<sub>C</sub> / r<sub>A</sub></span> · <b id="cn-r-v"></b></span>
+        <input type="range" id="cn-r" min="0.1" max="1" step="0.005" value="0.525" aria-label="Radius ratio" data-ta="153">
+        <div class="row"><button type="button" class="btn sm" data-r="0.525">NaCl 0.525</button><button type="button" class="btn sm" data-r="0.934">CsCl 0.934</button><button type="button" class="btn sm" data-r="0.402">ZnS 0.402</button></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="100">Coordination number</span>
+        <div class="seg tight" id="cn-cn"><button type="button" data-v="0" aria-pressed="true" data-t="101">Best fit</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="6">6</button><button type="button" data-v="8">8</button></div>
+      </div>
+      <div class="readout" id="cn-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="102"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Critical ratios: CN 8 (cube) ≥ 0.732, CN 6 (octahedron) ≥ 0.414, CN 4 (tetrahedron) ≥ 0.225, CN 3 (triangle) ≥ 0.155.</li>
+      <li>NaCl: 0.095 / 0.181 = 0.525 → CN 6. CsCl: 0.169 / 0.181 = 0.934 → CN 8.</li>
+      <li>Lattice energy and melting point are high in ionic solids. They rise with ionic charge (MgO ≫ NaCl) and fall as the ions get larger.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 09 ======================= -->
+<section class="unit" id="s9">
+  <header class="unit-head" data-t="103"><p class="unit-no">09</p><h2>Covalent bonds: sharing electron clouds</h2><p class="unit-tag">sp³ = ½ (s ± p<sub>x</sub> ± p<sub>y</sub> ± p<sub>z</sub>)&emsp;109.5°</p></header>
+  <div class="prose" data-t="104">    <p>When two atoms of similar electronegativity meet, neither can take the other's electron. Instead their outer orbitals overlap and a pair of electrons is shared, so that each atom counts a full shell. H<sub>2</sub> shares one pair. F<sub>2</sub> (2s²2p⁵) shares one p electron each, O<sub>2</sub> two, N<sub>2</sub> three. Because the bond lives where two orbitals overlap, a covalent bond points in a definite direction.</p>
+    <p>Carbon is the key case. Its ground state 1s²2s²2p² has only two half-filled orbitals, which suggests two bonds. Yet carbon forms four, all alike, at 109.5° to each other. The reason is <span class="term">hybridization</span>: one 2s electron is promoted to 2p, and the 2s and three 2p waves mix into four equal <span class="term">sp³ orbitals</span>. Adding waves means some regions add (same sign) and others cancel (opposite sign). Build them step by step below.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-sp"></div>
+      <div class="legend" id="sp-legend" data-t="105">        <span><i style="background:var(--c-corner)"></i>ψ &gt; 0</span>
+        <span><i style="background:var(--c-body)"></i>ψ &lt; 0</span>
+        <span><i style="background:var(--c-face)"></i>Hydrogen</span>
+        <span><i style="background:var(--edge3d)"></i>Carbon</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="106">Step</span>
+        <div class="seg" id="sp-mode">
+          <button type="button" data-v="s" data-t="107">1 · 2s</button>
+          <button type="button" data-v="p" data-t="108">2 · 2p<sub>x</sub> 2p<sub>y</sub> 2p<sub>z</sub></button>
+          <button type="button" data-v="h1" aria-pressed="true" data-t="109">3 · one sp³</button>
+          <button type="button" data-v="h4" data-t="110">4 · four sp³</button>
+          <button type="button" data-v="ch4" data-t="111">5 · CH₄</button>
+          <button type="button" data-v="dia" data-t="112">6 · Diamond</button>
+        </div>
+      </div>
+      <div class="readout" id="sp-info"></div>
+    </div>
+  </div>
+  <div class="tbl-wrap wide" data-t="113">    <table>
+      <thead><tr><th>Bond</th><th>Shared pairs</th><th>Bond energy (kJ/mol)</th><th>Bond length (nm)</th></tr></thead>
+      <tbody>
+        <tr><td>F–F</td><td class="num">1</td><td class="num">155</td><td class="num">0.142</td></tr>
+        <tr><td>O=O</td><td class="num">2</td><td class="num">494</td><td class="num">0.121</td></tr>
+        <tr><td>N≡N</td><td class="num">3</td><td class="num">942</td><td class="num">0.110</td></tr>
+        <tr class="sum"><td>C–C</td><td class="num">1</td><td class="num">370</td><td class="num">0.154</td></tr>
+        <tr><td>C=C</td><td class="num">2</td><td class="num">680</td><td class="num">0.13</td></tr>
+        <tr><td>C≡C</td><td class="num">3</td><td class="num">890</td><td class="num">0.12</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="114"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Covalent bonds form between atoms of similar electronegativity by sharing electron pairs. They are directional, because the bond is where two orbitals overlap.</li>
+      <li>More shared pairs → stronger and shorter bonds.</li>
+      <li>sp³ hybrids point to the corners of a tetrahedron, 109.5° apart. In diamond every carbon bonds to four others this way: very hard, bond energy 711 kJ/mol, melting point 3550 °C.</li>
+      <li>Strong bonds inside a molecule do not make a strong solid. CH<sub>4</sub> has four strong C–H bonds, but the molecules hold each other only by weak secondary bonds, so methane melts at −183 °C.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 10 ======================= -->
+<section class="unit" id="s10">
+  <header class="unit-head" data-t="115"><p class="unit-no">10</p><h2>Metallic bonds and mixed bonds</h2><p class="unit-tag">ion cores in a sea of shared electrons</p></header>
+  <div class="prose" data-t="116">    <p>Metal atoms hold their outer electrons loosely and have few of them. Packed closely in a crystal, each atom's valence electrons are attracted to the neighboring nuclei as much as to their own, and they spread through the whole crystal as an <span class="term">electron cloud</span> shared by all the positive ion cores. Two things follow:</p>
+    <dl class="defs">
+      <dt>Conduction</dt><dd>The shared electrons move freely, so a small voltage drives a current. The same free electrons carry heat.</dd>
+      <dt>Ductility</dt><dd>The bond is <span class="term">non-directional</span>: an ion core is happy wherever it sits in the electron sea. Planes of atoms can slide past each other without breaking the bond.</dd>
+    </dl>
+    <p>Compare that with an ionic crystal. Slide one layer by one ion-to-ion spacing and every ion faces an ion of the same charge. The layers push apart and the crystal cleaves. That is why metals bend and ceramics shatter.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="sl-plot"><canvas id="sl-cv" role="img" aria-label="Sliding one layer of a metal and of an ionic crystal" data-ta="154"></canvas></div>
+      <div class="legend" data-t="117">        <span><i style="background:var(--c-corner)"></i>Metal ion core · anion</span>
+        <span><i style="background:var(--c-body)"></i>Cation</span>
+        <span><i class="dot" style="background:var(--hi)"></i>Shared valence electrons</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="118">Solid</span>
+        <div class="seg" id="sl-kind">
+          <button type="button" data-v="m" aria-pressed="true" data-t="119">Metal</button>
+          <button type="button" data-v="i" data-t="120">Ionic crystal</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="121">Slide the top layers</span> · <b id="sl-x-v"></b></span>
+        <input type="range" id="sl-x" min="0" max="1" step="0.01" value="0" aria-label="Shift" data-ta="155">
+      </div>
+      <div class="readout" id="sl-info"></div>
+    </div>
+  </div>
+  <div class="prose" data-t="122">    <p>Real bonds are often mixtures of two types:</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="123">    <table>
+      <thead><tr><th>Mixture</th><th>When it happens</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td>Ionic–covalent</td><td>Two nonmetals or a metal and a nonmetal with moderate ΔX</td><td>GaAs 4% ionic, ZnSe 15%, SiO₂ about 50%</td></tr>
+        <tr><td>Metallic–covalent</td><td>Transition metals with dsp hybrid orbitals;<br>group IVA going down</td><td>High melting points of W, Mo;<br>C (diamond) covalent → Si, Ge partly metallic → Sn, Pb metallic</td></tr>
+        <tr><td>Metallic–ionic</td><td>Intermetallic compounds of metals with a large ΔX</td><td>NaZn₁₃ (more ionic); Al₉Co₃, Fe₅Zn₂₁ (less ionic)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="124"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Metallic bond: positive ion cores held together by a shared cloud of free valence electrons. Non-directional.</li>
+      <li>Free electrons → electrical and thermal conduction. Non-directional bond → layers slide without breaking → ductility.</li>
+      <li>In an ionic crystal a slide of one ion spacing brings like charges face to face, so ceramics are brittle.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 11 ======================= -->
+<section class="unit" id="s11">
+  <header class="unit-head" data-t="125"><p class="unit-no">11</p><h2>Secondary bonds: dipoles</h2><p class="unit-tag">μ = qd&emsp;fluctuating · permanent · hydrogen bond</p></header>
+  <div class="prose" data-t="126">    <p>Atoms with full shells and molecules whose bonds are already satisfied still attract each other a little. The attraction comes from <span class="term">electric dipoles</span>: wherever the centers of positive and negative charge separate by a distance d, there is a dipole moment μ = qd, and dipoles pull on each other. Secondary bonds are much weaker than primary bonds, but they decide whether a molecular substance is a gas, a liquid or a solid at room temperature.</p>
+    <dl class="defs">
+      <dt>Fluctuating dipoles</dt><dd>The electron cloud of even a noble-gas atom is not always centered. For an instant it shifts, the atom is a dipole, and it pushes the cloud of its neighbor into a matching shift. Bigger atoms have looser clouds, larger dipoles, and higher melting and boiling points.</dd>
+      <dt>Permanent dipoles</dt><dd>A molecule whose bonds are polar and not arranged symmetrically carries a fixed dipole. CH<sub>4</sub> is symmetric and has none; CH<sub>3</sub>Cl has one.</dd>
+      <dt>Hydrogen bonds</dt><dd>The strongest secondary bond. H bonded to O, N or F is stripped nearly bare and attracts lone pairs on a neighboring molecule. Water's bent shape (about 105°) gives it a large dipole.</dd>
+    </dl>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-sb"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="127">Kind of secondary bond</span>
+        <div class="seg" id="sb-mode">
+          <button type="button" data-v="fl" aria-pressed="true" data-t="128">Fluctuating · Ar</button>
+          <button type="button" data-v="pm" data-t="129">Permanent · CH₄ vs CH₃Cl</button>
+          <button type="button" data-v="hb" data-t="130">Hydrogen bond · water</button>
+        </div>
+      </div>
+      <div class="readout" id="sb-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="131"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Strength, roughly: ionic, covalent, metallic (100 – 1000 kJ/mol) ≫ hydrogen bond (about 20 – 40) &gt; permanent dipole &gt; fluctuating dipole (a few).</li>
+      <li>Noble gases are held only by fluctuating dipoles, and their boiling points rise with size: He 4 K, Ne 27 K, Ar 87 K, Kr 120 K, Xe 165 K, Rn 211 K.</li>
+      <li>Symmetric molecules cancel their bond dipoles (CH<sub>4</sub>). Asymmetric ones keep a net dipole (CH<sub>3</sub>Cl, H<sub>2</sub>O).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 12 ======================= -->
+<section class="unit" id="s12">
+  <header class="unit-head" data-t="132"><p class="unit-no">12</p><h2>Quiz</h2><p class="unit-tag">12 questions</p></header>
+  <p class="quiz-intro" data-t="133">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score"></p>
+  <div class="quiz" id="quiz"></div>
+  <p class="next" data-t="134"><a href="index.html">Next, Chapter 3: Crystal Structure 3D Classroom →</a></p>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="135">  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch. 2 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019; A. Beiser, <i>Concepts of Modern Physics</i>, 6th ed. (hydrogen wave functions). Electronegativities are Pauling's values as tabulated in Callister, <i>Materials Science and Engineering: An Introduction</i>. Noble-gas boiling points and the F–F, O=O, N≡N bond lengths are standard reference values, not from the slides.</p>
+  <span class="lbl">MODELS</span>
+  <p>The electron clouds are exact hydrogen orbitals: each dot is drawn at random with probability |ψ|², so the dot density is the real probability density. Real orbitals (p<sub>x</sub>, d<sub>xy</sub>, …) are shown instead of complex ones, because they are the ones used in bonding. The sp³ clouds are mixed from hydrogen 2s and 2p. The Rutherford model draws the nucleus about 100 times larger than scale so that a few hundred α particles show some large deflections. The ion-pair curve uses the slide's NaCl example (a<sub>0</sub> = 0.276 nm, n = 9).</p>
+  <span class="lbl">NOTES</span>
+  <p>Slide 42 gives the Na<sup>+</sup>–Cl<sup>−</sup> attraction as 3.02 × 10<sup>−19</sup> N. Working the same numbers gives 3.02 × 10<sup>−9</sup> N, which is also the value used on slide 47.</p>
+  <p>Slide 62 lists X<sub>Ga</sub> = 1.8, X<sub>As</sub> = 2.2, X<sub>Zn</sub> = 1.7, X<sub>Se</sub> = 2.5, while the Pauling table here has 1.6, 2.0, 1.6, 2.4. The differences ΔX = 0.4 and 0.8, which are all the formula uses, are the same in both.</p></footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={"1":"材料科學與工程導論（一）",
+"2":"第 1 章・導論",
+"3":"第 2 章・原子與鍵結",
+"4":"第 3 章・晶體結構",
+"5":"第 4 章・凝固與缺陷",
+"6":"      <h1>原子與鍵結<br><span class=\"d\">3D<\/span>教室<\/h1>\n      <p class=\"lede\">原子裡的電子不是在軌道上跑的小球，而是一道波，而且這道波必須剛好繞原子核接得起來；接不起來的波不存在。就這一條規則，決定了原子有一階一階的能階、電子雲的形狀、週期表的順序，最後決定了把所有材料黏在一起的化學鍵。這裡每個模型都能轉動，多數還有滑桿。<\/p>\n      <p class=\"lede\">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。<\/p>\n      <ul class=\"palette\" aria-label=\"本章顏色約定\">\n        <li class=\"palette-h\">這一章的顏色都照這個約定<\/li>\n        <li><i style=\"background:var(--c-corner)\"><\/i><span><b>藍<\/b>　波函數 ψ &gt; 0・陰離子・金屬離子核<\/span><\/li>\n        <li><i style=\"background:var(--c-body)\"><\/i><span><b>橘<\/b>　波函數 ψ &lt; 0・陽離子<\/span><\/li>\n        <li><i style=\"background:var(--c-face)\"><\/i><span><b>綠<\/b>　第二種原子，各模型會標明<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i><span><b>紫<\/b>　波耳軌道、參考半徑<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--hi)\"><\/i><span><b>紅<\/b>　電子、光子、要注意看的東西<\/span><\/li>\n      <\/ul>\n    ",
+"7":"氫原子 3d<sub>z²<\/sub><br>n = 3、l = 2、m = 0",
+"8":"氫原子的電子在 3d<sub>z²<\/sub> 軌域時，可能出現的位置。每一點代表「如果去量，電子可能出現在這裡」的一次結果。<b style=\"color:var(--c-corner)\">藍<\/b>和<b style=\"color:var(--c-body)\">橘<\/b>是波的正負號。第 5 單元可以畫出 n = 1 到 4 的每一個軌域。",
+"9":"<span>01<\/span>原子裡面",
+"10":"<span>02<\/span>軌道為什麼量子化",
+"11":"<span>03<\/span>能階與光譜",
+"12":"<span>04<\/span>物質波",
+"13":"<span>05<\/span>電子雲",
+"14":"<span>06<\/span>電子組態",
+"15":"<span>07<\/span>電負度",
+"16":"<span>08<\/span>離子鍵",
+"17":"<span>09<\/span>共價鍵",
+"18":"<span>10<\/span>金屬鍵",
+"19":"<span>11<\/span>次鍵結",
+"20":"<span>12<\/span>小測驗",
+"21":"<p class=\"unit-no\">01<\/p><h2>原子裡面有什麼<\/h2><p class=\"unit-tag\">湯姆森的布丁 vs 拉塞福的原子核<\/p>",
+"22":"    <p>1900 年前後，沒有人知道原子裡面長什麼樣子。陰極射線管已經證明任何原子都能被拉出電子，所以原子由帶負電的部分（電子）和帶正電的部分組成。問題是：正電是怎麼分布的？<\/p>\n    <dl class=\"defs\">\n      <dt>湯姆森，1897<small>「葡萄乾布丁」<\/small><\/dt><dd>正電均勻散布在整個原子裡，電子像葡萄乾一樣嵌在其中。這種原子裡沒有任何地方密到能讓高速的 α 粒子掉頭。<\/dd>\n      <dt>拉塞福，1911<small>原子核模型<\/small><\/dt><dd>幾乎全部質量和全部正電，集中在中心一個非常小的<span class=\"term\">原子核<\/span>。原子其他地方幾乎是空的，只有電子。<\/dd>\n    <\/dl>\n    <p>拉塞福的團隊用 α 粒子（He<sup>2+<\/sup>）打一片很薄的金箔。大多數直接穿過去，但有少數反彈回來；拉塞福形容這像是砲彈打在衛生紙上卻彈回來打到自己。α 粒子比電子重大約 7300 倍，而重的東西只有撞到比自己更重的東西才會被彈回來。所以正電和質量一定集中在原子核。下面兩種模型都打打看。",
+"23":"<span class=\"lbl\">尺度感<\/span><p>如果原子核是一顆 1 cm 的彈珠，整個原子就是一座 100 m 寬的體育場，電子在看台上的某處。",
+"24":"        <span><i style=\"background:var(--c-body)\"><\/i>正電（原子核，或整團布丁）<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>幾乎直直穿過的 α 粒子<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>偏轉超過 10° 的 α 粒子<\/span>\n      ",
+"25":"金原子的模型",
+"26":"湯姆森布丁",
+"27":"拉塞福原子核",
+"28":"▶ 發射 400 個 α 粒子",
+"29":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>原子直徑約 100 pm（10<sup>−10<\/sup> m），原子核約 0.01 pm，小了大約一萬倍。<\/li>\n      <li>質子和電子的電量一樣大，±1.602 × 10<sup>−19<\/sup> C，但質子重了 1836 倍。<\/li>\n      <li>α 粒子會被反彈，證明正電和質量集中在原子核。但這個模型有一個致命的問題，見第 2 單元。<\/li>\n    <\/ul>\n  ",
+"30":"<p class=\"unit-no\">02<\/p><h2>軌道為什麼一定要量子化<\/h2><p class=\"unit-tag\">nλ = 2πr　→　L = mvr = nh / 2π<\/p>",
+"31":"    <p>拉塞福的原子裡，電子像行星一樣繞著原子核轉。古典物理說這撐不久：繞圓周走的電子一直在向圓心加速，而加速的電荷會放出電磁波。電子會一邊放光一邊失去能量，螺旋掉進原子核，只要大約 10<sup>−11<\/sup> s。往下掉的途中繞轉頻率連續上升，放出的光應該是一整片連續的顏色。<\/p>\n    <p>真實的原子兩件事都沒發生：它很穩定，而且熱的氫氣只放出幾條很細的特定波長。一定有什麼規則禁止了大部分的軌道。",
+"32":"▶ 放開一個古典電子",
+"33":"<span class=\"h3-no\">2-1<\/span><span>規則：電子波必須頭尾接得起來<\/span>",
+"34":"    <p>1923 年德布羅意提出：電子也像波，波長 <span class=\"idx wrap\">λ = h / mv<\/span>（第 4 單元）。這樣波耳允許的軌道就有了簡單的意義。沿圓周跑的波，繞一圈後會碰到自己的尾巴。如果圓周長剛好裝得下整數個波長，波峰疊上波峰，每繞一圈都加強自己，形成穩定的<span class=\"term\">駐波<\/span>。如果不是整數，每一圈都錯開一點，繞很多圈之後波峰和波谷互相抵消，這個軌道就不存在。<\/p>\n    <p>把滑桿拖到非整數，看紅線：它是很多圈疊加後剩下來的波。只有 n = 1、2、3…… 時它才留得下來。",
+"35":"<span class=\"lbl\">打個比方<\/span><p>兩端固定的吉他弦，只能發出半波長剛好塞滿弦長的那些音。繞原子核的圓圈沒有端點，所以要塞滿的是整數個完整的波長。<\/p>",
+"36":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>波的第一圈<\/span>\n        <span><i class=\"sq\" style=\"background:var(--ghost3d)\"><\/i>後面幾圈<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>所有圈加起來：留下來的波<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>軌道<\/span>\n      ",
+"37":"一圈裝得下幾個波長 2πr / λ",
+"38":"取最接近的整數 n",
+"39":"顯示後面幾圈",
+"40":"    <p>這條規則一行就能變成波耳的條件。把 λ = h / mv 代進 nλ = 2πr：<\/p>\n    <p class=\"eq big\">n · h / (mv) = 2πr　⇒　L = mvr = n · h / 2π<\/p>\n    <p>電子的角動量 L 只能是 h / 2π 的整數倍。再加上「原子核的庫侖吸引力提供向心力」，每個軌道的半徑和能量就跟著定下來（第 3 單元）。",
+"41":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>古典軌道大約 10<sup>−11<\/sup> s 就會崩潰，而且應該放出連續光譜。真實原子很穩定，放出的是一條條的細線。<\/li>\n      <li>電子波只有在軌道周長剛好裝得下整數個波長時才留得下來：nλ<sub>n<\/sub> = 2πr<sub>n<\/sub>。<\/li>\n      <li>代入 λ = h / mv，就是 L = mvr = nh / 2π，波耳的角動量量子化。n = 1、2、3…… 就是<span class=\"term\">主量子數<\/span>。<\/li>\n      <li>只要承認電子是波，量子化就不是額外的假設；它和吉他弦只能發出特定音高是同一個道理。<\/li>\n    <\/ul>\n  ",
+"42":"<p class=\"unit-no\">03<\/p><h2>能階與氫原子光譜<\/h2><p class=\"unit-tag\">r<sub>n<\/sub> = n²a<sub>0<\/sub> / Z　E<sub>n<\/sub> = −13.6 Z² / n² eV<\/p>",
+"43":"    <p>讓庫侖吸引力等於向心力，mv² / r = Ze² / (4πε<sub>0<\/sub>r²)，再用 mvr = nh / 2π 消掉 v，就只剩下這些允許的半徑和能量：<\/p>\n    <dl class=\"defs\">\n      <dt>半徑<small>隨 n² 變大<\/small><\/dt><dd><span class=\"idx wrap\">r<sub>n<\/sub> = n² h² ε<sub>0<\/sub> / (Zπme²) = n² a<sub>0<\/sub> / Z<\/span>，其中<span class=\"term\">波耳半徑<\/span> a<sub>0<\/sub> = 0.0529 nm。<\/dd>\n      <dt>能量<small>負的，往 0 擠<\/small><\/dt><dd><span class=\"idx wrap\">E<sub>n<\/sub> = −Ze² / (8πε<sub>0<\/sub> r<sub>n<\/sub>) = −13.6 Z² / n² eV<\/span>。負號代表被綁住：要給能量才能把電子拉走。E = 0 是遠處靜止的自由電子。<\/dd>\n    <\/dl>\n    <p>電子只能在能階之間跳。往下跳，把能量差變成一顆光子放出去；往上跳，必須剛好吸收這個能量差。光子能量決定它的波長：<\/p>\n    <p class=\"eq big\">ΔE = hc / λ　⇒　λ (nm) = 1240 / ΔE (eV)<\/p>\n    <p>因為只有特定的 ΔE，所以只出現特定的波長。選一個躍遷，同時看軌道圖和能階圖。",
+"44":"        <span><i style=\"background:var(--c-body)\"><\/i>原子核（質子）<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>電子<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>允許的軌道，照真實比例（r ∝ n²）<\/span>\n      ",
+"45":"上面的能階",
+"46":"下面的能階",
+"47":"方向",
+"48":"放光：往下跳",
+"49":"吸光：往上跳",
+"50":"▶ 跳一次",
+"51":" <span class=\"key-tag\">公式<\/span>\n    <dl>\n      <dt>軌道半徑<\/dt><dd><span class=\"idx wrap\">r<sub>n<\/sub> = n² a<sub>0<\/sub> / Z<\/span>，a<sub>0<\/sub> = 0.0529 nm<\/dd>\n      <dt>能階能量<\/dt><dd><span class=\"idx wrap\">E<sub>n<\/sub> = −13.6 Z² / n² eV<\/span>（只適用單一電子：H、He<sup>+<\/sup>、Li<sup>2+<\/sup>）<\/dd>\n      <dt>光子<\/dt><dd><span class=\"idx wrap\">ΔE = 13.6 (1/n<sub>下<\/sub>² − 1/n<sub>上<\/sub>²) eV = hc / λ<\/span>；λ (nm) = 1240 / ΔE (eV)<\/dd>\n      <dt>例：3 → 2<\/dt><dd>ΔE = 13.6 (1/4 − 1/9) = 1.89 eV = 3.02 × 10<sup>−19<\/sup> J，λ = 656 nm，就是巴耳末系的紅線 H<sub>α<\/sub><\/dd>\n      <dt>游離能<\/dt><dd>從 n = 1 到 n = ∞：13.6 eV，也就是把電子完全拿走所需的能量。<\/dd>\n    <\/dl>\n  ",
+"52":" <span class=\"key-tag\">小心<\/span>\n    <ul>\n      <li>n 越大，能階越擠在一起，但軌道離得越開：能量跟著 −1/n²，半徑跟著 n²。<\/li>\n      <li>n 跳得多，不一定波長就短。2 → 1（122 nm，紫外）的能量比 ∞ → 2（365 nm）大得多，因為最底下那一階最大。<\/li>\n      <li>波耳模型把氫的能量算得完全正確，但「電子走圓形路線」這個畫面是錯的。第 5 單元會用電子雲取代它。<\/li>\n    <\/ul>\n  ",
+"53":"<p class=\"unit-no\">04<\/p><h2>物質波與測不準<\/h2><p class=\"unit-tag\">λ = h / p　Δx · Δp ≥ h / 4π<\/p>",
+"54":"    <p>德布羅意的想法是：任何動量為 p 的運動粒子都有波長 <span class=\"idx wrap\">λ = h / p<\/span>，普朗克常數 h = 6.63 × 10<sup>−34<\/sup> J·s。日常物體的 λ 小到荒謬；電子的 λ 卻和原子差不多大，所以在原子裡，電子的波動性決定了一切。",
+"55":"    <table>\n      <thead><tr><th>物體<\/th><th>速度或能量<\/th><th>λ = h / p<\/th><th>和原子（0.1 nm）比<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>棒球，145 g<\/td><td>40 m/s<\/td><td class=\"num\">1.1 × 10<sup>−34<\/sup> m<\/td><td>小 10<sup>24<\/sup> 倍：完全看不到波動<\/td><\/tr>\n        <tr><td>氫原子裡的電子，n = 1<\/td><td>2.19 × 10<sup>6<\/sup> m/s（13.6 eV）<\/td><td class=\"num\">0.332 nm<\/td><td>剛好 2πa<sub>0<\/sub>：第一軌道裝一個波長<\/td><\/tr>\n        <tr><td>電子，54 eV<\/td><td>Davisson–Germer，1927<\/td><td class=\"num\">0.167 nm<\/td><td>和原子間距一樣，所以會被晶體繞射<\/td><\/tr>\n        <tr><td>電子，100 keV<\/td><td>TEM 電子束<\/td><td class=\"num\">0.0037 nm<\/td><td>短到能拍出一列列原子<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"56":"<span class=\"h3-no\">4-1<\/span><span>用波做出一顆粒子：波包<\/span>",
+"57":"    <p>單一波長的波無限延伸，完全說不出粒子在哪裡。薛丁格的做法是用很多道波組成粒子：波長略有不同的波，在某一區同相加強、其他地方互相抵消，就成了<span class=\"term\">波包<\/span>。波函數 ψ 是振幅，|ψ|² 是在那裡找到粒子的<span class=\"term\">機率密度<\/span>。<\/p>\n    <p>想把波包擠得更窄，就得混進範圍更廣的波長，也就是範圍更廣的動量。位置和動量不能同時很確定：<span class=\"idx wrap\">Δx · Δp ≥ h / 4π<\/span>，這就是<span class=\"term\">海森堡測不準原理<\/span>。所以原子裡的電子沒有確定的路徑，第 5 單元才要畫成一團雲。",
+"58":"混入的波長範圍 Δk",
+"59":"顯示每一道波",
+"60":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>每一個運動的粒子都有 λ = h / p。原子裡電子的 λ 和原子差不多大，所以波動性不能忽略。<\/li>\n      <li>ψ 是機率振幅，|ψ|² = ψψ* 是機率密度。<\/li>\n      <li>波包越窄，動量的範圍就越寬：Δx · Δp ≥ h / 4π。原子裡的電子沒有軌跡，只有機率雲。<\/li>\n    <\/ul>\n  ",
+"61":"<p class=\"unit-no\">05<\/p><h2>電子雲：軌域<\/h2><p class=\"unit-tag\">ψ<sub>nlm<\/sub>(r, θ, φ) = R<sub>nl<\/sub>(r) · Y<sub>lm<\/sub>(θ, φ)<\/p>",
+"62":"    <p>把氫原子的薛丁格方程式解出來，第 2 單元的駐波條件又回來了，只是現在是三維的。三維的波要在三個方向都「接得起來」，所以需要三個整數，而不是一個：<\/p>\n    <dl class=\"defs\">\n      <dt>n<small>主量子數<\/small><\/dt><dd>讓波在半徑方向接得起來。決定能量（氫原子 −13.6 / n² eV）和整體大小，約 n² a<sub>0<\/sub>。<\/dd>\n      <dt>l<small>角量子數，0 … n−1<\/small><\/dt><dd>繞一圈時波變號幾次，也就是形狀。l = 0、1、2、3 叫 s、p、d、f。<\/dd>\n      <dt>m<sub>l<\/sub><small>磁量子數，−l … +l<\/small><\/dt><dd>形狀朝哪個方向。共有 2l + 1 個：s 一個、p 三個、d 五個、f 七個。<\/dd>\n    <\/dl>\n    <p>結果就是<span class=\"term\">軌域<\/span>：不是一條路徑，而是一個區域，|ψ|² 告訴你電子在各處出現的機率。下面每一點都是「電子可能出現在這裡」的一次結果；點越密，電子越可能在那裡。波變號的地方（藍變橘），|ψ|² 降到零，形成一個完全沒有點的<span class=\"term\">節面<\/span>。",
+"63":"<span class=\"lbl\">打個比方<\/span><p>用長時間曝光拍轉動的電扇，拍不到葉片本身，只看到一片模糊；葉片停留越久的地方越深。軌域就是電子的那片模糊。<\/p>",
+"64":"        <span><i style=\"background:var(--c-corner)\"><\/i>ψ &gt; 0<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>ψ &lt; 0<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>同一個 n 的波耳軌道，半徑 n²a<sub>0<\/sub><\/span>\n      ",
+"65":"主量子數 n",
+"66":"角量子數 l",
+"67":"磁量子數 m<sub>l<\/sub>",
+"68":"畫法",
+"69":"點雲",
+"70":"90% 邊界面",
+"71":"剖半",
+"72":"密度截面",
+"73":"顯示波耳軌道對照",
+"74":"    <p>上面這條曲線是<span class=\"term\">徑向機率<\/span> P(r) = r²R<sub>nl<\/sub>²：不管方向，在距離 r 的薄球殼裡找到電子的機率。它把電子雲接回波耳模型：1s 的峰剛好在 a<sub>0<\/sub>，就是波耳的第一軌道半徑。波耳把大小算對了，只是電子分散在一段 r 的範圍裡，而不是固定在一個圓上。峰的個數是 n − l，所以高 n 的 s 軌域在原子核附近有小小的內峰。第 6 單元會說明這為什麼重要。",
+"75":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>軌域就是三維的駐波，由三個量子數決定：n（大小與能量）、l（形狀：s p d f）、m<sub>l<\/sub>（方向）。<\/li>\n      <li>|ψ|² 大的地方點就密。ψ 變號的地方是節面，|ψ|² = 0。<\/li>\n      <li>節面總數 = n − 1：徑向節面（球面）n − l − 1 個，加上角節面（平面或錐面）l 個。<\/li>\n      <li>在氫原子裡，n 相同的軌域能量都一樣；多電子原子就不是這樣了（第 6 單元）。<\/li>\n      <li>第四個量子數，自旋 m<sub>s<\/sub> = ±½，不改變形狀，只讓每個軌域可以放兩個電子。<\/li>\n    <\/ul>\n  ",
+"76":"<p class=\"unit-no\">06<\/p><h2>把軌域填滿：電子組態<\/h2><p class=\"unit-tag\">1s 2s 2p 3s 3p 4s 3d 4p<\/p>",
+"77":"    <p>有 Z 個電子的原子，照三條規則把電子放進軌域：<\/p>\n    <dl class=\"defs\">\n      <dt>先填低能量<\/dt><dd>先填滿能量最低的空位，再往上填（構築原理）。<\/dd>\n      <dt>包立不相容<\/dt><dd>沒有兩個電子的四個量子數完全相同，所以每個軌域最多放兩個、自旋相反（↑↓）。第 n 層最多 2n² 個電子。<\/dd>\n      <dt>洪德定則<\/dt><dd>能量相同的一組軌域（三個 p、五個 d）裡，電子先一個軌域放一個、自旋同向，都放過一個之後才開始配對。<\/dd>\n    <\/dl>\n    <p>電子不只一個時，n 相同的軌域能量就不再一樣。內層電子會<span class=\"term\">屏蔽<\/span>原子核，讓外層電子感受不到全部的核電荷。會跑到原子核附近的軌域，感受到比較多的核電荷，能量就比較低。4s 在很裡面有小小的峰（看下面的曲線），3d 則都待在外面，所以雖然 n = 4 &gt; 3，4s 還是比 3d 先填。",
+"78":"原子序 Z",
+"79":"離子電荷",
+"80":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>填入順序：1s 2s 2p 3s 3p <b>4s 3d<\/b> 4p。每個軌域兩個電子，第 n 層 2n² 個。<\/li>\n      <li>惰性氣體（He 1s²，Ne 到 Kr 最外層都是 s²p⁶）外層全滿：游離能高、沒有電子親和力、化學上很安靜。<\/li>\n      <li>過渡金屬形成陽離子時先失去 4s 電子：Fe [Ar]3d⁶4s²、Fe<sup>2+<\/sup> [Ar]3d⁶、Fe<sup>3+<\/sup> [Ar]3d⁵。最後填進去的不是最先拿走的。<\/li>\n      <li>Cr 和 Cu 是例外：[Ar]3d⁵4s¹ 和 [Ar]3d¹⁰4s¹，因為半滿或全滿的 d 特別穩定。<\/li>\n    <\/ul>\n  ",
+"81":"<p class=\"unit-no\">07<\/p><h2>電負度：誰拉電子比較用力<\/h2><p class=\"unit-tag\">離子性 % = 1 − exp(−¼ (X<sub>A<\/sub> − X<sub>B<\/sub>)²)<\/p>",
+"82":"    <p>電子組態決定原子在反應中怎麼表現。比滿殼層多一兩個電子的原子，很容易把電子交出去變成陽離子，叫<span class=\"term\">正電性<\/span>元素（Na、K、Ca）。比滿殼層少一兩個電子的原子，會搶電子變成陰離子，叫<span class=\"term\">負電性<\/span>元素（F、O、Cl）。<\/p>\n    <p><span class=\"term\">電負度<\/span> X 衡量一個原子把共用電子拉向自己的能力，範圍大約從 0.7（Fr、Cs）到 4.0（F）。同一週期往右、同一族往上都會變大。兩個原子成鍵時，差值 ΔX 決定鍵的種類：ΔX 大，電子被搬走（離子鍵）；ΔX 小，電子被共用（共價鍵）。鮑林的公式把 ΔX 換成離子性的百分比。<\/p>\n    <p>在模型上點兩根柱子，或從清單選一對元素。",
+"83":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>柱高 = 電負度 X<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>原子 A<\/span>\n        <span><i style=\"background:var(--c-face)\"><\/i>原子 B<\/span>\n      ",
+"84":"常見組合",
+"85":"或自己選兩個",
+"86":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>電負度往週期表右上角變大（F = 4.0），往左下角變小（Cs、Fr ≈ 0.7）。惰性氣體不列入。<\/li>\n      <li>真實的鍵大多是混合的。GaAs（ΔX = 0.4）離子性 4%，ZnSe（ΔX = 0.8）15%，NaCl（ΔX = 2.1）約 67%。<\/li>\n      <li>兩種不同元素一定帶點離子性；只有相同原子之間的鍵（Si–Si、H–H）才是純共價。<\/li>\n    <\/ul>\n  ",
+"87":"<p class=\"unit-no\">08<\/p><h2>離子鍵：一條曲線解釋很多性質<\/h2><p class=\"unit-tag\">E<sub>net<\/sub> = Z<sub>1<\/sub>Z<sub>2<\/sub>e² / (4πε<sub>0<\/sub>a) + b / a<sup>n<\/sup><\/p>",
+"88":"    <p>Na（3s¹）把電子交給 Cl（3s²3p⁵）。兩個離子都變成惰性氣體的組態，Na<sup>+<\/sup> 像 Ne、Cl<sup>−<\/sup> 像 Ar，彼此靠庫侖力吸引。它們不會合在一起，因為填滿的電子殼層一開始重疊，就出現很強的排斥。兩項力隨離子中心距離 a 互相競爭：<\/p>\n    <dl class=\"defs\">\n      <dt>吸引<small>長程<\/small><\/dt><dd><span class=\"idx wrap\">F<sub>att<\/sub> = −Z<sub>1<\/sub>Z<sub>2<\/sub>e² / (4πε<sub>0<\/sub>a²)<\/span>，能量 <span class=\"idx wrap\">Z<sub>1<\/sub>Z<sub>2<\/sub>e² / (4πε<sub>0<\/sub>a)<\/span>，因為 Z<sub>1<\/sub>Z<sub>2<\/sub> &lt; 0，所以是負的。<\/dd>\n      <dt>排斥<small>短程<\/small><\/dt><dd><span class=\"idx wrap\">F<sub>rep<\/sub> = −nb / a<sup>n+1<\/sup><\/span>，能量 <span class=\"idx wrap\">b / a<sup>n<\/sup><\/span>，n = 7 到 10。只在 a 很小時才重要。<\/dd>\n    <\/dl>\n    <p>兩力平衡（F<sub>net<\/sub> = 0）的地方，也就是 E<sub>net<\/sub> 最低的地方：平衡間距 a<sub>0<\/sub>。能量是力的積分，所以力曲線的零點就是能量曲線的最低點。這一條曲線的形狀，預告了材料的行為。",
+"89":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>吸引<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>排斥<\/span>\n        <span><i class=\"sq\" style=\"background:var(--accent)\"><\/i>合力 / 總能量<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>溫度 T 下的振動範圍與平均位置<\/span>\n      ",
+"90":"離子對",
+"91":"Na⁺ Cl⁻ <small>Z₁Z₂ = −1<\/small>",
+"92":"Mg²⁺ O²⁻ <small>Z₁Z₂ = −4<\/small>",
+"93":"排斥指數 n",
+"94":"溫度（振動能量）",
+"95":"    <table>\n      <thead><tr><th>曲線的特徵<\/th><th>決定的性質<\/th><th>原因<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>井的深度 E<sub>0<\/sub><\/td><td>鍵能、熔點<\/td><td>井越深，要越多熱能才能把離子拉開。<\/td><\/tr>\n        <tr><td>井底的曲率<\/td><td>剛性（彈性模數）<\/td><td>井壁越陡，拉長一點點就有很大的回復力。<\/td><\/tr>\n        <tr><td>井的不對稱<\/td><td>熱膨脹<\/td><td>外側的井壁比較緩，振動時有比較多時間處在拉長的狀態，<br>所以平均間距隨溫度變大。<\/td><\/tr>\n        <tr><td>井底的位置 a<sub>0<\/sub><\/td><td>離子間距、晶格常數<\/td><td>兩個離子半徑的和。<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"96":"<span class=\"h3-no\">8-1<\/span><span>一個陽離子周圍放得下幾個陰離子：半徑比<\/span>",
+"97":"    <p>離子鍵在各個方向拉力都一樣，所以離子固體會在每個陽離子周圍塞進盡量多的陰離子，同時保持整塊晶體電中性。限制來自幾何：陰離子必須碰得到陽離子。如果陽離子對某種排法來說太小，陰離子還沒碰到它就先彼此撞在一起，陽離子在籠子裡晃來晃去，結構就不穩定。剛好還能碰到所有鄰居的最小陽離子，定出每一種<span class=\"term\">配位數<\/span>（CN）的<span class=\"term\">臨界半徑比<\/span>。",
+"98":"        <span><i style=\"background:var(--c-body)\"><\/i>陽離子（r<sub>C<\/sub>）<\/span>\n        <span><i style=\"background:var(--c-corner)\"><\/i>陰離子（r<sub>A<\/sub>）<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>空隙：陽離子碰不到<\/span>\n      ",
+"99":"半徑比 r<sub>C<\/sub> / r<sub>A<\/sub>",
+"100":"配位數",
+"101":"自動",
+"102":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>臨界半徑比：CN 8（立方體）≥ 0.732、CN 6（八面體）≥ 0.414、CN 4（四面體）≥ 0.225、CN 3（三角形）≥ 0.155。<\/li>\n      <li>NaCl：0.095 / 0.181 = 0.525 → CN 6。CsCl：0.169 / 0.181 = 0.934 → CN 8。<\/li>\n      <li>離子固體的晶格能和熔點都高。離子電荷越大越高（MgO ≫ NaCl），離子越大越低。<\/li>\n    <\/ul>\n  ",
+"103":"<p class=\"unit-no\">09<\/p><h2>共價鍵：共用電子雲<\/h2><p class=\"unit-tag\">sp³ = ½ (s ± p<sub>x<\/sub> ± p<sub>y<\/sub> ± p<sub>z<\/sub>)　109.5°<\/p>",
+"104":"    <p>兩個電負度差不多的原子相遇，誰也搶不走對方的電子。它們改成讓外層軌域重疊、共用一對電子，讓雙方都算得上滿殼層。H<sub>2<\/sub> 共用一對；F<sub>2<\/sub>（2s²2p⁵）各出一個 p 電子，O<sub>2<\/sub> 兩個，N<sub>2<\/sub> 三個。因為鍵存在於兩個軌域重疊的地方，共價鍵有明確的方向。<\/p>\n    <p>碳是關鍵的例子。基態 1s²2s²2p² 只有兩個半滿軌域，看起來只能形成兩個鍵；但碳實際上形成四個一模一樣、彼此夾 109.5° 的鍵。原因是<span class=\"term\">混成<\/span>：一個 2s 電子升到 2p，2s 和三個 2p 波混合成四個相同的 <span class=\"term\">sp³ 軌域<\/span>。波相加的意思是：同號的地方加強，異號的地方抵消。下面一步一步組出來。",
+"105":"        <span><i style=\"background:var(--c-corner)\"><\/i>ψ &gt; 0<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>ψ &lt; 0<\/span>\n        <span><i style=\"background:var(--c-face)\"><\/i>氫<\/span>\n        <span><i style=\"background:var(--edge3d)\"><\/i>碳<\/span>\n      ",
+"106":"步驟",
+"107":"1 · 2s",
+"108":"2 · 2p<sub>x<\/sub> 2p<sub>y<\/sub> 2p<sub>z<\/sub>",
+"109":"3 · 一個 sp³",
+"110":"4 · 四個 sp³",
+"111":"5 · CH₄",
+"112":"6 · 鑽石",
+"113":"    <table>\n      <thead><tr><th>鍵<\/th><th>共用電子對<\/th><th>鍵能（kJ/mol）<\/th><th>鍵長（nm）<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>F–F<\/td><td class=\"num\">1<\/td><td class=\"num\">155<\/td><td class=\"num\">0.142<\/td><\/tr>\n        <tr><td>O=O<\/td><td class=\"num\">2<\/td><td class=\"num\">494<\/td><td class=\"num\">0.121<\/td><\/tr>\n        <tr><td>N≡N<\/td><td class=\"num\">3<\/td><td class=\"num\">942<\/td><td class=\"num\">0.110<\/td><\/tr>\n        <tr class=\"sum\"><td>C–C<\/td><td class=\"num\">1<\/td><td class=\"num\">370<\/td><td class=\"num\">0.154<\/td><\/tr>\n        <tr><td>C=C<\/td><td class=\"num\">2<\/td><td class=\"num\">680<\/td><td class=\"num\">0.13<\/td><\/tr>\n        <tr><td>C≡C<\/td><td class=\"num\">3<\/td><td class=\"num\">890<\/td><td class=\"num\">0.12<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"114":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>共價鍵形成在電負度相近的原子之間，靠共用電子對。它有方向性，因為鍵就在兩個軌域重疊的地方。<\/li>\n      <li>共用的電子對越多，鍵越強也越短。<\/li>\n      <li>sp³ 混成軌域指向正四面體的四個角，彼此夾 109.5°。鑽石裡每個碳都這樣和四個碳鍵結：極硬，鍵能 711 kJ/mol，熔點 3550 °C。<\/li>\n      <li>分子內的鍵很強，不代表固體很強。CH<sub>4<\/sub> 有四個很強的 C–H 鍵，但分子之間只靠很弱的次鍵結，所以甲烷在 −183 °C 就熔化。<\/li>\n    <\/ul>\n  ",
+"115":"<p class=\"unit-no\">10<\/p><h2>金屬鍵與混合鍵<\/h2><p class=\"unit-tag\">泡在共用電子海裡的離子核<\/p>",
+"116":"    <p>金屬原子的外層電子少，又綁得不緊。原子在晶體裡緊密堆積時，價電子被鄰近原子核吸引的程度和被自己的原子核吸引差不多，於是散布到整塊晶體，成為所有正離子核共用的<span class=\"term\">電子雲<\/span>。由此得到兩件事：<\/p>\n    <dl class=\"defs\">\n      <dt>導電<\/dt><dd>共用的電子可以自由移動，一點點電壓就能推出電流。同一批自由電子也負責導熱。<\/dd>\n      <dt>延展性<\/dt><dd>金屬鍵<span class=\"term\">沒有方向性<\/span>：離子核在電子海裡待在哪裡都可以。原子面可以互相滑過去，鍵不會斷。<\/dd>\n    <\/dl>\n    <p>拿離子晶體比較：把一層滑動一個離子間距，每個離子都正對著同號的離子，層與層互相推開，晶體就裂開。這就是金屬會彎、陶瓷會碎的原因。",
+"117":"        <span><i style=\"background:var(--c-corner)\"><\/i>金屬離子核・陰離子<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>陽離子<\/span>\n        <span><i class=\"dot\" style=\"background:var(--hi)\"><\/i>共用的價電子<\/span>\n      ",
+"118":"固體",
+"119":"金屬",
+"120":"離子晶體",
+"121":"滑動上面幾層",
+"122":"    <p>真實的鍵常常是兩種的混合：",
+"123":"    <table>\n      <thead><tr><th>混合<\/th><th>什麼時候出現<\/th><th>例子<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>離子–共價<\/td><td>兩個非金屬，或金屬與非金屬，ΔX 中等<\/td><td>GaAs 離子性 4%、ZnSe 15%、SiO₂ 約 50%<\/td><\/tr>\n        <tr><td>金屬–共價<\/td><td>有 dsp 混成軌域的過渡金屬；<br>IVA 族由上往下<\/td><td>W、Mo 的高熔點；<br>C（鑽石）共價 → Si、Ge 帶些金屬性 → Sn、Pb 金屬<\/td><\/tr>\n        <tr><td>金屬–離子<\/td><td>ΔX 很大的金屬之間形成的介金屬化合物<\/td><td>NaZn₁₃（離子性較強）；Al₉Co₃、Fe₅Zn₂₁（較弱）<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"124":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>金屬鍵：正離子核被一團共用的自由價電子黏在一起，沒有方向性。<\/li>\n      <li>自由電子 → 導電、導熱。沒有方向性 → 原子層滑動時鍵不斷 → 延展性。<\/li>\n      <li>離子晶體滑動一個離子間距就讓同號電荷正面相對，所以陶瓷很脆。<\/li>\n    <\/ul>\n  ",
+"125":"<p class=\"unit-no\">11<\/p><h2>次鍵結：偶極<\/h2><p class=\"unit-tag\">μ = qd　擾動偶極・永久偶極・氫鍵<\/p>",
+"126":"    <p>外層全滿的原子，或內部鍵結已經滿足的分子，彼此之間還是有一點點吸引力。它來自<span class=\"term\">電偶極<\/span>：正電中心和負電中心一旦分開距離 d，就有偶極矩 μ = qd，偶極之間會互相吸引。次鍵結比主鍵結弱很多，但它決定了分子物質在室溫下是氣體、液體還是固體。<\/p>\n    <dl class=\"defs\">\n      <dt>擾動偶極<\/dt><dd>就算是惰性氣體原子，電子雲也不是隨時都在正中央。某一瞬間偏了一點，原子就成了偶極，並推動鄰居的電子雲跟著偏。原子越大，電子雲越鬆，偶極越大，熔點、沸點也越高。<\/dd>\n      <dt>永久偶極<\/dt><dd>鍵有極性、又排得不對稱的分子，帶有固定的偶極。CH<sub>4<\/sub> 對稱，沒有偶極；CH<sub>3<\/sub>Cl 有。<\/dd>\n      <dt>氫鍵<\/dt><dd>最強的次鍵結。和 O、N、F 鍵結的 H 幾乎被剝光，會吸引鄰近分子上的孤對電子。水分子彎成約 105°，所以偶極很大。<\/dd>\n    <\/dl>\n  ",
+"127":"次鍵結的種類",
+"128":"擾動偶極・Ar",
+"129":"永久偶極・CH₄ 和 CH₃Cl",
+"130":"氫鍵・水",
+"131":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>強度大致是：離子、共價、金屬（100 – 1000 kJ/mol）≫ 氫鍵（約 20 – 40）&gt; 永久偶極 &gt; 擾動偶極（幾個）。<\/li>\n      <li>惰性氣體只靠擾動偶極結合，沸點隨原子變大而升高：He 4 K、Ne 27 K、Ar 87 K、Kr 120 K、Xe 165 K、Rn 211 K。<\/li>\n      <li>對稱的分子讓各個鍵的偶極互相抵消（CH<sub>4<\/sub>）；不對稱的分子留下淨偶極（CH<sub>3<\/sub>Cl、H<sub>2<\/sub>O）。<\/li>\n    <\/ul>\n  ",
+"132":"<p class=\"unit-no\">12<\/p><h2>小測驗<\/h2><p class=\"unit-tag\">12 題<\/p>",
+"133":"每題只能作答一次，選完會顯示解說。",
+"134":"<a href=\"index.html\">下一章，第 3 章：晶體結構 3D 教室 →<\/a>",
+"135":"  <span class=\"lbl\">資料來源<\/span>\n  <p>國立清華大學「材料科學與工程導論（一）」第 2 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering<\/i>, 6th ed., McGraw-Hill, 2019；A. Beiser, <i>Concepts of Modern Physics<\/i>, 6th ed.（氫原子波函數）。電負度採用 Callister《Materials Science and Engineering: An Introduction》所列的鮑林數值。惰性氣體沸點與 F–F、O=O、N≡N 鍵長是標準參考值，不在投影片裡。<\/p>\n  <span class=\"lbl\">關於模型<\/span>\n  <p>電子雲是精確的氫原子軌域：每一點都以 |ψ|² 為機率隨機抽出，所以點的密度就是真實的機率密度。畫的是實數軌域（p<sub>x<\/sub>、d<sub>xy<\/sub>……）而不是複數形式，因為成鍵時用的是實數軌域。sp³ 電子雲由氫的 2s 和 2p 混成。拉塞福模型把原子核畫得比真實比例大約 100 倍，這樣幾百個 α 粒子裡才看得到幾個大角度偏轉。離子對的曲線用投影片上 NaCl 的例子（a<sub>0<\/sub> = 0.276 nm、n = 9）。<\/p>\n  <span class=\"lbl\">備註<\/span>\n  <p>投影片第 42 頁寫 Na<sup>+<\/sup>–Cl<sup>−<\/sup> 吸引力為 3.02 × 10<sup>−19<\/sup> N。同樣的數字算出來是 3.02 × 10<sup>−9<\/sup> N，第 47 頁用的也是這個值。<\/p>\n  <p>投影片第 62 頁寫 X<sub>Ga<\/sub> = 1.8、X<sub>As<\/sub> = 2.2、X<sub>Zn<\/sub> = 1.7、X<sub>Se<\/sub> = 2.5，這裡的鮑林表是 1.6、2.0、1.6、2.4。公式只用到差值 ΔX = 0.4 和 0.8，兩邊相同。<\/p>",
+"136":"章節",
+"137":"單元",
+"138":"語言",
+"139":"深色模式",
+"140":"古典電子螺旋掉進原子核，以及它會放出的光譜和真實氫光譜的比較",
+"141":"一圈的波長數",
+"142":"氫原子能階圖，含來曼、巴耳末、帕申系列，以及對應的線光譜",
+"143":"波長略有不同的波疊加成波包",
+"144":"波數範圍",
+"145":"所選軌域與同一 n 其他軌域的徑向機率分布",
+"146":"原子序",
+"147":"3d 與 4s 的徑向機率，4s 會深入原子核附近",
+"148":"原子 A",
+"149":"原子 B",
+"150":"一對離子的力與位能對距離的關係",
+"151":"排斥指數",
+"152":"溫度",
+"153":"半徑比",
+"154":"讓金屬與離子晶體的一層原子滑動",
+"155":"滑動量"}, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title="原子結構與鍵結 3D 教室";var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="ch2.js?v=20261028-2"></script>
+
+</body></html>
