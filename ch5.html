@@ -1,0 +1,935 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Diffusion in Solids 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+
+#so-plot,#gs-plot{height:400px}
+#nu-plot{height:320px}
+#dg-plot{height:360px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}#dg-plot{height:300px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+#eb-plot{height:360px}
+#ar-plot{height:340px}
+#kk-plot{height:360px}
+#f2-plot{height:340px}
+#cb-plot{height:340px}
+#td-plot{height:420px}
+@media (max-width:520px){#eb-plot{height:330px}#ar-plot,#f2-plot,#cb-plot{height:300px}#kk-plot{height:340px}#td-plot{height:360px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+.seg.multi button{font-size:.8rem}
+.readout table.mini{width:100%;border-collapse:collapse;font-size:.82rem;margin:2px 0 8px}
+.readout .mini th,.readout .mini td{padding:3px 6px 3px 0;text-align:left;border-bottom:1px solid var(--line);font-weight:400}
+.readout .mini th{color:var(--muted);font-size:.75rem}
+.readout .mini .num{text-align:right;font-family:var(--f-mono);white-space:nowrap}
+/* formulas: KaTeX */
+.katex{font-size:1.08em;position:relative}
+.katex .katex-mathml{left:0;top:0}
+.eq .katex{font-size:1.12em}
+.unit-tag .katex{font-size:1.15em}
+.legend .katex{font-size:1em}
+.eq{line-height:2.1}
+</style>
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="93"><span class="course-h" data-t="1">Materials Science and Engineering I</span><a href="ch1.html" data-t="2">Ch 1 · Introduction</a><a href="ch2.html" data-t="3">Ch 2 · Atoms and bonding</a><a href="index.html" data-t="4">Ch 3 · Crystal structures</a><a href="ch4.html" data-t="5">Ch 4 · Solidification and defects</a><a href="ch5.html" aria-current="page" data-t="6">Ch 5 · Diffusion</a><a href="ch6.html" data-t="7">Ch 6 · Mechanical properties</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="8">      <h1>Diffusion in Solids<br><span class="d">3D</span> Classroom</h1>
+      <p class="lede">Atoms in a solid are not frozen in place. Every second each one tries to jump about 10<sup>13</sup> times, and once in a while it makes it over the energy barrier to the next site. That rare success, repeated across a whole crystal, is diffusion. It hardens gear teeth, sets the doping profile of every transistor and opens voids in solder joints. This chapter follows it from one jump to the equations that predict a whole concentration profile.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for this chapter">
+        <li class="palette-h">Colors mean the same thing on every page of this chapter</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>host atoms · copper</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>the diffusing atoms · zinc, carbon</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>vacancies and their path · markers</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>the atom that is jumping, the thing to watch</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <span class="plate-tag" data-t="9">Cu | Zn<br>after annealing</span>
+      </div>
+      <figcaption data-t="10">A block of copper (blue) pressed against zinc (orange) and held hot. Atoms have crossed the original interface in both directions, so the boundary is now a blurred band. How wide the band grows, and how fast, is what this chapter calculates.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="94">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="11"><span>01</span>Energy barrier</a></li>
+    <li><a href="#s2" data-t="12"><span>02</span>Arrhenius plot</a></li>
+    <li><a href="#s3" data-t="13"><span>03</span>How atoms jump</a></li>
+    <li><a href="#s4" data-t="14"><span>04</span>Kirkendall effect</a></li>
+    <li><a href="#s5" data-t="15"><span>05</span>Fick's first law</a></li>
+    <li><a href="#s6" data-t="16"><span>06</span>Fick's second law</a></li>
+    <li><a href="#s7" data-t="17"><span>07</span>Carburizing a gear</a></li>
+    <li><a href="#s8" data-t="18"><span>08</span>D and temperature</a></li>
+    <li><a href="#s9" data-t="19"><span>09</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="95"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="96"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="20"><p class="unit-no">01</p><h2>Energy barrier: why heat speeds everything up</h2><p class="unit-tag">fraction above E* = \(e^{-E^*/kT}\)</p></header>
+  <div class="prose" data-t="21">    <p>Reactions in a solid run toward a lower energy, from reactants at E<sub>r</sub> to products at E<sub>p</sub>. They cannot get there directly: on the way the atoms must pass through a crowded, high-energy arrangement, the <span class="term">activated complex</span> M*, at energy E*. The climb ΔE* is the <span class="term">activation energy</span>.</p>
+    <p>Where does the energy for the climb come from? From heat. At temperature T the atoms share energy according to the <span class="term">Boltzmann distribution</span>: the probability of having energy E is \(\frac{1}{kT}\,e^{-E/kT}\), so most atoms sit low and only a thin tail reaches high. Integrating that tail from E* upward gives the fraction that can cross:</p>
+    <p class="eq big">\(\displaystyle \frac{n(E &gt; E^*)}{N_\text{total} } = e^{-E^*/kT}\)&emsp;\(k = 1.38\times10^{-23}\ \text{J/K} = 8.62\times10^{-5}\ \text{eV/K}\)</p>
+    <p>The same exponential appeared in Chapter 4 for the vacancy fraction, \(n_v/N = C\,e^{-E_v/kT}\): forming a vacancy is also a climb over an energy cost. Move the sliders. The tail is tiny, but because T sits in the exponent, a modest rise in temperature multiplies it many times.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="eb-plot"><canvas id="eb-cv" role="img" aria-label="Energy along the reaction path beside the Boltzmann distribution of atom energies, with the part above the barrier shaded" data-ta="97"></canvas></div>
+      <div class="legend" data-t="22">        <span><i class="sq" style="background:var(--c-corner)"></i>Energy along the reaction path</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Boltzmann distribution at T</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Atoms with E &gt; E*</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="23">Temperature</span> · <b id="eb-T-v"></b></span>
+        <input type="range" id="eb-T" min="200" max="1600" step="10" value="600" aria-label="Temperature" data-ta="98">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="24">Barrier height ΔE*</span> · <b id="eb-E-v"></b></span>
+        <input type="range" id="eb-E" min="0.1" max="2" step="0.05" value="0.6" aria-label="Activation energy" data-ta="99">
+      </div>
+      <div class="readout" id="eb-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="25"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>A thermally activated process needs a barrier ΔE*. Only the high-energy tail of the Boltzmann distribution gets over it.</li>
+      <li>That fraction is \(e^{-E^*/kT}\). Temperature in the exponent is why the rate changes by orders of magnitude, not by percent.</li>
+      <li>The final energy E<sub>p</sub> decides which way the reaction goes; the barrier decides how fast. A product can be much lower in energy and still form very slowly.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="26"><p class="unit-no">02</p><h2>The Arrhenius plot: a straight line hiding an exponential</h2><p class="unit-tag">rate = \(C\,e^{-Q/RT}\)</p></header>
+  <div class="prose" data-t="27">    <p>The rate of a reaction is proportional to the number of atoms that make it over the barrier, so it carries the same exponential. Written per mole it is the <span class="term">Arrhenius equation</span>:</p>
+    <p class="eq big">\(\displaystyle \text{rate} = C\,e^{-Q/RT}\)&emsp;\(R = k N_A = 8.314\ \text{J/(mol}\cdot\text{K)}\)</p>
+    <p>Q is the activation energy per mole, and C is a rate constant that does not depend on T. Per particle and per mole are just a unit change: 1 eV per particle = 23.06 kcal/mol = 96.5 kJ/mol.</p>
+    <p>Take the logarithm and the curve becomes a line, \(\ln(\text{rate}) = \ln C - (Q/R)(1/T)\), or in base 10, \(\log_{10}(\text{rate}) = \log_{10} C - Q/(2.303\,RT)\). Plot log(rate) against 1/T: the intercept is log C and the slope is \(-Q/(2.303\,R)\). That is how activation energies are measured. Measure the rate at a few temperatures, draw the best line, read Q off the slope.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="ar-plot"><canvas id="ar-cv" role="img" aria-label="Arrhenius plot of log rate against inverse temperature for the chosen activation energy" data-ta="100"></canvas></div>
+      <div class="legend" data-t="28">        <span><i class="sq" style="background:var(--c-corner)"></i>log<sub>10</sub>(rate / C)</span>
+        <span><i style="background:var(--c-body)"></i>T<sub>1</sub></span>
+        <span><i style="background:var(--hi)"></i>T<sub>2</sub></span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Q = 50 kJ/mol for comparison</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="29">Activation energy Q</span> · <b id="ar-Q-v"></b></span>
+        <input type="range" id="ar-Q" min="20" max="300" step="5" value="150" aria-label="Activation energy" data-ta="101">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="30">T<sub>1</sub></span> · <b id="ar-T1-v"></b></span>
+        <input type="range" id="ar-T1" min="300" max="1500" step="10" value="700" aria-label="Temperature 1" data-ta="102">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="31">T<sub>2</sub></span> · <b id="ar-T2-v"></b></span>
+        <input type="range" id="ar-T2" min="300" max="1500" step="10" value="800" aria-label="Temperature 2" data-ta="103">
+      </div>
+      <div class="readout" id="ar-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="32"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>log(rate) against 1/T is a straight line. Its slope is \(-Q/(2.303\,R)\), so a steeper line means a higher barrier.</li>
+      <li>A high-Q process is the most sensitive to temperature: the same 100 K gives it a much larger speed-up.</li>
+      <li>Hot is on the left of an Arrhenius plot, because 1/T is small there. Read the axis before reading the line.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="33"><p class="unit-no">03</p><h2>How atoms jump: vacancies and interstitials</h2><p class="unit-tag">\(E^* = E_v + E_m\) · \(E^* = E_m\)</p></header>
+  <div class="prose" data-t="34">    <p><span class="term">Diffusion</span> is the transport of one material through another. Smoke spreads through air in seconds, dye through water in minutes; in a solid the same thing takes hours to years, because every step needs a thermally activated jump. There are two main ways to make that jump.</p>
+    <dl class="defs">
+      <dt>Vacancy (substitutional) diffusion</dt><dd>An atom on a lattice site can move only if a neighboring site is empty. It swaps places with the vacancy, so atoms and vacancies travel in opposite directions. When the atoms are of the host itself this is <span class="term">self-diffusion</span>. Its activation energy has two parts: the energy to form the vacancy and the energy to move into it, \(E^* = E_v + E_m\).</dd>
+      <dt>Interstitial diffusion</dt><dd>A small atom sitting in the gaps between host atoms hops from one gap to the next. Almost every neighboring gap is already empty, so no vacancy has to form: \(E^* = E_m\). Carbon in BCC or FCC iron, hydrogen in metals.</dd>
+    </dl>
+    <p>Both give a diffusion coefficient of Arrhenius form, \(D = D_0\,e^{-E^*/kT}\). Because interstitial jumps skip the vacancy-formation cost, interstitial diffusion is usually far faster. Watch the two in the model: the red atom is the one jumping, the purple trail is the path of the vacancy or of the carbon atom.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-mech"></div>
+      <div class="legend" id="mc-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="35">Mechanism</span>
+        <div class="seg" id="mc-s">
+          <button type="button" data-v="vac" aria-pressed="true" data-t="36">Vacancy</button>
+          <button type="button" data-v="int" data-t="37">Interstitial</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="38">Motion</span>
+        <div class="seg" id="mc-run">
+          <button type="button" data-v="run" aria-pressed="true" data-t="39">Run</button>
+          <button type="button" data-v="stop" data-t="40">Pause</button>
+          <button type="button" data-v="reset" data-t="41">Restart</button>
+        </div>
+      </div>
+      <div class="readout" id="mc-info"></div>
+    </div>
+  </div>
+  <h3 data-t="42"><span class="h3-no">3-1</span><span>Higher melting point, higher barrier</span></h3>
+  <div class="prose" data-t="43">    <p>The bonds that hold a crystal together also resist every jump. A metal that needs more heat to melt needs more energy to form and move a vacancy, so the self-diffusion activation energy rises with the melting point. The last column shows the ratio is roughly constant, about 0.15 kJ/(mol·K), roughly 18 R.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="44">    <table>
+      <thead><tr><th>Metal</th><th>Melting point</th><th>Structure</th><th>Q of self-diffusion</th><th>Q / T<sub>m</sub></th></tr></thead>
+      <tbody>
+        <tr><td>Zinc</td><td class="num">419 °C (692 K)</td><td>HCP</td><td class="num">91.6 kJ/mol</td><td class="num">0.132</td></tr>
+        <tr><td>Aluminium</td><td class="num">660 °C (933 K)</td><td>FCC</td><td class="num">165 kJ/mol</td><td class="num">0.177</td></tr>
+        <tr><td>Copper</td><td class="num">1083 °C (1356 K)</td><td>FCC</td><td class="num">196 kJ/mol</td><td class="num">0.145</td></tr>
+        <tr><td>Nickel</td><td class="num">1452 °C (1725 K)</td><td>FCC</td><td class="num">293 kJ/mol</td><td class="num">0.170</td></tr>
+        <tr><td>α iron</td><td class="num">1530 °C (1803 K)</td><td>BCC</td><td class="num">240 kJ/mol</td><td class="num">0.133</td></tr>
+        <tr><td>Molybdenum</td><td class="num">2600 °C (2873 K)</td><td>BCC</td><td class="num">460 kJ/mol</td><td class="num">0.160</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="45"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Vacancy diffusion: an atom swaps with a neighboring vacancy, so atoms and vacancies move in opposite directions. \(E^* = E_v + E_m\).</li>
+      <li>Interstitial diffusion: a small atom hops between gaps. No vacancy is needed, \(E^* = E_m\), so it is usually much faster.</li>
+      <li>The self-diffusion activation energy scales with the melting point: the same bonds resist melting and jumping.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="46"><p class="unit-no">04</p><h2>The Kirkendall effect: when one side runs faster</h2><p class="unit-tag">\(J_\text{Zn} &gt; J_\text{Cu}\) ⇒ net vacancy flow, moving markers, voids</p></header>
+  <div class="prose" data-t="47">    <p>Press copper against zinc and anneal. If both kinds of atoms crossed the interface at the same rate, the interface would just blur. In 1947 Smigelskas and Kirkendall put fine molybdenum wires at the interface of such a couple as <span class="term">markers</span>, and found that the wires moved. Zinc diffuses faster than copper, so more atoms leave the zinc side than arrive. Every atom that leaves by a vacancy jump sends a vacancy back the other way, so a net flow of vacancies, J<sub>v</sub>, pours into the zinc side.</p>
+    <p>Three things follow. The lattice planes on the zinc side are consumed and those on the copper side are added, so the markers drift toward the zinc. The brass (Cu–Zn) layer grows in the direction the faster-moving zinc flows, into the copper side. And where the arriving vacancies cannot all be absorbed, they cluster into pores, <span class="term">Kirkendall voids</span>. The same voids appear between solder and copper pads (J<sub>Cu</sub> into Sn), where they weaken the joint; chemists use them on purpose to make hollow nanoparticles.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="kk-plot"><canvas id="kk-cv" role="img" aria-label="Zinc fraction across a copper–zinc couple with the marker position and the atom and vacancy fluxes" data-ta="104"></canvas></div>
+      <div class="legend" data-t="48">        <span><i class="sq" style="background:var(--c-body)"></i>Zn fraction X<sub>Zn</sub></span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Starting interface</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Marker · voids</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="49">How much faster zinc diffuses, D<sub>Zn</sub> / D<sub>Cu</sub></span>
+        <div class="seg" id="kk-r">
+          <button type="button" data-v="1" data-t="50">1 (equal)</button>
+          <button type="button" data-v="2.3" aria-pressed="true">2.3</button>
+          <button type="button" data-v="5">5</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="51">Annealing time</span> · <b id="kk-t-v"></b></span>
+        <input type="range" id="kk-t" min="0" max="100" step="1" value="45" aria-label="Annealing time" data-ta="105">
+      </div>
+      <div class="readout" id="kk-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="52"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>In a couple, each species has its own diffusivity. Unequal atom fluxes leave a net vacancy flux pointing toward the faster species' side.</li>
+      <li>Markers at the interface drift toward the faster-diffusing side. That drift proved diffusion goes by vacancies, not by atoms swapping directly.</li>
+      <li>Vacancies that pile up form Kirkendall voids, a real reliability problem in solder joints.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="53"><p class="unit-no">05</p><h2>Fick's first law: steady flow down a gradient</h2><p class="unit-tag">\(J = -D\,dC/dx\)</p></header>
+  <div class="prose" data-t="54">    <p>Each atom jumps in a random direction. None of them "knows" where the low concentration is. Yet where there are more atoms on the left than on the right, more jumps cross any plane from left to right than back, and a net flow appears. The <span class="term">flux</span> J, the net number of atoms crossing unit area per unit time, is proportional to the concentration gradient:</p>
+    <p class="eq big">\(\displaystyle J = -D\,\frac{dC}{dx}\)</p>
+    <p>D is the <span class="term">diffusion coefficient</span> or diffusivity, in m²/s. The minus sign says atoms flow downhill, from high to low concentration. If the two ends are held at fixed concentrations C<sub>1</sub> and C<sub>2</sub> and nothing reacts, the profile settles into a straight line and stops changing: <span class="term">steady-state diffusion</span>, with the same J through every plane. Purifying hydrogen through a palladium sheet works this way.</p>
+    <p>The model is a real random walk. Every orange atom takes random steps; the left end is kept full and the right end nearly empty. Count the atoms crossing the purple plane: the net count tracks −D·dC/dx.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-fick"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="55">Concentration at the left end C<sub>1</sub></span> · <b id="f1-c-v"></b></span>
+        <input type="range" id="f1-c" min="0" max="100" step="5" value="100" aria-label="Left concentration" data-ta="106">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="56">Diffusivity D (relative)</span> · <b id="f1-d-v"></b></span>
+        <input type="range" id="f1-d" min="0.25" max="2" step="0.25" value="1" aria-label="Diffusivity" data-ta="107">
+      </div>
+      <div class="readout" id="f1-info"></div>
+    </div>
+  </div>
+  <h3 data-t="57"><span class="h3-no">5-1</span><span>One law, three kinds of transport</span></h3>
+  <div class="prose" data-t="58">    <p>Flux equals minus a coefficient times a gradient. Heat follows the same rule (Fourier) and so does charge (Ohm). Combine each with conservation and you get the same second-order equation, with its own diffusivity.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="59">    <table>
+      <thead><tr><th>What flows</th><th>Flux law</th><th>Driven by</th><th>Time-dependent form</th><th>Its "diffusivity"</th></tr></thead>
+      <tbody>
+        <tr><td>Mass</td><td>Fick: \(J_M = -D_M\,\frac{dC}{dx}\)</td><td>concentration gradient</td><td>\(\frac{\partial C}{\partial t} = D_M\,\frac{\partial^2 C}{\partial x^2}\)</td><td class="num">\(D_M\)</td></tr>
+        <tr><td>Heat</td><td>Fourier: \(J_Q = -k\,\frac{dT}{dx}\)</td><td>temperature gradient</td><td>\(\frac{\partial T}{\partial t} = \frac{k}{\rho c_p}\,\frac{\partial^2 T}{\partial x^2}\)</td><td class="num">\(D_Q = k/\rho c_p\)</td></tr>
+        <tr><td>Charge</td><td>Ohm: \(J_E = -\sigma\,\frac{dV}{dx}\)</td><td>potential gradient</td><td>\(\frac{\partial V}{\partial t} = \frac{\sigma}{C_q}\,\frac{\partial^2 V}{\partial x^2}\)</td><td class="num">\(D_E = \sigma/C_q\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="60"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Net flux comes from random jumps plus unequal numbers on the two sides. No force pushes the atoms.</li>
+      <li>J = −D dC/dx: double the gradient or double D and the flux doubles. The minus sign means flow from high to low.</li>
+      <li>Steady state means C(x) no longer changes with time; the profile is a straight line and J is the same everywhere.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="61"><p class="unit-no">06</p><h2>Fick's second law: how a profile changes with time</h2><p class="unit-tag">\(\partial C/\partial t = D\,\partial^2 C/\partial x^2\)</p></header>
+  <div class="prose" data-t="62">    <p>Most real diffusion is not steady: the concentration at a given depth keeps changing. Take a thin slice between x and x + Δx. Atoms flow in through the left face at J(x) and out through the right face at J(x + Δx). Whatever does not leave stays, so the concentration in the slice changes at</p>
+    <p class="eq big">\(\displaystyle \frac{\partial C}{\partial t} = \frac{J(x) - J(x+\Delta x)}{\Delta x} = -\frac{\partial J}{\partial x}\)</p>
+    <p>This is the <span class="term">continuity equation</span>. Put Fick's first law in for J and, with D constant, you get <span class="term">Fick's second law</span>, \(\partial C/\partial t = D\,\partial^2 C/\partial x^2\). You can read it straight off the curve: the concentration rises where the curve bends upward (\(\partial^2 C/\partial x^2 &gt; 0\), more flows in than out) and falls where it bends downward. Diffusion always flattens bumps.</p>
+    <p>Two solutions from the slides, both for a Ni–Cu couple at 400 °C, where D of Cu in Ni = \(D_0\,e^{-E_A/kT} = 6\times10^{-8}\ \text{cm}^2\text{/s} \times e^{-0.98\ \text{eV}/kT} = 2.7\times10^{-15}\ \text{cm}^2\text{/s}\):</p>
+    <dl class="defs">
+      <dt>Couple</dt><dd>Pure Ni joined to Cu<sub>0.6</sub>Ni<sub>0.4</sub>: \(C(x,t) = \frac{C_0}{2}\Big[1 - \operatorname{erf}\Big(\frac{x}{2\sqrt{Dt} }\Big)\Big]\). Every profile passes through \(C_0/2\) at the interface.</dd>
+      <dt>Thin layer</dt><dd>A 0.05 µm layer of the alloy between two blocks of Ni, an almost instant source of n atoms per area: \(C(x,t) = \frac{n}{\sqrt{4\pi Dt} }\,e^{-x^2/4Dt}\). A Gaussian that spreads and sinks while its area stays n. Against an impenetrable wall (semi-infinite case) all atoms go one way, and the prefactor doubles to \(n/\sqrt{\pi Dt}\).</dd>
+    </dl>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="f2-plot"><canvas id="f2-cv" role="img" aria-label="Concentration profile in a nickel–copper couple at the chosen time, with the fluxes into and out of one slice" data-ta="108"></canvas></div>
+      <div class="legend" data-t="63">        <span><i class="sq" style="background:var(--c-body)"></i>C(x, t) now</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>At t = 0</span>
+        <span><i class="sq" style="background:var(--c-face)"></i>Rising (\(\partial^2 C/\partial x^2 &gt; 0\))</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Falling (\(\partial^2 C/\partial x^2 &lt; 0\))</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="64">Starting arrangement</span>
+        <div class="seg" id="f2-m">
+          <button type="button" data-v="couple" aria-pressed="true" data-t="65">Couple</button>
+          <button type="button" data-v="film" data-t="66">Thin layer</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="67">Time at 400 °C</span> · <b id="f2-t-v"></b></span>
+        <input type="range" id="f2-t" min="0" max="100" step="1" value="40" aria-label="Time" data-ta="109">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="68">Slice position</span> · <b id="f2-x-v"></b></span>
+        <input type="range" id="f2-x" min="-100" max="100" step="1" value="30" aria-label="Slice position" data-ta="110">
+      </div>
+      <div class="readout" id="f2-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="69"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Continuity: what flows into a slice and does not flow out accumulates, \(\partial C/\partial t = -\partial J/\partial x\).</li>
+      <li>Fick's second law, \(\partial C/\partial t = D\,\partial^2 C/\partial x^2\): concentration rises where the profile curves up and falls where it curves down.</li>
+      <li>The width of every profile grows as \(\sqrt{Dt}\). Four times the time gives only twice the depth.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="70"><p class="unit-no">07</p><h2>Carburizing a gear: the error-function solution</h2><p class="unit-tag">\((C_s - C_x)/(C_s - C_0) = \operatorname{erf}(x/2\sqrt{Dt})\)</p></header>
+  <div class="prose" data-t="71">    <p>A steel gear needs a hard, wear-resistant surface and a tough core. <span class="term">Carburizing</span> gets both: heat a low-carbon steel part in a carbon-rich gas, and carbon atoms diffuse in interstitially, building a high-carbon case over the low-carbon core. When the surface is held at C<sub>s</sub> and the solid starts at a uniform C<sub>0</sub>, Fick's second law gives</p>
+    <p class="eq big">\(\displaystyle \frac{C_s - C_x}{C_s - C_0} = \operatorname{erf}\left(\frac{x}{2\sqrt{Dt} }\right)\)&emsp;\(\displaystyle \operatorname{erf}(z) = \frac{2}{\sqrt{\pi} }\int_0^z e^{-y^2}\,dy\)</p>
+    <p>The <span class="term">error function</span> is just a tabulated S-curve: \(\operatorname{erf}(0) = 0\), \(\operatorname{erf}(\infty) = 1\), \(\operatorname{erf}(0.5) = 0.52\). To use the table, find the two rows around your value and interpolate linearly.</p>
+    <p><b>Slide example.</b> A 1018 steel gear (0.18 wt% C) is carburized at 927 °C with C<sub>s</sub> = 1.15 wt% and D = 1.28 × 10<sup>−11</sup> m²/s. How long until the carbon reaches 0.35 wt% at 0.40 mm below the surface? Set the controls to the example and read the answer, then change them to see what matters.</p>
+    <p>Silicon chips use the same mathematics. Doping a wafer with boron or phosphorus is a constant-surface diffusion (an erf profile) followed by a drive-in from a fixed amount (a Gaussian, Unit 6), and the dopant concentration sets the resistivity of each region.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="cb-plot"><canvas id="cb-cv" role="img" aria-label="Carbon concentration against depth below the gear surface, with the target depth and concentration marked" data-ta="111"></canvas></div>
+      <div class="legend" data-t="72">        <span><i class="sq" style="background:var(--c-body)"></i>C(x) at the chosen time</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Every 30 min</span>
+        <span><i style="background:var(--hi)"></i>Target: 0.35 wt% at the chosen depth</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="73">Carburizing temperature</span>
+        <div class="seg" id="cb-T">
+          <button type="button" data-v="1143">870 °C</button>
+          <button type="button" data-v="1200" aria-pressed="true">927 °C</button>
+          <button type="button" data-v="1273">1000 °C</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="74">Target depth x</span> · <b id="cb-x-v"></b></span>
+        <input type="range" id="cb-x" min="0.1" max="1.5" step="0.05" value="0.4" aria-label="Target depth" data-ta="112">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="75">Time in the furnace</span> · <b id="cb-t-v"></b></span>
+        <input type="range" id="cb-t" min="1" max="240" step="1" value="30" aria-label="Time" data-ta="113">
+      </div>
+      <div class="readout" id="cb-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="76"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>For a fixed surface concentration, the left side \((C_s - C_x)/(C_s - C_0)\) fixes \(z = x/2\sqrt{Dt}\). A given concentration sits at a depth proportional to \(\sqrt{Dt}\).</li>
+      <li>Twice the case depth needs four times the time at the same temperature, or a higher temperature, because D grows exponentially with T.</li>
+      <li>Linear interpolation in the erf table: \(\dfrac{z - z_0}{z_1 - z_0} = \dfrac{\operatorname{erf} - \operatorname{erf}_0}{\operatorname{erf}_1 - \operatorname{erf}_0}\).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 08 ======================= -->
+<section class="unit" id="s8">
+  <header class="unit-head" data-t="77"><p class="unit-no">08</p><h2>What sets D: temperature, mechanism, structure, path</h2><p class="unit-tag">\(D = D_0\,e^{-Q/RT}\)</p></header>
+  <div class="prose" data-t="78">    <p>The diffusivity depends on five things:</p>
+    <dl class="defs">
+      <dt>Mechanism</dt><dd>Interstitial atoms (carbon) diffuse far faster than substitutional ones (iron, nickel) in the same host.</dd>
+      <dt>Temperature</dt><dd>D rises exponentially with T. This is by far the biggest lever.</dd>
+      <dt>Crystal structure</dt><dd>BCC iron packs less densely than FCC iron (APF 0.68 against 0.74), so atoms diffuse faster in it at the same temperature.</dd>
+      <dt>Imperfections</dt><dd>Grain boundaries and free surfaces are open, disordered paths. Diffusion along them is much faster than through the lattice.</dd>
+      <dt>Concentration</dt><dd>At high solute content D changes: solutes can trap vacancies or block interstitial sites (usually lowering D) or change the activation energy (either way).</dd>
+    </dl>
+    <p>The plot draws log D against 1000/T for the systems in Table 5.2 of the slides, each line through its values at 500 °C and 1000 °C. Its slope gives Q. Two-point method from the slides: silver in silver has D = 1 × 10<sup>−17</sup> m²/s at 500 °C and 7 × 10<sup>−13</sup> m²/s at 1000 °C, so</p>
+    <p class="eq big">\(\displaystyle \frac{D_2}{D_1} = \exp\!\left[-\frac{Q}{R}\left(\frac{1}{T_2} - \frac{1}{T_1}\right)\right]\)&emsp;⇒&emsp;\(\displaystyle Q = \frac{R\,\ln(7\times10^{4})}{1/773 - 1/1273} \approx 183\ \text{kJ/mol}\)</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="td-plot"><canvas id="td-cv" role="img" aria-label="Arrhenius plot of diffusivity for several solute–solvent systems, with a temperature marker" data-ta="114"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="79">Compare</span>
+        <div class="seg multi" id="td-g">
+          <button type="button" data-v="mech" aria-pressed="true" data-t="80">Interstitial vs substitutional</button>
+          <button type="button" data-v="xtal" data-t="81">BCC vs FCC iron</button>
+          <button type="button" data-v="cu" data-t="82">Copper and zinc</button>
+          <button type="button" data-v="all" data-t="83">All</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="84">Temperature</span> · <b id="td-T-v"></b></span>
+        <input type="range" id="td-T" min="400" max="1100" step="10" value="900" aria-label="Temperature" data-ta="115">
+      </div>
+      <div class="readout" id="td-info"></div>
+    </div>
+  </div>
+  <h3 data-t="85"><span class="h3-no">8-1</span><span>Fast paths: lattice, grain boundary, surface</span></h3>
+  <div class="prose" data-t="86">    <p>What counts as "hot" depends on the melting point. At 100 °C copper is at only 0.275 of its melting temperature and its lattice is practically frozen, but its grain boundaries and surfaces are still active. That is why electromigration in copper wiring runs along surfaces and boundaries. Solder at 100 °C is at 0.82 T<sub>m</sub>, so even its lattice diffuses quickly (K. N. Tu, <i>J. Appl. Phys.</i> 94, 5451, 2003).</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="87">    <table>
+      <thead><tr><th>Material</th><th>T<sub>m</sub></th><th>373 K / T<sub>m</sub></th><th>D at 100 °C (cm²/s)</th><th>D at 350 °C (cm²/s)</th></tr></thead>
+      <tbody>
+        <tr><td>Cu, lattice</td><td class="num" rowspan="3">1356 K</td><td class="num" rowspan="3">0.275</td><td class="num">7 × 10<sup>−28</sup></td><td class="num">5 × 10<sup>−17</sup></td></tr>
+        <tr><td>Cu, grain boundary</td><td class="num">3 × 10<sup>−15</sup></td><td class="num">1.2 × 10<sup>−9</sup></td></tr>
+        <tr><td>Cu, surface</td><td class="num">10<sup>−12</sup></td><td class="num">10<sup>−8</sup></td></tr>
+        <tr><td>Al, lattice</td><td class="num" rowspan="2">933 K</td><td class="num" rowspan="2">0.4</td><td class="num">1.5 × 10<sup>−19</sup></td><td class="num">10<sup>−11</sup></td></tr>
+        <tr><td>Al, grain boundary</td><td class="num">6 × 10<sup>−11</sup></td><td class="num">5 × 10<sup>−7</sup></td></tr>
+        <tr><td>Eutectic SnPb, lattice</td><td class="num">456 K</td><td class="num">0.82</td><td class="num">2 × 10<sup>−10</sup> – 2 × 10<sup>−9</sup></td><td class="num">molten, &gt; 10<sup>−5</sup></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="88"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Two measurements of D at two temperatures fix both Q and D<sub>0</sub>: Q = R ln(D<sub>2</sub>/D<sub>1</sub>) / (1/T<sub>1</sub> − 1/T<sub>2</sub>).</li>
+      <li>Interstitial beats substitutional, BCC beats FCC, boundaries and surfaces beat the lattice.</li>
+      <li>Judge temperature against the melting point, T/T<sub>m</sub>. The same 100 °C freezes copper's lattice and lets solder's flow.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 09 ======================= -->
+<section class="unit" id="s9">
+  <header class="unit-head" data-t="89"><p class="unit-no">09</p><h2>Quiz</h2><p class="unit-tag">8 questions</p></header>
+  <p class="quiz-intro" data-t="90">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score"></p>
+  <div class="quiz" id="quiz"></div>
+  <p class="next" data-t="91"><a href="ch6.html">Next, Chapter 6: Mechanical Properties of Metals 3D Classroom →</a></p>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="92">  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch. 5 of Materials Science and Engineering I, National Tsing Hua University; W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019 (Tables 5.1 and 5.2, the carburizing example). Diffusivity lines in Unit 8 pass through the Table 5.2 values at 500 °C and 1000 °C; values in parentheses in that table are extrapolations outside the phase's range. Lattice, grain-boundary and surface diffusivities: K. N. Tu, <i>J. Appl. Phys.</i> 94, 5451 (2003). Ni–Cu couple data: C. N. Liao's slides. Kirkendall's experiment: A. D. Smigelskas &amp; E. O. Kirkendall, <i>Trans. AIME</i> 171, 130 (1947).</p>
+  <span class="lbl">MODELS</span>
+  <p>Unit 3 shows one atomic layer of a simple cubic lattice; real metals are FCC or BCC, but the jump rules are the same. Unit 4 solves Darken's equations for a couple with constant intrinsic diffusivities and no volume change; voids are drawn in proportion to the vacancies arriving on the zinc side. Unit 5 is a random walk of independent particles with both ends held at fixed density. The carburizing temperatures other than 927 °C scale D with Q = 148 kJ/mol for carbon in FCC iron.</p></footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={"1":"材料科學與工程導論（一）",
+"2":"第 1 章・導論",
+"3":"第 2 章・原子與鍵結",
+"4":"第 3 章・晶體結構",
+"5":"第 4 章・凝固與缺陷",
+"6":"第 5 章・擴散",
+"7":"第 6 章・機械性質",
+"8":"      <h1>固體中的擴散<br><span class=\"d\">3D<\/span>教室<\/h1>\n      <p class=\"lede\">固體裡的原子並沒有被凍住。每個原子每秒試著跳約 10<sup>13<\/sup> 次，偶爾有一次翻過能障、跳到隔壁的位置。這種難得的成功在整塊晶體裡不斷累積，就是擴散。它讓齒輪表面變硬、決定每顆電晶體的摻雜分布，也會在銲點裡挖出孔洞。這一章從一次跳躍講起，一路講到能預測整條濃度分布的方程式。<\/p>\n      <p class=\"lede\">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。<\/p>\n      <ul class=\"palette\" aria-label=\"本章顏色約定\">\n        <li class=\"palette-h\">這一章的顏色都照這個約定<\/li>\n        <li><i style=\"background:var(--c-corner)\"><\/i><span><b>藍<\/b>　母材原子・銅<\/span><\/li>\n        <li><i style=\"background:var(--c-body)\"><\/i><span><b>橘<\/b>　正在擴散的原子・鋅、碳<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i><span><b>紫<\/b>　空位與它走過的路・標記<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--hi)\"><\/i><span><b>紅<\/b>　正在跳的原子、要注意看的東西<\/span><\/li>\n      <\/ul>\n    ",
+"9":"銅 | 鋅<br>退火之後",
+"10":"一塊銅（藍）貼著鋅（橘）放在高溫下。原子往兩個方向越過原本的界面，邊界變成一條模糊的帶子。這條帶子會長多寬、長多快，就是這一章要算的。",
+"11":"<span>01<\/span>能障",
+"12":"<span>02<\/span>Arrhenius 圖",
+"13":"<span>03<\/span>原子怎麼跳",
+"14":"<span>04<\/span>Kirkendall 效應",
+"15":"<span>05<\/span>Fick’s first law",
+"16":"<span>06<\/span>Fick’s second law",
+"17":"<span>07<\/span>齒輪滲碳",
+"18":"<span>08<\/span>D 與溫度",
+"19":"<span>09<\/span>小測驗",
+"20":"<p class=\"unit-no\">01<\/p><h2>能障：為什麼加熱會讓一切變快<\/h2><p class=\"unit-tag\">能量超過 E* 的比例 = \\(e^{-E^*/kT}\\)<\/p>",
+"21":"    <p>固體中的反應會往能量低的方向走，從能量 E<sub>r<\/sub> 的反應物變成 E<sub>p<\/sub> 的生成物。但它沒辦法直接過去：途中原子必須經過一個擠在一起、能量很高的排列，也就是<span class=\"term\">活化錯合物<\/span> M*，能量為 E*。這段爬升 ΔE* 就是<span class=\"term\">活化能<\/span>。<\/p>\n    <p>爬坡的能量從哪裡來？從熱來。溫度 T 時，原子依照<span class=\"term\">Boltzmann 分布<\/span>分配能量：擁有能量 E 的機率是 \\(\\frac{1}{kT}\\,e^{-E/kT}\\)，所以大部分原子待在低處，只有細細的一條尾巴伸到高能量。把這條尾巴從 E* 往上積分，就是翻得過去的比例：<\/p>\n    <p class=\"eq big\">\\(\\displaystyle \\frac{n(E &gt; E^*)}{N_\\text{total} } = e^{-E^*/kT}\\)　\\(k = 1.38\\times10^{-23}\\ \\text{J/K} = 8.62\\times10^{-5}\\ \\text{eV/K}\\)<\/p>\n    <p>第 4 章的空位比例 \\(n_v/N = C\\,e^{-E_v/kT}\\) 也是同一個指數：形成空位同樣要付一筆能量。拉動滑桿看看：尾巴雖然很小，但 T 在指數裡，溫度升高一點點，比例就會翻好幾倍。",
+"22":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>反應路徑上的能量<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>溫度 T 的 Boltzmann 分布<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>能量超過 E* 的原子<\/span>\n      ",
+"23":"溫度",
+"24":"能障高度 ΔE*",
+"25":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>熱活化過程要翻過能障 ΔE*，只有 Boltzmann 分布高能量的那條尾巴翻得過去。<\/li>\n      <li>這個比例是 \\(e^{-E^*/kT}\\)。溫度在指數裡，所以速率一變就是好幾個數量級，不是幾個百分比。<\/li>\n      <li>終點能量 E<sub>p<\/sub> 決定反應往哪走，能障決定走多快。生成物能量低很多，照樣可能生成得非常慢。<\/li>\n    <\/ul>\n  ",
+"26":"<p class=\"unit-no\">02<\/p><h2>Arrhenius 圖：藏著指數的一條直線<\/h2><p class=\"unit-tag\">速率 = \\(C\\,e^{-Q/RT}\\)<\/p>",
+"27":"    <p>反應速率和翻過能障的原子數成正比，所以帶著同一個指數。以每莫耳來寫，就是<span class=\"term\">Arrhenius 方程式<\/span>：<\/p>\n    <p class=\"eq big\">\\(\\displaystyle \\text{速率} = C\\,e^{-Q/RT}\\)　\\(R = k N_A = 8.314\\ \\text{J/(mol}\\cdot\\text{K)}\\)<\/p>\n    <p>Q 是每莫耳的活化能，C 是和溫度無關的速率常數。每個粒子和每莫耳只是換單位：每個粒子 1 eV = 23.06 kcal/mol = 96.5 kJ/mol。<\/p>\n    <p>取對數，曲線就變成直線：\\(\\ln(\\text{速率}) = \\ln C - (Q/R)(1/T)\\)；改用以 10 為底，\\(\\log_{10}(\\text{速率}) = \\log_{10} C - Q/(2.303\\,RT)\\)。以 log(速率) 對 1/T 作圖：截距是 log C，斜率是 \\(-Q/(2.303\\,R)\\)。活化能就是這樣量出來的：在幾個溫度下量速率，畫出最佳直線，從斜率讀出 Q。",
+"28":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>log<sub>10<\/sub>(速率 / C)<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>T<sub>1<\/sub><\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>T<sub>2<\/sub><\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>對照：Q = 50 kJ/mol<\/span>\n      ",
+"29":"活化能 Q",
+"30":"T<sub>1<\/sub>",
+"31":"T<sub>2<\/sub>",
+"32":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>log(速率) 對 1/T 是一條直線，斜率是 \\(-Q/(2.303\\,R)\\)；線越陡，能障越高。<\/li>\n      <li>Q 高的過程對溫度最敏感：同樣升溫 100 K，它加速得多很多。<\/li>\n      <li>Arrhenius 圖上高溫在左邊，因為那裡 1/T 小。先看座標軸，再看線。<\/li>\n    <\/ul>\n  ",
+"33":"<p class=\"unit-no\">03<\/p><h2>原子怎麼跳：空位與間隙<\/h2><p class=\"unit-tag\">\\(E^* = E_v + E_m\\)・\\(E^* = E_m\\)<\/p>",
+"34":"    <p><span class=\"term\">擴散<\/span>是一種物質穿過另一種物質的傳輸。煙在空氣中幾秒就散開，染料在水中要幾分鐘；在固體裡同樣的事要花幾小時到幾年，因為每一步都需要一次熱活化跳躍。跳躍主要有兩種方式。<\/p>\n    <dl class=\"defs\">\n      <dt>空位（置換型）擴散<\/dt><dd>晶格位置上的原子，只有旁邊的位置空著才能移動。它和空位交換位置，所以原子和空位往相反方向走。原子就是母材本身時，叫做<span class=\"term\">自擴散<\/span>。它的活化能分兩部分：形成空位的能量，加上跳進空位的能量，\\(E^* = E_v + E_m\\)。<\/dd>\n      <dt>間隙擴散<\/dt><dd>待在母材原子空隙裡的小原子，從一個間隙跳到下一個。旁邊的間隙幾乎都是空的，不必先形成空位：\\(E^* = E_m\\)。例如碳在 BCC 或 FCC 鐵中、氫在金屬中。<\/dd>\n    <\/dl>\n    <p>兩者的擴散係數都是 Arrhenius 形式，\\(D = D_0\\,e^{-E^*/kT}\\)。間隙跳躍省下形成空位的那筆能量，所以間隙擴散通常快得多。在模型裡比較兩者：紅色是正在跳的原子，紫色軌跡是空位或碳原子走過的路。",
+"35":"機制",
+"36":"空位",
+"37":"間隙",
+"38":"動畫",
+"39":"播放",
+"40":"暫停",
+"41":"重來",
+"42":"<span class=\"h3-no\">3-1<\/span><span>熔點越高，能障越高<\/span>",
+"43":"    <p>把晶體結合起來的鍵，也阻擋每一次跳躍。要更多熱才能熔化的金屬，形成和移動空位也要更多能量，所以自擴散活化能隨熔點升高。最後一欄可以看到比值大致固定，約 0.15 kJ/(mol·K)，大約 18 R。",
+"44":"    <table>\n      <thead><tr><th>金屬<\/th><th>熔點<\/th><th>結構<\/th><th>自擴散的 Q<\/th><th>Q / T<sub>m<\/sub><\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>鋅<\/td><td class=\"num\">419 °C（692 K）<\/td><td>HCP<\/td><td class=\"num\">91.6 kJ/mol<\/td><td class=\"num\">0.132<\/td><\/tr>\n        <tr><td>鋁<\/td><td class=\"num\">660 °C（933 K）<\/td><td>FCC<\/td><td class=\"num\">165 kJ/mol<\/td><td class=\"num\">0.177<\/td><\/tr>\n        <tr><td>銅<\/td><td class=\"num\">1083 °C（1356 K）<\/td><td>FCC<\/td><td class=\"num\">196 kJ/mol<\/td><td class=\"num\">0.145<\/td><\/tr>\n        <tr><td>鎳<\/td><td class=\"num\">1452 °C（1725 K）<\/td><td>FCC<\/td><td class=\"num\">293 kJ/mol<\/td><td class=\"num\">0.170<\/td><\/tr>\n        <tr><td>α 鐵<\/td><td class=\"num\">1530 °C（1803 K）<\/td><td>BCC<\/td><td class=\"num\">240 kJ/mol<\/td><td class=\"num\">0.133<\/td><\/tr>\n        <tr><td>鉬<\/td><td class=\"num\">2600 °C（2873 K）<\/td><td>BCC<\/td><td class=\"num\">460 kJ/mol<\/td><td class=\"num\">0.160<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"45":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>空位擴散：原子和旁邊的空位交換位置，所以原子和空位往相反方向走。\\(E^* = E_v + E_m\\)。<\/li>\n      <li>間隙擴散：小原子在間隙之間跳。不需要空位，\\(E^* = E_m\\)，通常快得多。<\/li>\n      <li>自擴散活化能跟著熔點走：抵抗熔化和抵抗跳躍的是同一批鍵。<\/li>\n    <\/ul>\n  ",
+"46":"<p class=\"unit-no\">04<\/p><h2>Kirkendall 效應：當一邊跑得比較快<\/h2><p class=\"unit-tag\">\\(J_\\text{Zn} &gt; J_\\text{Cu}\\) ⇒ 空位淨流動、標記移動、孔洞<\/p>",
+"47":"    <p>把銅貼著鋅退火。如果兩種原子以同樣的速率越過界面，界面只會變模糊。1947 年 Smigelskas 和 Kirkendall 在這種擴散偶的界面上放了細鉬絲當<span class=\"term\">標記<\/span>，結果發現鉬絲會移動。鋅擴散得比銅快，所以離開鋅那一側的原子比進來的多。每個原子靠空位跳走，就有一個空位往反方向回來，於是一股空位的淨流動 J<sub>v<\/sub> 灌進鋅那一側。<\/p>\n    <p>接著發生三件事。鋅這一側的晶格面被吃掉、銅那一側的晶格面增加，所以標記往鋅那邊漂。黃銅（Cu–Zn）層沿著跑得快的鋅前進的方向，往銅那一側長。灌進來的空位如果沒辦法全部被吸收，就聚成孔洞，也就是<span class=\"term\">Kirkendall 孔洞<\/span>。銲料和銅墊之間也會出現同樣的孔洞（J<sub>Cu<\/sub> 流進 Sn），讓銲點變弱；化學家則刻意利用它來做中空奈米顆粒。",
+"48":"        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>鋅的比例 X<sub>Zn<\/sub><\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>原本的界面<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>標記・孔洞<\/span>\n      ",
+"49":"鋅擴散快幾倍，D<sub>Zn<\/sub> / D<sub>Cu<\/sub>",
+"50":"1（一樣快）",
+"51":"退火時間",
+"52":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>擴散偶裡每一種原子有自己的擴散係數。原子通量不相等，就留下一股空位淨通量，指向跑得快的那一側。<\/li>\n      <li>界面上的標記往擴散快的那一側漂。這個漂移證明擴散靠的是空位，而不是兩個原子直接互換。<\/li>\n      <li>堆積的空位形成 Kirkendall 孔洞，是銲點可靠度上實際會碰到的問題。<\/li>\n    <\/ul>\n  ",
+"53":"<p class=\"unit-no\">05<\/p><h2>Fick’s first law：沿著梯度的穩定流動<\/h2><p class=\"unit-tag\">\\(J = -D\\,dC/dx\\)<\/p>",
+"54":"    <p>每個原子都往隨機的方向跳，沒有一個「知道」低濃度在哪裡。但只要左邊的原子比右邊多，穿過任一平面的跳躍就是由左往右比由右往左多，淨流動就出現了。<span class=\"term\">通量<\/span> J，也就是單位時間穿過單位面積的淨原子數，和濃度梯度成正比：<\/p>\n    <p class=\"eq big\">\\(\\displaystyle J = -D\\,\\frac{dC}{dx}\\)<\/p>\n    <p>D 是<span class=\"term\">擴散係數<\/span>，單位 m²/s。負號表示原子往下坡流，從高濃度流向低濃度。如果兩端固定在濃度 C<sub>1<\/sub> 和 C<sub>2<\/sub>，又沒有反應發生，分布會變成一條直線，之後不再改變：這就是<span class=\"term\">穩態擴散<\/span>，每個平面通過的 J 都一樣。用鈀片純化氫氣就是這樣運作。<\/p>\n    <p>模型是真的隨機漫步：每顆橘色原子都走隨機的步伐，左端一直保持滿，右端幾乎是空的。數一數穿過紫色平面的原子：淨數目跟著 −D·dC/dx 走。",
+"55":"左端濃度 C<sub>1<\/sub>",
+"56":"擴散係數 D（相對值）",
+"57":"<span class=\"h3-no\">5-1<\/span><span>同一條定律，三種傳輸<\/span>",
+"58":"    <p>通量等於負的係數乘上梯度。熱遵守同一條規則（Fourier’s law），電荷也是（Ohm’s law）。每一條再配上守恆，就得到同一個二階方程式，只是擴散係數不同。",
+"59":"    <table>\n      <thead><tr><th>流動的東西<\/th><th>通量定律<\/th><th>驅動力<\/th><th>隨時間變化的形式<\/th><th>對應的「擴散係數」<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>質量<\/td><td>Fick：\\(J_M = -D_M\\,\\frac{dC}{dx}\\)<\/td><td>濃度梯度<\/td><td>\\(\\frac{\\partial C}{\\partial t} = D_M\\,\\frac{\\partial^2 C}{\\partial x^2}\\)<\/td><td class=\"num\">\\(D_M\\)<\/td><\/tr>\n        <tr><td>熱<\/td><td>Fourier：\\(J_Q = -k\\,\\frac{dT}{dx}\\)<\/td><td>溫度梯度<\/td><td>\\(\\frac{\\partial T}{\\partial t} = \\frac{k}{\\rho c_p}\\,\\frac{\\partial^2 T}{\\partial x^2}\\)<\/td><td class=\"num\">\\(D_Q = k/\\rho c_p\\)<\/td><\/tr>\n        <tr><td>電荷<\/td><td>Ohm：\\(J_E = -\\sigma\\,\\frac{dV}{dx}\\)<\/td><td>電位梯度<\/td><td>\\(\\frac{\\partial V}{\\partial t} = \\frac{\\sigma}{C_q}\\,\\frac{\\partial^2 V}{\\partial x^2}\\)<\/td><td class=\"num\">\\(D_E = \\sigma/C_q\\)<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"60":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>淨通量來自隨機跳躍，加上兩側原子數不相等。沒有任何力在推原子。<\/li>\n      <li>J = −D dC/dx：梯度加倍或 D 加倍，通量就加倍。負號代表從高濃度流向低濃度。<\/li>\n      <li>穩態是指 C(x) 不再隨時間改變；分布是一條直線，各處的 J 都一樣。<\/li>\n    <\/ul>\n  ",
+"61":"<p class=\"unit-no\">06<\/p><h2>Fick’s second law：分布怎麼隨時間改變<\/h2><p class=\"unit-tag\">\\(\\partial C/\\partial t = D\\,\\partial^2 C/\\partial x^2\\)<\/p>",
+"62":"    <p>實際的擴散大多不是穩態：某個深度的濃度會一直改變。取 x 到 x + Δx 之間的一片薄層。原子以 J(x) 從左面流進來，以 J(x + Δx) 從右面流出去。沒流走的就留下來，所以薄層裡濃度的變化率是<\/p>\n    <p class=\"eq big\">\\(\\displaystyle \\frac{\\partial C}{\\partial t} = \\frac{J(x) - J(x+\\Delta x)}{\\Delta x} = -\\frac{\\partial J}{\\partial x}\\)<\/p>\n    <p>這是<span class=\"term\">連續方程式<\/span>。把 Fick’s first law 代進 J，在 D 為定值時就得到<span class=\"term\">Fick’s second law<\/span>：\\(\\partial C/\\partial t = D\\,\\partial^2 C/\\partial x^2\\)。它的意思可以直接看圖：曲線往上彎的地方（\\(\\partial^2 C/\\partial x^2 &gt; 0\\)，流進比流出多）濃度上升，往下彎的地方濃度下降。擴散一定會把凸起抹平。<\/p>\n    <p>投影片上的兩個解，都是 400 °C 下的 Ni–Cu 擴散偶；Cu 在 Ni 中的 D = \\(D_0\\,e^{-E_A/kT} = 6\\times10^{-8}\\ \\text{cm}^2\\text{/s} \\times e^{-0.98\\ \\text{eV}/kT} = 2.7\\times10^{-15}\\ \\text{cm}^2\\text{/s}\\)：<\/p>\n    <dl class=\"defs\">\n      <dt>擴散偶<\/dt><dd>純 Ni 接上 Cu<sub>0.6<\/sub>Ni<sub>0.4<\/sub>：\\(C(x,t) = \\frac{C_0}{2}\\Big[1 - \\operatorname{erf}\\Big(\\frac{x}{2\\sqrt{Dt} }\\Big)\\Big]\\)。每一條分布在界面上都通過 \\(C_0/2\\)。<\/dd>\n      <dt>薄層<\/dt><dd>0.05 µm 厚的合金夾在兩塊 Ni 之間，幾乎是一個瞬間的點源，每單位面積有 n 個原子：\\(C(x,t) = \\frac{n}{\\sqrt{4\\pi Dt} }\\,e^{-x^2/4Dt}\\)。高斯曲線會變寬、變矮，但面積一直是 n。如果一邊是原子穿不過的牆（半無限介質），原子全部往同一邊走，前面的係數加倍成 \\(n/\\sqrt{\\pi Dt}\\)。<\/dd>\n    <\/dl>",
+"63":"        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>現在的 C(x, t)<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>t = 0 時<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-face)\"><\/i>正在上升（\\(\\partial^2 C/\\partial x^2 &gt; 0\\)）<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>正在下降（\\(\\partial^2 C/\\partial x^2 &lt; 0\\)）<\/span>\n      ",
+"64":"起始配置",
+"65":"擴散偶",
+"66":"薄層",
+"67":"在 400 °C 的時間",
+"68":"薄層位置",
+"69":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>連續方程式：流進薄層卻沒流出去的，就累積下來，\\(\\partial C/\\partial t = -\\partial J/\\partial x\\)。<\/li>\n      <li>Fick’s second law \\(\\partial C/\\partial t = D\\,\\partial^2 C/\\partial x^2\\)：分布往上彎的地方濃度上升，往下彎的地方濃度下降。<\/li>\n      <li>每一條分布的寬度都隨 \\(\\sqrt{Dt}\\) 成長。時間變四倍，深度只變兩倍。<\/li>\n    <\/ul>\n  ",
+"70":"<p class=\"unit-no\">07<\/p><h2>齒輪滲碳：error function 解<\/h2><p class=\"unit-tag\">\\((C_s - C_x)/(C_s - C_0) = \\operatorname{erf}(x/2\\sqrt{Dt})\\)<\/p>",
+"71":"    <p>鋼齒輪需要又硬又耐磨的表面，和強韌的心部。<span class=\"term\">滲碳<\/span>可以同時做到：把低碳鋼零件放在富含碳的氣體中加熱，碳原子以間隙擴散鑽進去，在低碳的心部外面形成一層高碳的表層。表面固定在 C<sub>s<\/sub>、固體起始濃度均勻為 C<sub>0<\/sub> 時，Fick’s second law 給出<\/p>\n    <p class=\"eq big\">\\(\\displaystyle \\frac{C_s - C_x}{C_s - C_0} = \\operatorname{erf}\\left(\\frac{x}{2\\sqrt{Dt} }\\right)\\)　\\(\\displaystyle \\operatorname{erf}(z) = \\frac{2}{\\sqrt{\\pi} }\\int_0^z e^{-y^2}\\,dy\\)<\/p>\n    <p><span class=\"term\">error function<\/span>只是一條查表用的 S 形曲線：\\(\\operatorname{erf}(0) = 0\\)，\\(\\operatorname{erf}(\\infty) = 1\\)，\\(\\operatorname{erf}(0.5) = 0.52\\)。查表時，找出夾住你那個值的兩列，再做線性內插。<\/p>\n    <p><b>投影片例題。<\/b>1018 鋼齒輪（0.18 wt% C）在 927 °C 滲碳，C<sub>s<\/sub> = 1.15 wt%，D = 1.28 × 10<sup>−11<\/sup> m²/s。要多久，表面下 0.40 mm 處的碳才會達到 0.35 wt%？先把控制項設成例題讀出答案，再改改看哪些因素重要。<\/p>\n    <p>矽晶片用的是同一套數學。在晶圓裡摻硼或磷，是先做表面濃度固定的擴散（erf 分布），再用固定的量做推進擴散（高斯分布，第 6 單元）；摻雜濃度決定每一區的電阻率。",
+"72":"        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>所選時間的 C(x)<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>每 30 分鐘<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>目標：所選深度處 0.35 wt%<\/span>\n      ",
+"73":"滲碳溫度",
+"74":"目標深度 x",
+"75":"爐內時間",
+"76":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>表面濃度固定時，左邊的 \\((C_s - C_x)/(C_s - C_0)\\) 決定了 \\(z = x/2\\sqrt{Dt}\\)。某個濃度出現的深度和 \\(\\sqrt{Dt}\\) 成正比。<\/li>\n      <li>同樣溫度下，表層深度要加倍就得花四倍時間；或者提高溫度，因為 D 隨 T 呈指數成長。<\/li>\n      <li>erf 表的線性內插：\\(\\dfrac{z - z_0}{z_1 - z_0} = \\dfrac{\\operatorname{erf} - \\operatorname{erf}_0}{\\operatorname{erf}_1 - \\operatorname{erf}_0}\\)。<\/li>\n    <\/ul>\n  ",
+"77":"<p class=\"unit-no\">08<\/p><h2>什麼決定 D：溫度、機制、結構、路徑<\/h2><p class=\"unit-tag\">\\(D = D_0\\,e^{-Q/RT}\\)<\/p>",
+"78":"    <p>擴散係數取決於五件事：<\/p>\n    <dl class=\"defs\">\n      <dt>機制<\/dt><dd>在同一種母材裡，間隙原子（碳）擴散得比置換型原子（鐵、鎳）快得多。<\/dd>\n      <dt>溫度<\/dt><dd>D 隨 T 呈指數上升，這是影響最大的因素。<\/dd>\n      <dt>晶體結構<\/dt><dd>BCC 鐵堆得比 FCC 鐵鬆（APF 0.68 比 0.74），所以同樣溫度下，原子在 BCC 鐵中擴散得比較快。<\/dd>\n      <dt>缺陷<\/dt><dd>晶界和自由表面是開放、無序的通道，沿著它們擴散比穿過晶格快得多。<\/dd>\n      <dt>濃度<\/dt><dd>溶質含量高時 D 會改變：溶質可能捕捉空位或占住間隙位置（通常讓 D 變小），也可能改變活化能（變大變小都有可能）。<\/dd>\n    <\/dl>\n    <p>圖上畫的是投影片表 5.2 各系統的 log D 對 1000/T，每條線都通過它在 500 °C 和 1000 °C 的值，斜率就是 Q。投影片的兩點法：銀在銀中的 D 在 500 °C 是 1 × 10<sup>−17<\/sup> m²/s，1000 °C 是 7 × 10<sup>−13<\/sup> m²/s，所以<\/p>\n    <p class=\"eq big\">\\(\\displaystyle \\frac{D_2}{D_1} = \\exp\\!\\left[-\\frac{Q}{R}\\left(\\frac{1}{T_2} - \\frac{1}{T_1}\\right)\\right]\\)&emsp;⇒&emsp;\\(\\displaystyle Q = \\frac{R\\,\\ln(7\\times10^{4})}{1/773 - 1/1273} \\approx 183\\ \\text{kJ/mol}\\)<\/p>",
+"79":"比較",
+"80":"間隙 vs 置換",
+"81":"BCC vs FCC 鐵",
+"82":"銅與鋅",
+"83":"全部",
+"84":"溫度",
+"85":"<span class=\"h3-no\">8-1<\/span><span>快速通道：晶格、晶界、表面<\/span>",
+"86":"    <p>「熱不熱」要看熔點。100 °C 時銅只在熔點的 0.275 倍，晶格幾乎凍結，但晶界和表面仍然很活躍；所以銅導線的電遷移是沿著表面和晶界走。銲料在 100 °C 已經到 0.82 T<sub>m<\/sub>，連晶格擴散都很快（K. N. Tu, <i>J. Appl. Phys.<\/i> 94, 5451, 2003）。",
+"87":"    <table>\n      <thead><tr><th>材料<\/th><th>T<sub>m<\/sub><\/th><th>373 K / T<sub>m<\/sub><\/th><th>100 °C 的 D（cm²/s）<\/th><th>350 °C 的 D（cm²/s）<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>Cu，晶格<\/td><td class=\"num\" rowspan=\"3\">1356 K<\/td><td class=\"num\" rowspan=\"3\">0.275<\/td><td class=\"num\">7 × 10<sup>−28<\/sup><\/td><td class=\"num\">5 × 10<sup>−17<\/sup><\/td><\/tr>\n        <tr><td>Cu，晶界<\/td><td class=\"num\">3 × 10<sup>−15<\/sup><\/td><td class=\"num\">1.2 × 10<sup>−9<\/sup><\/td><\/tr>\n        <tr><td>Cu，表面<\/td><td class=\"num\">10<sup>−12<\/sup><\/td><td class=\"num\">10<sup>−8<\/sup><\/td><\/tr>\n        <tr><td>Al，晶格<\/td><td class=\"num\" rowspan=\"2\">933 K<\/td><td class=\"num\" rowspan=\"2\">0.4<\/td><td class=\"num\">1.5 × 10<sup>−19<\/sup><\/td><td class=\"num\">10<sup>−11<\/sup><\/td><\/tr>\n        <tr><td>Al，晶界<\/td><td class=\"num\">6 × 10<sup>−11<\/sup><\/td><td class=\"num\">5 × 10<sup>−7<\/sup><\/td><\/tr>\n        <tr><td>共晶 SnPb，晶格<\/td><td class=\"num\">456 K<\/td><td class=\"num\">0.82<\/td><td class=\"num\">2 × 10<sup>−10<\/sup> – 2 × 10<sup>−9<\/sup><\/td><td class=\"num\">已熔化，&gt; 10<sup>−5<\/sup><\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"88":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>在兩個溫度各量一次 D，就能同時定出 Q 和 D<sub>0<\/sub>：Q = R ln(D<sub>2<\/sub>/D<sub>1<\/sub>) / (1/T<sub>1<\/sub> − 1/T<sub>2<\/sub>)。<\/li>\n      <li>間隙勝過置換，BCC 勝過 FCC，晶界和表面勝過晶格。<\/li>\n      <li>溫度要和熔點比，看 T/T<sub>m<\/sub>。同樣是 100 °C，銅的晶格凍住了，銲料的晶格卻還在流動。<\/li>\n    <\/ul>\n  ",
+"89":"<p class=\"unit-no\">09<\/p><h2>小測驗<\/h2><p class=\"unit-tag\">8 題<\/p>",
+"90":"每題只能作答一次，選完會顯示解說。",
+"91":"<a href=\"ch6.html\">下一章，第 6 章：金屬的機械性質 3D 教室 →<\/a>",
+"92":"  <span class=\"lbl\">資料來源<\/span>\n  <p>國立清華大學「材料科學與工程導論（一）」第 5 章投影片；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering<\/i>, 6th ed., McGraw-Hill, 2019（表 5.1、表 5.2、滲碳例題）。第 8 單元的擴散係數直線通過表 5.2 在 500 °C 和 1000 °C 的值；該表括號內的數值是超出該相範圍的外插值。晶格、晶界與表面擴散係數：K. N. Tu, <i>J. Appl. Phys.<\/i> 94, 5451 (2003)。Ni–Cu 擴散偶資料：C. N. Liao 的投影片。Kirkendall 實驗：A. D. Smigelskas &amp; E. O. Kirkendall, <i>Trans. AIME<\/i> 171, 130 (1947)。<\/p>\n  <span class=\"lbl\">關於模型<\/span>\n  <p>第 3 單元畫的是簡單立方晶格的一層原子；實際金屬是 FCC 或 BCC，但跳躍規則相同。第 4 單元解的是 Darken 方程式，假設本質擴散係數固定、體積不變；孔洞的多寡和流進鋅那一側的空位數成正比。第 5 單元是彼此獨立的粒子做隨機漫步，兩端密度固定。滲碳溫度除了 927 °C 以外，D 以碳在 FCC 鐵中的 Q = 148 kJ/mol 換算。<\/p>",
+"93":"章節",
+"94":"單元",
+"95":"語言",
+"96":"深色模式",
+"97":"反應路徑上的能量，旁邊是原子能量的 Boltzmann 分布，超過能障的部分塗色",
+"98":"溫度",
+"99":"活化能",
+"100":"所選活化能的 Arrhenius 圖：log 速率對 1/T",
+"101":"活化能",
+"102":"溫度 1",
+"103":"溫度 2",
+"104":"銅鋅擴散偶中鋅的比例，標記位置，以及原子和空位的通量",
+"105":"退火時間",
+"106":"左端濃度",
+"107":"擴散係數",
+"108":"所選時間下鎳銅擴散偶的濃度分布，以及流進、流出一片薄層的通量",
+"109":"時間",
+"110":"薄層位置",
+"111":"齒輪表面下碳濃度對深度的分布，標出目標深度與濃度",
+"112":"目標深度",
+"113":"時間",
+"114":"幾個溶質－溶劑系統擴散係數的 Arrhenius 圖，附溫度標線",
+"115":"溫度"}, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title="固體中的擴散 3D 教室";var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="ch5.js?v=6"></script>
+
+</body></html>

@@ -1,0 +1,1149 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mechanical Properties of Metals 3D Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Kalam:wght@400&family=LXGW+WenKai+TC&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,900&display=swap">
+<style>
+/* Layout: a lab notebook on lattice paper. Each unit has a narrow margin column (unit number, notation, side notes, labels)
+   beside a reading column; 3D labs, tables and worked examples run the full width. The hero is an X-ray film plate.
+   The interface is drawn in ink only, so the atom colours are the only colour on the page. */
+:root{
+  --bg:#F3F5F5; --paper-line:#E1E6E7; --surface:#FFFFFF; --surface-2:#ECEFF0;
+  --ink:#141A20; --muted:#59636C; --line:#C8CFD3; --rule:#141A20;
+  --accent:#18222C; --accent-ink:#F3F5F5;
+  --hi:#D2452F; --ok:#17845A; --bad:#C23A2A;
+  --stage:#FBFCFC; --edge3d:#6C7781; --ghost3d:#ADB5BC; --grid:#E2E6E9;
+  --c-corner:#4F7FE0; --c-face:#1FA386; --c-body:#E7962A; --c-plane:#7A5CF0;
+  --film:#0C161B; --film-2:#132229; --film-ink:#DDE7EA; --film-muted:#8EA2A9; --film-line:#2A3D45; --film-ring:#A9CBD5; --filmline:#7E959E;
+  --f-display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --m:11rem; --gap:40px; --r:2px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+    --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+    --accent:#E1E8EB; --accent-ink:#0E1316;
+    --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+    --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+    --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1316; --paper-line:#172024; --surface:#151C20; --surface-2:#1C252A;
+  --ink:#E1E8EB; --muted:#94A1A9; --line:#2C373D; --rule:#E1E8EB;
+  --accent:#E1E8EB; --accent-ink:#0E1316;
+  --hi:#FF7C66; --ok:#4CC38A; --bad:#FF7C66;
+  --stage:#11181C; --edge3d:#7F8C95; --ghost3d:#44515A; --grid:#1D272C;
+  --film:#081013; --film-2:#0F1C22; --film-ink:#DDE7EA; --film-muted:#8197A0; --film-line:#22343B; --film-ring:#9CC0CA; --filmline:#6F8790;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--paper-line) 1px,transparent 1px),linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:20px 20px;
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;padding-inline:16px;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1160px;margin-inline:auto}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--ink);text-underline-offset:3px}
+sub,sup{line-height:0}
+.mono,.idx{font-family:var(--f-mono)}
+.bar{text-decoration:overline;text-decoration-thickness:1.5px}
+.idx{white-space:nowrap;letter-spacing:.03em}
+.idx.wrap{white-space:normal}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---------- hero: film plate ---------- */
+.hero{background:var(--film);color:var(--film-ink);margin-inline:-16px;padding:56px 16px 52px;border-bottom:1px solid var(--film-line)}
+.hero-in{max-width:1160px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center}
+.hero-text{display:grid;gap:26px;align-content:center}
+.hero h1{font-size:clamp(2.05rem,4.5vw,3.5rem);font-weight:900;line-height:1.08;letter-spacing:-.012em}
+.hero h1 .d{font-family:var(--f-mono);font-weight:500;letter-spacing:-.02em}
+.lede{font-size:1.06rem;line-height:1.72;max-width:33em;color:var(--film-ink)}
+.lede + .lede{margin-top:-12px;color:var(--film-muted);font-size:.95rem}
+.palette{list-style:none;margin:0;padding:16px 0 0;border-top:1px solid var(--film-line);display:grid;grid-template-columns:1fr;gap:5px;font-size:.88rem;color:var(--film-muted);max-width:32em}
+.palette-h{grid-column:1/-1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--film-muted)}
+.palette li{display:flex;gap:10px;align-items:baseline}
+.palette i{flex:none;width:11px;height:11px;border-radius:50%;transform:translateY(1px)}
+.palette i.sq{border-radius:1px;height:4px;transform:translateY(-3px)}
+.palette b{color:var(--film-ink);font-weight:500;display:inline-block;min-width:4.2em}
+.hero-fig{margin:0;display:grid;gap:12px}
+.hero-fig figcaption{font-size:.85rem;line-height:1.65;color:var(--film-muted);max-width:36em}
+.hero-fig figcaption b{font-weight:700}
+.stage.film{aspect-ratio:1/1;max-height:560px;border:1px solid var(--film-line);background:radial-gradient(circle at 50% 50%,var(--film-2) 0,var(--film) 70%)}
+.stage.film .rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage.film .rings circle{fill:none;stroke:var(--film-ring)}
+.plate-tag{position:absolute;left:10px;top:9px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--film-muted);pointer-events:none;line-height:1.5}
+.film .stage-tools button{background:transparent;color:var(--film-muted);border-color:var(--film-line)}
+.film .stage-tools button:hover{color:var(--film-ink);border-color:var(--film-muted)}
+.film .stage-tools button[aria-pressed="true"]{background:var(--film-ink);color:var(--film);border-color:var(--film-ink)}
+.film .stage-hint{color:var(--film-muted)}
+.film .stage-hint.cta{background:var(--film-ink);color:var(--film)}
+.stage.film.live{border-color:var(--film-muted)}
+
+.hero-in{position:relative}
+@media (max-width:980px){.lang{top:-29px}}
+
+/* ---------- Traditional Chinese: its own fonts, measures and line heights (switched by <html lang>) ---------- */
+:root[lang="zh-Hant"]{
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-hand:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB",serif;
+  --m:9.5rem;
+}
+:root[lang="zh-Hant"] body{line-height:1.8}
+:root[lang="zh-Hant"] h1,:root[lang="zh-Hant"] h2,:root[lang="zh-Hant"] h3,:root[lang="zh-Hant"] h4{line-height:1.3}
+:root[lang="zh-Hant"] .hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);line-height:1.1;letter-spacing:.05em}
+:root[lang="zh-Hant"] .hero h1 .d{letter-spacing:0;margin-right:.12em}
+:root[lang="zh-Hant"] .lede{line-height:1.9;max-width:30em}
+:root[lang="zh-Hant"] .palette b{display:inline;min-width:0}
+:root[lang="zh-Hant"] .hero-fig figcaption{line-height:1.75}
+:root[lang="zh-Hant"] .unit-head h2{font-size:clamp(1.6rem,3.3vw,2.25rem);letter-spacing:.02em}
+:root[lang="zh-Hant"] .defs dt,:root[lang="zh-Hant"] .key dt{max-width:none;white-space:nowrap}
+:root[lang="zh-Hant"] .mnote{line-height:1.7}
+:root[lang="zh-Hant"] .readout table th{white-space:nowrap}
+:root[lang="zh-Hant"] .readout table th,:root[lang="zh-Hant"] .readout table td{padding-inline:14px}
+:root[lang="zh-Hant"] .errata b{margin-right:8px}
+:root[lang="zh-Hant"] .try{line-height:1.75}
+
+/* ---------- toc ---------- */
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.toc-in{max-width:1160px;margin-inline:auto;display:flex;align-items:center;gap:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.toc-tools{display:flex;gap:8px;flex:none;align-items:center}
+.toc ol::-webkit-scrollbar{display:none}
+.toc a{display:flex;align-items:baseline;gap:6px;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.875rem;padding:12px 11px 10px;border-bottom:2px solid transparent}
+.toc li:first-child a{padding-left:0}
+.toc a span{font-family:var(--f-mono);font-size:.72rem}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--ink);border-bottom-color:var(--rule)}
+.lang{display:flex;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.lang button{font:inherit;letter-spacing:inherit;padding:3px 9px;line-height:1.5;color:var(--muted);background:transparent;border:0;border-radius:0;cursor:pointer}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);cursor:default}
+.lang button:focus-visible{outline-offset:-2px}
+.theme-btn{display:grid;place-items:center;width:28px;height:28px;padding:0;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--rule)}
+.theme-btn svg{width:15px;height:15px}
+.theme-btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:520px){.toc-in{gap:6px}.toc-tools{gap:5px}.lang button{padding:3px 6px}.theme-btn{width:26px;height:26px}.toc a{padding-inline:8px}}
+
+/* ---------- unit: margin column + reading column ---------- */
+.unit{display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:28px;padding-block:80px 0;grid-auto-flow:row dense}
+.unit > *{grid-column:2;min-width:0}
+.unit > .wide{grid-column:1/-1}
+/* a row of lattice points opens every unit */
+.unit::before{content:"";grid-column:1/-1;height:8px;margin-bottom:8px;background:radial-gradient(circle,var(--muted) 1.4px,transparent 1.8px) 0 50%/16px 8px repeat-x;opacity:.55}
+.unit-head{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:6px;align-items:baseline}
+.unit-no{font-family:var(--f-mono);font-weight:500;font-size:2.75rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit-head h2{font-size:clamp(1.55rem,3.2vw,2.2rem);font-weight:900;letter-spacing:-.005em}
+.unit-tag{grid-column:2;font-family:var(--f-mono);font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.prose{max-width:40em;display:grid;gap:14px}
+.prose ul,.prose ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.prose strong{font-weight:700}
+.term{font-weight:700}
+.term small{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.78em;margin-left:3px}
+.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 20px;margin:2px 0;padding:14px 0;border-block:1px solid var(--line)}
+.defs dt{font-weight:700;max-width:10.5em}
+.defs dt small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
+.defs dd{margin:0}
+
+/* hand-written margin note */
+.mnote{grid-column:1;align-self:start;font-family:var(--f-hand);font-size:1.02rem;line-height:1.55;color:var(--ink);display:grid;gap:6px;padding-top:4px}
+.mnote .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* sub-sections (unit 09) */
+.unit > h3{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);align-items:baseline;font-size:1.35rem;font-weight:700;margin-top:28px}
+.h3-no{font-family:var(--f-mono);font-size:.95rem;font-weight:500;color:var(--muted)}
+
+/* ---------- lab: stage + panel ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.lab.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.lab.flip > .panel{order:-1}
+.stage-col{display:grid;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:4/3;max-height:72vh;width:100%;max-width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.stage canvas:active{cursor:grabbing}
+.stage.live{border-color:var(--rule)}
+.stage-tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.stage-tools button{font:500 .72rem var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:3px 8px;cursor:pointer;line-height:1.5}
+.stage-tools button[data-act="in"],.stage-tools button[data-act="out"]{font-size:.85rem;width:27px;padding:3px 0}
+.stage-tools button:hover{border-color:var(--rule);color:var(--ink)}
+.stage-tools button[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.stage-hint{position:absolute;left:10px;bottom:8px;right:10px;font-size:.72rem;color:var(--muted);pointer-events:none}
+.stage-hint.cta{left:50%;right:auto;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;font-weight:500;color:var(--accent-ink);background:var(--accent);padding:4px 12px;border-radius:var(--r)}
+.stage-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:1px;height:4px;vertical-align:3px}
+.legend i.dot{width:6px;height:6px;margin-right:3px;vertical-align:1px}
+.legend i.dot + i.dot{margin-right:6px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:16px;min-width:0}
+.ctl{display:grid;gap:7px}
+.ctl-label{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.04em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button,.btn{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button:hover,.btn:hover{border-color:var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{font-size:.8rem;padding:3px 10px;margin-top:8px}
+.seg button small{font-family:var(--f-mono);font-size:.72rem;opacity:.8;margin-left:3px}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idx-in{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:1.15rem}
+.idx-in input{width:3.3em;font:500 1rem var(--f-mono);text-align:center;padding:4px 2px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink)}
+select{font:inherit;font-size:.9rem;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:10px;font-size:.93rem;border-top:1px solid var(--line);padding-top:14px}
+.readout h4{font-size:1.02rem;font-weight:700}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.stats dt{color:var(--muted);font-size:.85rem}
+.stats dd{margin:0;font-family:var(--f-mono);font-size:.9rem;font-variant-numeric:tabular-nums}
+.eq{font-family:var(--f-mono);font-size:.88rem;background:var(--surface-2);border-radius:var(--r);padding:9px 12px;line-height:1.8;overflow-x:auto}
+.eq.big{font-size:1.06rem;justify-self:start;padding:10px 16px;background:var(--surface);border:1px solid var(--line)}
+.warn{color:var(--bad);font-size:.88rem}
+.note{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:var(--r);border:1px solid currentColor}
+.pill.ok{color:var(--ok)}
+.pill.bad{color:var(--bad)}
+
+/* ---------- key: label in the margin, rules around the content ---------- */
+.key{grid-column:1/-1;display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap)}
+.key-tag{font-family:var(--f-mono);font-size:.75rem;font-weight:600;letter-spacing:.08em;padding-top:15px}
+.key > ul,.key > dl{grid-column:2;margin:0;max-width:44em;border-top:2px solid var(--rule);border-bottom:1px solid var(--line);padding:12px 0 14px}
+.key > ul{padding-left:1.2em;display:grid;gap:6px}
+.key dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px}
+.key dt{font-weight:700;max-width:13em}
+.key dd{margin:0}
+
+/* ---------- tables (ruled like a reference table) ---------- */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border-top:2px solid var(--rule);border-bottom:2px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--f-mono)}
+tr.sum td{border-top:1px solid var(--rule)}
+.readout table th{white-space:normal}
+.readout table th,.readout table td{padding-inline:0 12px}
+
+/* ---------- worked examples (unit 08) ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:2px solid var(--rule);padding:16px 16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card-no{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.card h4{font-size:1.06rem;font-weight:700;margin-top:-4px}
+.card svg{width:100%;height:auto;max-height:190px}
+.card .eq{font-size:.82rem}
+.errata{font-size:.84rem;color:var(--muted);max-width:44em}
+.errata b{font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.06em;margin-right:10px;color:var(--ink)}
+.try{display:grid;gap:8px;align-self:start;font-family:var(--f-hand);font-size:1.05rem;line-height:1.6;padding:6px 0 0 18px;border-left:1px dashed var(--line)}
+.try .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- 2D canvases ---------- */
+.plot{position:relative;width:100%;background:var(--stage);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.plot canvas{display:block;width:100%;height:100%}
+#br-plot{height:400px}
+#ph-plot{height:340px}
+@media (max-width:620px){#ph-plot{height:540px}}
+#xr-plot{height:320px}
+
+/* ---------- process (unit 09-6) ---------- */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;padding:18px 16px 4px 0;font-size:.88rem;counter-increment:f;display:grid;gap:4px;align-content:start;border-top:2px solid var(--rule)}
+.flow li::before{content:counter(f);position:absolute;top:-12px;left:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);border:2px solid var(--rule);border-radius:50%;font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.flow b{font-size:.95rem}
+
+/* ---------- quiz: answer sheet ---------- */
+.quiz-intro{color:var(--muted);font-size:.93rem}
+.quiz{display:grid;gap:0;max-width:46em;border-top:2px solid var(--rule)}
+.q{padding:18px 0 20px;border-bottom:1px solid var(--line);display:grid;gap:12px}
+.q p.qt{font-weight:500;display:grid;grid-template-columns:2.6em minmax(0,1fr)}
+.q p.qt span{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opts{display:grid;gap:4px;padding-left:2.6em}
+.opts button{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;font-size:.93rem;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:var(--r);padding:5px 10px 5px 4px;cursor:pointer}
+.opt-l{flex:none;width:1.65em;height:1.65em;display:grid;place-items:center;border:1.5px solid var(--muted);border-radius:50%;font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--muted)}
+.opts button:hover:not(:disabled){background:var(--surface)}
+.opts button:hover:not(:disabled) .opt-l{border-color:var(--ink);color:var(--ink)}
+.opts button.right .opt-l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opts button.wrong .opt-l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opts button.right{color:var(--ok);font-weight:500}
+.opts button.wrong{color:var(--bad)}
+.opts button:disabled{cursor:default}
+.explain{font-size:.88rem;color:var(--muted);padding-left:2.6em}
+.score{font-family:var(--f-mono);font-size:.9rem}
+
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);display:grid;grid-template-columns:var(--m) minmax(0,1fr);column-gap:var(--gap);row-gap:10px}
+footer .lbl{grid-column:1;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink);padding-top:2px}
+footer p{grid-column:2;max-width:56em}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:26px}
+  .hero-text{display:contents}
+  .hero-fig{order:1}
+  .hero-text > :not(h1){order:2}
+  .palette{margin-top:6px}
+  .hero{padding-block:36px 32px}
+  .stage.film{max-height:none}
+  .lab,.lab.flip{grid-template-columns:1fr}
+  .lab.flip > .panel{order:0}
+  .cards{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:26px}
+}
+@media (max-width:760px){
+  .unit,.unit-head,.key,.unit > h3,footer{grid-template-columns:minmax(0,1fr)}
+  .unit{padding-block:56px 0;row-gap:24px}
+  .unit > *,.unit > .wide,.mnote,.key > ul,.key > dl,.unit-tag,footer p,footer .lbl{grid-column:1}
+  .unit-head{row-gap:4px}
+  .unit-no{font-size:2rem}
+  .key-tag{padding-top:0;padding-bottom:6px}
+  .unit > h3{gap:2px}
+  .mnote{padding:4px 0 4px 16px;border-left:1px dashed var(--line)}
+  .palette{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .stage{aspect-ratio:1/1}
+  .flow{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .defs,.key dl{grid-template-columns:1fr;gap:2px 0}
+  .defs dd,.key dd{margin-bottom:8px}
+  .q p.qt{grid-template-columns:2.2em minmax(0,1fr)}
+  .opts,.explain{padding-left:0}
+}
+
+/* ---------- course bar: links between chapters ---------- */
+.course{max-width:1160px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:4px 20px;align-items:baseline;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.04em;padding-bottom:12px;border-bottom:1px solid var(--film-line);color:var(--film-muted)}
+.course-h{margin-right:auto;text-transform:uppercase;letter-spacing:.08em}
+.course a{color:var(--film-muted);text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.course a:hover{color:var(--film-ink)}
+.course a[aria-current]{color:var(--film-ink);border-bottom-color:var(--film-ink)}
+.hero.hc{padding-top:18px}
+.next{font-family:var(--f-mono);font-size:.88rem;margin-top:6px}
+
+#so-plot,#gs-plot{height:400px}
+#nu-plot{height:320px}
+#dg-plot{height:360px}
+@media (max-width:520px){#so-plot,#gs-plot{height:320px}#nu-plot{height:290px}#dg-plot{height:300px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+</style>
+<script>(function(){var l='en';try{if(localStorage.getItem('xtal-lang')==='zh')l='zh';var t=localStorage.getItem('xtal-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}document.documentElement.lang=l==='zh'?'zh-Hant':'en'})();</script>
+
+<style>
+#ss-plot{height:470px}
+#hd-plot{height:330px}
+#hv-plot{height:420px}
+#sh-plot{height:360px}
+#sol-plot{height:380px}
+#an-plot{height:420px}
+#sp-plot{height:330px}
+@media (max-width:520px){#ss-plot{height:420px}#hd-plot,#sh-plot{height:310px}#sol-plot{height:330px}#hv-plot{height:440px}#an-plot{height:440px}#sp-plot{height:300px}}
+.ctl-label b{font-weight:600;color:var(--ink)}
+.unit > .panel{max-width:40em}
+.seg.multi button{font-size:.8rem}
+.readout table.mini{width:100%;border-collapse:collapse;font-size:.82rem;margin:2px 0 8px}
+.readout .mini th,.readout .mini td{padding:3px 6px 3px 0;text-align:left;border-bottom:1px solid var(--line);font-weight:400}
+.readout .mini th{color:var(--muted);font-size:.75rem}
+.readout .mini .num{text-align:right;font-family:var(--f-mono);white-space:nowrap}
+</style>
+<header class="hero hc">
+  <nav class="course" aria-label="Chapters" data-ta="138"><span class="course-h" data-t="1">Materials Science and Engineering I</span><a href="ch1.html" data-t="2">Ch 1 · Introduction</a><a href="ch2.html" data-t="3">Ch 2 · Atoms and bonding</a><a href="index.html" data-t="4">Ch 3 · Crystal structures</a><a href="ch4.html" data-t="5">Ch 4 · Solidification and defects</a><a href="ch5.html" data-t="6">Ch 5 · Diffusion</a><a href="ch6.html" aria-current="page" data-t="7">Ch 6 · Mechanical properties</a></nav>
+  <div class="hero-in">
+    <div class="hero-text" data-t="8">      <h1>Mechanical Properties<br>of Metals <span class="d">3D</span> Classroom</h1>
+      <p class="lede">Pull on a metal bar and it first stretches like a stiff spring, then gives way and flows, and finally thins at one spot and breaks. Each stage gives a number an engineer can look up: modulus, yield strength, tensile strength, elongation, hardness. This chapter measures those numbers, traces the flow to dislocations gliding on close-packed planes, and shows how rolling, alloying, fine grains and annealing move every one of them.</p>
+      <p class="lede">On a computer, drag a model with the mouse. On a phone, tap the model first, then turn it with a finger.</p>
+      <ul class="palette" aria-label="Color key for this chapter">
+        <li class="palette-h">Colors mean the same thing on every page of this chapter</li>
+        <li><i style="background:var(--c-corner)"></i><span><b>Blue</b>the metal · atoms · specimen</span></li>
+        <li><i style="background:var(--c-body)"></i><span><b>Orange</b>applied load · stress</span></li>
+        <li><i class="sq" style="background:var(--c-plane)"></i><span><b>Purple</b>slip planes · grain boundaries</span></li>
+        <li><i class="sq" style="background:var(--hi)"></i><span><b>Red</b>slip direction, neck, the thing to watch</span></li>
+      </ul>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage film" id="v-hero">
+        <span class="plate-tag" data-t="9">Tensile bar<br>just before fracture</span>
+      </div>
+      <figcaption data-t="10">A round tensile specimen pulled past its maximum load. The gauge section has stretched evenly, then one spot (red) has started to neck. From here on the load the bar can carry falls, and it breaks inside the neck.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Units" data-ta="139">
+  <div class="toc-in"><ol>
+    <li><a href="#s1" data-t="11"><span>01</span>Shaping metals</a></li>
+    <li><a href="#s2" data-t="12"><span>02</span>Stress and strain</a></li>
+    <li><a href="#s3" data-t="13"><span>03</span>Tensile test</a></li>
+    <li><a href="#s4" data-t="14"><span>04</span>Hardness</a></li>
+    <li><a href="#s5" data-t="15"><span>05</span>Slip systems</a></li>
+    <li><a href="#s6" data-t="16"><span>06</span>Schmid's law</a></li>
+    <li><a href="#s7" data-t="17"><span>07</span>Strengthening</a></li>
+    <li><a href="#s8" data-t="18"><span>08</span>Annealing</a></li>
+    <li><a href="#s9" data-t="19"><span>09</span>Superplasticity</a></li>
+    <li><a href="#s10" data-t="20"><span>10</span>Quiz</a></li>
+  </ol><div class="toc-tools"><div class="lang" role="group" aria-label="Language" data-ta="140"><button type="button" id="lang-zh" lang="zh-Hant" aria-pressed="false">中文</button><button type="button" id="lang-en" lang="en" aria-pressed="true">English</button></div><button type="button" class="theme-btn" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" data-ta="141"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button></div></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ======================= 01 ======================= -->
+<section class="unit" id="s1">
+  <header class="unit-head" data-t="21"><p class="unit-no">01</p><h2>Shaping metals: hot work and cold work</h2><p class="unit-tag">% reduction = (t<sub>0</sub> − t) / t<sub>0</sub> · hot: T &gt; T<sub>recrystal</sub></p></header>
+  <div class="prose" data-t="22">    <p>A metal part gets its shape in one of two ways. <span class="term">Casting</span> pours molten metal into a mold of the final shape, which suits complex parts such as pistons. The others push solid metal around: <span class="term">rolling</span> squeezes a slab between rolls into thinner, uniform sheet, <span class="term">extrusion</span> forces a billet through a die hole to get a constant cross section, and <span class="term">forging</span> presses or hammers a piece into shape, closing pores and making the metal more uniform.</p>
+    <p>Each forming process can run hot or cold, and the dividing line is the <span class="term">recrystallization temperature</span>. Above it (hot rolling, hot extrusion at 0.5–0.75 T<sub>m</sub>) the deformed grains are replaced by new ones as fast as they are squashed, so large reductions are easy, but the surface oxidizes. Below it (cold rolling, cold extrusion at about room temperature) the grains stay squashed. The metal becomes stronger and less ductile, so only a limited reduction is possible before it needs annealing (Unit 8).</p>
+    <p>Pick a process and watch it run. The animations are schematic cutaways. In rolling, volume is conserved, so a 50% thinner slab comes out twice as long.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-form"></div>
+      <div class="legend" id="pf-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="23">Process</span>
+        <div class="seg" id="pf-f">
+          <button type="button" data-v="cast" aria-pressed="true" data-t="24">Casting</button>
+          <button type="button" data-v="roll" data-t="25">Rolling</button>
+          <button type="button" data-v="ext" data-t="26">Extrusion</button>
+          <button type="button" data-v="forge" data-t="27">Forging</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="28">Type</span>
+        <div class="seg" id="pf-v"></div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="29">Temperature</span>
+        <div class="seg" id="pf-h">
+          <button type="button" data-v="hot" aria-pressed="true" data-t="30">Hot work</button>
+          <button type="button" data-v="cold" data-t="31">Cold work</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="32">Thickness reduction</span> · <b id="pf-r-v"></b></span>
+        <input type="range" id="pf-r" min="5" max="70" step="5" value="40" aria-label="Thickness reduction" data-ta="142">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="33">Animation</span>
+        <button type="button" class="btn" id="pf-play"></button>
+        <input type="range" id="pf-t" min="0" max="1000" step="1" value="0" aria-label="Animation timeline" data-ta="143">
+      </div>
+      <div class="readout" id="pf-info"></div>
+    </div>
+  </div>
+  <h3 data-t="34"><span class="h3-no">1-1</span><span>The forming processes side by side</span></h3>
+  <div class="tbl-wrap wide" data-t="35">    <table>
+      <thead><tr><th>Process</th><th>How the shape is made</th><th>Variants in the slides</th></tr></thead>
+      <tbody>
+        <tr><td>Casting</td><td>Molten metal solidifies in a mold</td><td>Die casting: molten metal injected into a die under high pressure. Sand casting: a mold of packed sand. Investment casting: a ceramic shell built over a wax pattern, for very uniform, smooth surfaces.</td></tr>
+        <tr><td>Rolling</td><td>Stock passes through pairs of rolls and comes out thinner and uniform</td><td>Hot rolling, T &gt; T<sub>recrystal</sub>: surface oxidation. Cold rolling, T &lt; T<sub>recrystal</sub>: limited thickness reduction.</td></tr>
+        <tr><td>Extrusion</td><td>A billet is forced through a die hole to give a fixed cross section</td><td>Hot: 0.5–0.75 T<sub>m</sub>, 30–700 MPa. Cold: about room temperature, 3000 MPa. Direct: die on the container, billet slides against it, high friction and ram force, unsuitable for brittle metals. Indirect: die on the ram, no sliding, low friction and force, but shape and size are limited.</td></tr>
+        <tr><td>Forging</td><td>Pressing or hammering; removes porosity and makes the metal more uniform</td><td>Closed die, open die, and upset forging, which thickens the end of a bar for nails, screws, nuts and bolts.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="36"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Casting shapes liquid metal; rolling, extrusion and forging shape solid metal by plastic deformation.</li>
+      <li>Hot vs cold is set by the recrystallization temperature, not by "feels hot". Above it grains renew themselves; below it they stay deformed.</li>
+      <li>Cold work strengthens a metal and costs ductility, so large cold reductions need annealing in between.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 02 ======================= -->
+<section class="unit" id="s2">
+  <header class="unit-head" data-t="37"><p class="unit-no">02</p><h2>Stress, strain and the elastic constants</h2><p class="unit-tag">σ = Eε · τ = Gγ · ν = −ε<sub>lateral</sub>/ε<sub>axial</sub> · G = E / 2(1 + ν)</p></header>
+  <div class="prose" data-t="38">    <p>A deformation is <span class="term">elastic</span> if the metal returns to its original size when the load is removed, and <span class="term">plastic</span> if it does not. To compare specimens of different sizes, divide the force by the original area and the stretch by the original length:</p>
+    <p class="eq big">σ = F / A<sub>0</sub>&emsp;ε = (ℓ − ℓ<sub>0</sub>) / ℓ<sub>0</sub> = Δℓ / ℓ<sub>0</sub></p>
+    <p>These are the <span class="term">engineering stress</span> (Pa = N/m², or psi; 1 psi = 6.89 × 10<sup>3</sup> Pa) and <span class="term">engineering strain</span> (m/m, or percent). In the elastic range they are proportional, σ = Eε, and E is <span class="term">Young’s modulus</span>. A bar that stretches also thins; the ratio of the two strains is <span class="term">Poisson’s ratio</span>, ν = −ε<sub>lateral</sub>/ε<sub>axial</sub>, between 0.25 and 0.4 for metals.</p>
+    <p>Why not more than 0.5? Stretch an L × L × L cube by ε<sub>x</sub>; the two sides shrink by ε<sub>y</sub> = ε<sub>z</sub> = −νε<sub>x</sub>. To first order the new volume is L<sup>3</sup>(1 + ε<sub>x</sub> + ε<sub>y</sub> + ε<sub>z</sub>), so</p>
+    <p class="eq">ΔV / V = ε<sub>x</sub> + ε<sub>y</sub> + ε<sub>z</sub> = ε<sub>x</sub>(1 − 2ν)</p>
+    <p>An <span class="term">incompressible</span> material keeps its volume, ΔV = 0, which forces ν = 0.5. Metals, at about 0.3, gain a little volume when pulled elastically.</p>
+    <p>A force parallel to a face gives a <span class="term">shear stress</span> τ = S/A and a <span class="term">shear strain</span> γ = a/h = tan θ, related by the <span class="term">shear modulus</span>, τ = Gγ. For an isotropic material the three constants are not independent: G = E / 2(1 + ν). Pick a metal and check that rule against the measured G.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-bar"></div>
+      <div class="legend" data-t="39">        <span><i class="sq" style="background:var(--c-corner)"></i>Loaded block</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Original shape</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Applied force</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="40">Loading</span>
+        <div class="seg" id="el-m">
+          <button type="button" data-v="ten" aria-pressed="true" data-t="41">Tension</button>
+          <button type="button" data-v="shr" data-t="42">Shear</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="43">Metal (Table 6.1)</span>
+        <div class="seg multi" id="el-mat">
+          <button type="button" data-v="0" data-t="44">Al alloys</button>
+          <button type="button" data-v="1" data-t="45">Copper</button>
+          <button type="button" data-v="2" aria-pressed="true" data-t="46">Steel</button>
+          <button type="button" data-v="3" data-t="47">Stainless</button>
+          <button type="button" data-v="4" data-t="48">Titanium</button>
+          <button type="button" data-v="5" data-t="49">Tungsten</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="50">Stress</span> · <b id="el-s-v"></b></span>
+        <input type="range" id="el-s" min="0" max="400" step="10" value="200" aria-label="Stress" data-ta="144">
+      </div>
+      <div class="readout" id="el-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="51"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Engineering stress and strain use the original area and length: σ = F/A<sub>0</sub>, ε = Δℓ/ℓ<sub>0</sub>.</li>
+      <li>Elastic strains in metals are tiny, a few tenths of a percent at most. A stiffer metal (larger E) strains less under the same stress.</li>
+      <li>Stretching makes a bar thinner by ν times the axial strain, and for an isotropic metal G = E / 2(1 + ν), so G is roughly 0.38 E.</li>
+      <li>ΔV/V = ε(1 − 2ν). An incompressible material has ν = 0.5; with ν ≈ 0.3 a metal's volume grows slightly in tension.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 03 ======================= -->
+<section class="unit" id="s3">
+  <header class="unit-head" data-t="52"><p class="unit-no">03</p><h2>The tensile test: reading a stress–strain curve</h2><p class="unit-tag">E · 0.2% offset yield · UTS · % elongation · σ<sub>t</sub> = σ(1 + ε), ε<sub>t</sub> = ln(1 + ε)</p></header>
+  <div class="prose" data-t="53">    <p>In a <span class="term">tensile test</span> a standard specimen is pulled to failure. A load cell records the force and an extensometer the stretch, and the pair becomes one stress–strain curve. Four numbers come off it:</p>
+    <dl class="defs">
+      <dt>Modulus E</dt><dd>The slope of the first, straight part.</dd>
+      <dt>Yield strength σ<sub>y</sub></dt><dd>The stress at which significant plastic deformation begins. Since the curve bends gradually, the convention is the <span class="term">0.2% offset yield strength</span>: draw a line parallel to the elastic part starting at 0.2% strain and read where it cuts the curve.</dd>
+      <dt>Ultimate tensile strength (UTS)</dt><dd>The highest point of the engineering curve. Beyond it the specimen starts <span class="term">necking</span>: deformation concentrates in one spot, the area there shrinks quickly, and the load falls until fracture.</dd>
+      <dt>Ductility</dt><dd>% elongation = (final − initial length)/initial length, measured by fitting the broken halves together; or % area reduction = (initial − final area)/initial area at the break. Porosity lowers ductility.</dd>
+    </dl>
+    <p>The engineering curve divides by the original area, so it droops after the UTS even though the metal in the neck keeps getting stronger. <span class="term">True stress and true strain</span> use the instantaneous area and length. Until necking, when volume is conserved, σ<sub>t</sub> = F/A<sub>i</sub> = σ(ℓ<sub>i</sub>/ℓ<sub>0</sub>) = σ(1 + ε) and ε<sub>t</sub> = ∫dℓ/ℓ = ln(ℓ<sub>i</sub>/ℓ<sub>0</sub>) = ln(1 + ε).</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="ss-plot"><canvas id="ss-cv" role="img" aria-label="Tensile test specimen animation and engineering stress–strain curve with the 0.2% offset line, the ultimate tensile strength and a marker that follows the test" data-ta="145"></canvas></div>
+      <div class="legend" data-t="54">        <span><i class="sq" style="background:var(--c-corner)"></i>Engineering curve</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>True curve, up to necking</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>0.2% offset line</span>
+        <span><i style="background:var(--hi)"></i>Where the test is now</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="55">Specimen</span>
+        <div class="seg multi" id="ss-m">
+          <button type="button" data-v="alT" aria-pressed="true" data-t="56">Al 2024 tempered</button>
+          <button type="button" data-v="alA" data-t="57">Al 2024 annealed</button>
+          <button type="button" data-v="stC" data-t="58">1018 cold rolled</button>
+          <button type="button" data-v="stA" data-t="59">1018 annealed</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="60">Strain so far</span> · <b id="ss-e-v"></b></span>
+        <button type="button" class="btn" id="ss-play"></button>
+        <input type="range" id="ss-e" min="0" max="1000" step="1" value="120" aria-label="Strain" data-ta="146">
+      </div>
+      <div class="readout" id="ss-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="61"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Yield strength is read with the 0.2% offset construction; UTS is the peak of the engineering curve; elongation is the strain at fracture.</li>
+      <li>Necking starts at the UTS. After that the engineering stress falls because the area shrinks, not because the metal weakens.</li>
+      <li>Tempering or cold rolling raises σ<sub>y</sub> and UTS and lowers elongation: strength and ductility trade off.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 04 ======================= -->
+<section class="unit" id="s4">
+  <header class="unit-head" data-t="62"><p class="unit-no">04</p><h2>Hardness: resistance to a permanent dent</h2><p class="unit-tag">HR = E − e · e = Δd / 0.002 mm</p></header>
+  <div class="prose" data-t="63">    <p><span class="term">Hardness</span> measures how well a material resists plastic deformation, by pressing a hard indenter into it. It is quick, nearly non-destructive, and tracks the yield strength. The tests differ in what they measure: <span class="term">Brinell</span> (10 mm steel or carbide ball), <span class="term">Vickers</span> (136° diamond pyramid, VHN = 1.854P/d<sub>1</sub>²) and <span class="term">Knoop</span> (elongated diamond, KHN = 14.2P/l²) all measure the size of the dent; <span class="term">Rockwell</span> measures its depth.</p>
+    <p>A Rockwell test first applies a minor load F<sub>0</sub> = 10 kgf to seat the indenter and set the zero. The major load F<sub>1</sub> is added, then removed again, and the indenter springs back a little. The permanent extra depth Δd is divided by 0.002 mm to give e = Δd / 0.002 mm, which is subtracted from a constant E:</p>
+    <p class="eq big">HR = E − e&emsp;E = 100 (diamond cone) or 130 (steel ball)</p>
+    <p>A deeper dent gives a smaller number, so a harder material reads higher. The slide example: a depth of 0.076 mm on scale A gives 100 − 38 = HRA 62, and 0.06 mm on scale B gives 130 − 30 = HRB 100.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="hd-plot"><canvas id="hd-cv" role="img" aria-label="Cross-section of a Rockwell indentation at the three steps of the test, with the permanent depth Δd marked" data-ta="147"></canvas></div>
+      <div class="legend" data-t="64">        <span><i class="sq" style="background:var(--c-corner)"></i>Specimen</span>
+        <span><i class="sq" style="background:var(--edge3d)"></i>Indenter</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Load</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Permanent depth Δd</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="65">Rockwell scale</span>
+        <div class="seg multi" id="hd-s">
+          <button type="button" data-v="A" aria-pressed="true">A</button>
+          <button type="button" data-v="B">B</button>
+          <button type="button" data-v="C">C</button>
+          <button type="button" data-v="E">E</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="66">Permanent depth Δd</span> · <b id="hd-d-v"></b></span>
+        <input type="range" id="hd-d" min="0" max="0.2" step="0.002" value="0.076" aria-label="Permanent depth" data-ta="148">
+      </div>
+      <div class="readout" id="hd-info"></div>
+    </div>
+  </div>
+  <h3 data-t="67"><span class="h3-no">4-1</span><span>Hardness across materials</span></h3>
+  <div class="prose" data-t="68">    <p>Vickers hardness from the slides on one logarithmic axis. Soft tin and polymers sit near 10, metals spread over two decades depending on alloying and heat treatment, and ceramics such as alumina and tungsten carbide reach 2500.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="hv-plot"><canvas id="hv-cv" role="img" aria-label="Vickers hardness of metals, ceramics and polymers on a logarithmic scale" data-ta="149"></canvas></div>
+      <div class="legend" data-t="69">        <span><i class="sq" style="background:var(--c-corner)"></i>Metals</span>
+        <span><i class="sq" style="background:var(--c-face)"></i>Ceramics and minerals</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Polymers</span>
+      </div>
+    </div>
+  </div>
+  <div class="key" data-t="70"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Brinell, Vickers and Knoop measure the size of the dent; Rockwell measures its depth.</li>
+      <li>Rockwell: HR = E − e, where e = Δd / 0.002 mm. A deeper dent means a lower number and a softer material.</li>
+      <li>Always quote the scale (HRA, HRB, HRC…). Numbers on different scales cannot be compared directly.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 05 ======================= -->
+<section class="unit" id="s5">
+  <header class="unit-head" data-t="71"><p class="unit-no">05</p><h2>Slip systems: where dislocations glide</h2><p class="unit-tag">FCC {111}⟨1̄10⟩ 4 × 3 = 12 · BCC {110}⟨1̄11⟩ 6 × 2 = 12 · HCP {0001}⟨112̄0⟩ 1 × 3 = 3</p></header>
+  <div class="prose" data-t="72">    <p>Polish a single crystal, pull it, and the surface develops fine steps, <span class="term">slip bands</span>. Each step is where many dislocations (Chapter 4) have glided out along one crystal plane, the <span class="term">slip plane</span>, shifting the block above it by whole atomic spacings in the <span class="term">slip direction</span>.</p>
+    <p>Slip is not the only way to shear a crystal. In <span class="term">twinning</span> a band of the crystal shears into the mirror image of the rest across a <span class="term">twin plane</span> (also {111} in FCC). Slip moves one block by whole atomic spacings and leaves the lattice orientation unchanged; twinning moves each plane in the band by a fraction of a spacing, in proportion to its distance from the twin plane, and turns the lattice inside the band.</p>
+    <p>Slip prefers the densest planes and the densest directions: atoms on a close-packed plane are farthest from the next plane and need the smallest shear to slide past one another. A slip plane plus a slip direction in it is a <span class="term">slip system</span>.</p>
+    <dl class="defs">
+      <dt>FCC (Cu, Al, Ni, Pb, Au, Ag, γFe)</dt><dd>Four {111} octahedral planes, each with three ⟨1̄10⟩ directions: 4 × 3 = 12 systems, on truly close-packed planes. FCC metals are ductile.</dd>
+      <dt>BCC (αFe, W, Mo, β brass)</dt><dd>No close-packed plane. Slip runs on the densest planes, six {110}, each with two ⟨1̄11⟩ directions: 6 × 2 = 12. αFe, Mo, W and Na can also slip on {211} (12 systems), and αFe and K on {321} (24).</dd>
+      <dt>HCP (Cd, Zn, Mg, Ti, Be)</dt><dd>With a high c/a ratio slip is confined to the single basal plane {0001} with three ⟨112̄0⟩ directions: 1 × 3 = 3 systems, so these metals are less ductile. Low-c/a Ti also slips on prism {101̄0} (3) planes, and both Ti and Mg can slip on pyramidal {101̄1} (6) planes.</dd>
+    </dl>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-slip"></div>
+      <div class="legend" id="sl-legend" data-t="73">        <span><i style="background:var(--c-corner)"></i>Atoms on the slip plane</span>
+        <span><i style="background:var(--c-body)"></i>Sliding side</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Slip plane</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Slip directions in it</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="74">Structure</span>
+        <div class="seg" id="sl-x">
+          <button type="button" data-v="fcc" aria-pressed="true">FCC</button>
+          <button type="button" data-v="bcc">BCC</button>
+          <button type="button" data-v="hcp">HCP</button>
+        </div>
+      </div>
+      <div class="ctl" id="sl-fam-ctl" hidden>
+        <span class="ctl-label" data-t="75">BCC plane family</span>
+        <div class="seg" id="sl-fam">
+          <button type="button" data-v="110" aria-pressed="true">{110}</button>
+          <button type="button" data-v="211">{211}</button>
+          <button type="button" data-v="321">{321}</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="76">Slip plane</span> · <b id="sl-k-v"></b></span>
+        <input type="range" id="sl-k" min="0" max="3" step="1" value="0" aria-label="Slip plane" data-ta="150">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="77">Slip animation</span>
+        <button type="button" class="btn" id="sl-play"></button>
+      </div>
+      <div class="readout" id="sl-info"></div>
+    </div>
+  </div>
+  <h3 data-t="78"><span class="h3-no">5-1</span><span>How a dislocation moves: edge vs screw</span></h3>
+  <div class="prose" data-t="79">    <p>Whole planes of atoms do not slide past each other all at once: that would break every bond across the plane at the same time. Instead a dislocation glides across the crystal one row at a time, breaking and remaking only a single line of bonds at any instant.</p>
+    <p>Under the same shear stress τ (and Burgers vector <b>b</b>), an edge dislocation line lies perpendicular to <b>b</b> and glides parallel to τ and <b>b</b>, whereas a screw dislocation line lies parallel to <b>b</b> and glides perpendicular to both. Either way, once the dislocation exits the crystal, the top half has shifted by the exact same step of one atomic spacing.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-dslip"></div>
+      <div class="legend" id="ds-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="80">Dislocation type</span>
+        <div class="seg" id="ds-m">
+          <button type="button" data-v="edge" aria-pressed="true" data-t="81">Edge</button>
+          <button type="button" data-v="screw" data-t="82">Screw</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="83">Animation</span>
+        <button type="button" class="btn" id="ds-play"></button>
+        <input type="range" id="ds-u" min="0" max="1000" step="1" value="0" aria-label="Animation timeline" data-ta="151">
+      </div>
+      <div class="readout" id="ds-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="84"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Slip takes the densest plane and the densest direction in it, because those need the least shear.</li>
+      <li>Count slip systems as planes × directions per plane: FCC 12, BCC 12 on {110}, HCP basal only 3.</li>
+      <li>More independent slip systems, especially on truly close-packed planes, make a metal more ductile: FCC Cu and Al bend easily, HCP Zn and Mg crack sooner.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 06 ======================= -->
+<section class="unit" id="s6">
+  <header class="unit-head" data-t="85"><p class="unit-no">06</p><h2>Schmid's law: how much of the pull reaches the slip plane</h2><p class="unit-tag">τ<sub>r</sub> = σ cos λ cos Φ · slip when τ<sub>r</sub> &gt; CRSS</p></header>
+  <div class="prose" data-t="86">    <p>Pull a single-crystal rod with force F along its axis. A slip plane tilted at angle Φ (between its normal and the axis) has a larger area than the cross section, A<sub>1</sub> = A<sub>0</sub>/cos Φ. Only part of the force lies along the slip direction, which makes angle λ with the axis: F<sub>r</sub> = F cos λ. The shear stress that actually drives slip, the <span class="term">resolved shear stress</span>, is</p>
+    <p class="eq big">τ<sub>r</sub> = F<sub>r</sub> / A<sub>1</sub> = (F cos λ) / (A<sub>0</sub>/cos Φ) = σ cos λ cos Φ</p>
+    <p>The crystal yields when τ<sub>r</sub> reaches the <span class="term">critical resolved shear stress</span> (CRSS), a property of the metal that depends on crystal structure, bonding, temperature and purity. The product cos λ cos Φ, the <span class="term">Schmid factor</span>, is at most 0.5, at Φ = λ = 45°. When the slip plane is parallel or perpendicular to the pull the factor is zero and the crystal cannot slip on that system however hard you pull.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="stage" id="v-schmid"></div>
+      <div class="legend" data-t="87">        <span><i class="sq" style="background:var(--c-corner)"></i>Single-crystal rod</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Slip plane and its normal</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Slip direction</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Pull F</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="88">Plane tilt Φ</span> · <b id="sc-p-v"></b></span>
+        <input type="range" id="sc-p" min="0" max="90" step="1" value="45" aria-label="Angle between slip-plane normal and axis" data-ta="152">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="89">Direction within the plane</span> · <b id="sc-a-v"></b></span>
+        <input type="range" id="sc-a" min="0" max="180" step="1" value="0" aria-label="Slip direction within the plane" data-ta="153">
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="90">Metal, CRSS</span>
+        <div class="seg multi" id="sc-m">
+          <button type="button" data-v="0">Zn</button>
+          <button type="button" data-v="1">Mg</button>
+          <button type="button" data-v="2">Ag</button>
+          <button type="button" data-v="3" aria-pressed="true">Cu</button>
+          <button type="button" data-v="4" data-t="91">Ti 99.99</button>
+          <button type="button" data-v="5" data-t="92">Ti 99.9</button>
+        </div>
+      </div>
+      <div class="readout" id="sc-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="93"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Only the shear stress on the slip plane, along the slip direction, moves dislocations: τ<sub>r</sub> = σ cos λ cos Φ.</li>
+      <li>The Schmid factor cos λ cos Φ is at most 0.5. So a single crystal yields at σ<sub>y</sub> = CRSS / (cos λ cos Φ), never below 2 × CRSS.</li>
+      <li>CRSS is tiny for pure metals (Cu 0.94 MPa) and climbs fast with impurities (Ti 13.7 → 90.1 MPa from 99.99% to 99.9% pure).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 07 ======================= -->
+<section class="unit" id="s7">
+  <header class="unit-head" data-t="94"><p class="unit-no">07</p><h2>Strengthening: putting obstacles in the dislocations' way</h2><p class="unit-tag">Hall–Petch: σ<sub>y</sub> = σ<sub>0</sub> + k / √d</p></header>
+  <div class="prose" data-t="95">    <p>A metal yields when dislocations glide. Every strengthening mechanism makes that glide harder, by putting something in the way:</p>
+    <dl class="defs">
+      <dt>Strain (work) hardening</dt><dd>Plastic deformation multiplies dislocations, and they tangle and block each other. Dislocation density rises with the degree of deformation; cold-rolled 1018 steel is far stronger and far less ductile than annealed 1018.</dd>
+      <dt>Solid solution hardening</dt><dd>Solute atoms of a different size strain the lattice around them and pin passing dislocations.</dd>
+      <dt>Precipitation hardening</dt><dd>Fine particles of a second phase block glide. In Al–4%Cu aged at 130–190 °C, copper first clusters into GP zones 10–100 nm across, then metastable θ′ nucleates on dislocations, and finally equilibrium θ (CuAl<sub>2</sub>) forms.</dd>
+      <dt>Grain boundary hardening</dt><dd>A dislocation cannot cross into a differently oriented grain, so it piles up at the boundary. Smaller grains mean more boundaries and a higher yield strength, by the empirical <span class="term">Hall–Petch</span> equation σ<sub>y</sub> = σ<sub>0</sub> + k / √d.</dd>
+      <dt>Nanotwin hardening</dt><dd>Twin boundaries block dislocations like grain boundaries do but barely scatter electrons. Inside a grain, twins a distance λ apart cut the free path of a dislocation, so when λ is much smaller than the grain size d, λ takes over the role of d in Hall–Petch. Copper with ~400 nm grains split by ~15 nm twins is both strong and a good conductor, promising for free-standing Cu interconnects (L. Lu, <i>Science</i> 304, 422, 2004).</dd>
+    </dl>
+    <p>The plot uses the Hall–Petch lines for magnesium and three Mg–Zn alloys from the slides. Slide the grain size down and watch σ<sub>y</sub> rise. The alloys show solution hardening at the same time: more zinc gives a steeper line.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="sh-plot"><canvas id="sh-cv" role="img" aria-label="Hall–Petch plot of yield strength against inverse square root of grain size for magnesium and magnesium–zinc alloys" data-ta="154"></canvas></div>
+      <div class="legend" id="sh-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="96">View</span>
+        <div class="seg" id="sh-m">
+          <button type="button" data-v="hp" aria-pressed="true" data-t="97">Grain size</button>
+          <button type="button" data-v="cw" data-t="98">Cold work</button>
+        </div>
+      </div>
+      <div class="ctl" id="sh-dc">
+        <span class="ctl-label"><span data-t="99">Grain size d</span> · <b id="sh-d-v"></b></span>
+        <input type="range" id="sh-d" min="0" max="100" step="1" value="40" aria-label="Grain size" data-ta="155">
+      </div>
+      <div class="ctl" id="sh-cc" hidden>
+        <span class="ctl-label"><span data-t="100">Percent cold work</span> · <b id="sh-c-v"></b></span>
+        <input type="range" id="sh-c" min="0" max="60" step="1" value="20" aria-label="Percent cold work" data-ta="156">
+      </div>
+      <div class="readout" id="sh-info"></div>
+    </div>
+  </div>
+  <h3 data-t="101"><span class="h3-no">7-1</span><span>Solid solution hardening: dislocation–solute interaction</span></h3>
+  <div class="prose" data-t="102">    <p>Above an edge dislocation (⊥) the extra half-plane squeezes the lattice into compression; below it the lattice is stretched open in tension. A larger solute atom carries its own surrounding compressive field: in (a) above the slip plane, compression meets compression and the two repel; in (b) below it, the larger atom fits into the tensile gap, relieves distortion, and attracts and pins the dislocation. Either way, the solute's local strain raises the stress needed for the dislocation to glide past, strengthening the metal.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="sol-plot"><canvas id="sol-cv" role="img" aria-label="2D lattice animation of an edge dislocation interacting with a solute atom's stress field" data-ta="157"></canvas></div>
+      <div class="legend" id="sol-legend"></div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="103">Solute position</span>
+        <div class="seg" id="sol-pos">
+          <button type="button" data-v="above" aria-pressed="true" data-t="104">(a) Above ⊥</button>
+          <button type="button" data-v="below" data-t="105">(b) Below ⊥</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="106">Solute size</span>
+        <div class="seg" id="sol-sz">
+          <button type="button" data-v="big" aria-pressed="true" data-t="107">Larger solute</button>
+          <button type="button" data-v="small" data-t="108">Smaller solute</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="109">Animation</span>
+        <button type="button" class="btn" id="sol-play"></button>
+        <input type="range" id="sol-u" min="0" max="1000" step="1" value="0" aria-label="Animation timeline" data-ta="158">
+      </div>
+      <div class="readout" id="sol-info"></div>
+    </div>
+  </div>
+  <h3 data-t="110"><span class="h3-no">7-2</span><span>Too small: the inverse Hall–Petch effect</span></h3>
+  <div class="prose" data-t="111">    <p>Hall–Petch cannot go on forever. Nanocrystalline metals are usually very strong (and hard) but not very ductile, and below a critical grain size, around 20 nm, the trend reverses. The grains are too small to hold dislocation pile-ups, and deformation switches from dislocation slip to <span class="term">grain boundary sliding</span>, so the yield strength falls as d shrinks further. The maximum strength reachable by grain refinement sits at that crossover.</p>
+  </div>
+  <div class="key" data-t="112"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Five ways to strengthen a metal: strain hardening, solid solution, precipitates, grain boundaries, nanotwins. All of them hinder dislocation glide.</li>
+      <li>Hall–Petch: σ<sub>y</sub> grows linearly with d<sup>−1/2</sup>. Halving the grain size does not double the strength; you need d four times smaller to double the k/√d term.</li>
+      <li>Cold work raises yield strength faster than tensile strength and lowers elongation, until the metal must be annealed.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 08 ======================= -->
+<section class="unit" id="s8">
+  <header class="unit-head" data-t="113"><p class="unit-no">08</p><h2>Annealing: recovery, recrystallization, grain growth</h2><p class="unit-tag">process → microstructure → property</p></header>
+  <div class="prose" data-t="114">    <p>A cold-worked metal is strong but brittle, and full of stored energy in its dislocations. Heat it and it softens in three stages. Reheating to soften a cold-worked metal is called <span class="term">annealing</span>.</p>
+    <dl class="defs">
+      <dt>Recovery</dt><dd>At a moderate temperature (T<sub>recovery</sub> &lt; T<sub>recrystal</sub>) dislocations rearrange into lower-energy walls that divide each grain into subgrains, <span class="term">polygonization</span>; with longer annealing neighbouring subgrains coalesce into larger ones. Internal residual stresses drop, but the grains keep their deformed shape and the strength barely changes.</dd>
+      <dt>Recrystallization</dt><dd>At a high enough temperature new strain-free grains nucleate and grow, either from a nucleus inside a deformed grain or by an old high-angle boundary migrating into a more deformed region. Strength falls sharply and ductility returns.</dd>
+      <dt>Grain growth</dt><dd>Once the deformed grains are consumed, the new grains keep growing to lower the total boundary area. Strength drifts down slowly.</dd>
+    </dl>
+    <p>The plot uses the slide data for 85%Cu–15%Zn brass cold-worked 50%. Move the annealing temperature and watch structure and properties change together.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="an-plot"><canvas id="an-cv" role="img" aria-label="Grain structure of cold-worked brass at the chosen annealing temperature, above the tensile strength and elongation against temperature" data-ta="159"></canvas></div>
+      <div class="legend" data-t="115">        <span><i class="sq" style="background:var(--c-plane)"></i>Grain boundaries · subgrain walls</span>
+        <span><i style="background:var(--hi)"></i>Dislocations</span>
+        <span><i class="sq" style="background:var(--c-corner)"></i>Tensile strength</span>
+        <span><i class="sq" style="background:var(--c-body)"></i>Elongation</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="116">Annealing temperature</span> · <b id="an-T-v"></b></span>
+        <input type="range" id="an-T" min="200" max="850" step="10" value="250" aria-label="Annealing temperature" data-ta="160">
+      </div>
+      <div class="readout" id="an-info"></div>
+    </div>
+  </div>
+  <h3 data-t="117"><span class="h3-no">8-1</span><span>What sets the recrystallization temperature</span></h3>
+  <div class="prose" data-t="118">    <p>Recrystallization is driven by the strain energy stored in the cold work, needs nucleation sites for the new grains, and needs thermal energy for long enough. So:</p>
+    <ul>
+      <li>More prior deformation → lower T<sub>recrystal</sub> and finer new grains.</li>
+      <li>Higher temperature → shorter time. Time and temperature trade off along an Arrhenius line, as in Chapter 5.</li>
+      <li>Larger initial grains → more deformation needed to recrystallize at the same temperature.</li>
+      <li>Higher purity → lower T<sub>recrystal</sub>; solute atoms pin the moving boundaries.</li>
+    </ul>
+    <p>Rule of thumb: in kelvin, T<sub>recrystal</sub> is about 0.3–0.4 T<sub>m</sub> for pure metals and about 0.5 T<sub>m</sub> for alloys. The last column checks it against the table: 0.35–0.51, at or just above the pure-metal range, since these are commercial metals rather than very pure ones. That is why lead recrystallizes below room temperature and cannot be work-hardened at all at room temperature, while tungsten needs 1200 °C.</p>
+  </div>
+  <div class="tbl-wrap wide" data-t="119">    <table>
+      <thead><tr><th>Metal</th><th>Recrystallization temperature</th><th>Melting point</th><th>T<sub>recrystal</sub> / T<sub>m</sub> (K / K)</th></tr></thead>
+      <tbody>
+        <tr><td>Lead</td><td class="num">−4 °C</td><td class="num">327 °C</td><td class="num">0.45</td></tr>
+        <tr><td>Aluminium</td><td class="num">150 °C</td><td class="num">660 °C</td><td class="num">0.45</td></tr>
+        <tr><td>Magnesium</td><td class="num">200 °C</td><td class="num">650 °C</td><td class="num">0.51</td></tr>
+        <tr><td>Copper</td><td class="num">200 °C</td><td class="num">1085 °C</td><td class="num">0.35</td></tr>
+        <tr><td>Iron</td><td class="num">450 °C</td><td class="num">1538 °C</td><td class="num">0.40</td></tr>
+        <tr><td>Tungsten</td><td class="num">1200 °C</td><td class="num">3410 °C</td><td class="num">0.40</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="key" data-t="120"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Recovery relieves residual stress by rearranging dislocations into walls; grain shape and strength barely change.</li>
+      <li>Recrystallization replaces the deformed grains with new strain-free ones; this is where strength drops and ductility returns.</li>
+      <li>T<sub>recrystal</sub> is not a fixed property: more cold work, longer time and higher purity all lower it.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 09 ======================= -->
+<section class="unit" id="s9">
+  <header class="unit-head" data-t="121"><p class="unit-no">09</p><h2>Superplasticity: stretching a metal 1000%</h2><p class="unit-tag">grains 5–10 µm · T &gt; 0.5 T<sub>m</sub> · strain rate 10<sup>−2</sup>–10<sup>−4</sup> s<sup>−1</sup></p></header>
+  <div class="prose" data-t="122">    <p>At high temperature and slow loading some alloys stretch 2000% without breaking. An annealed Ti alloy elongates 12% at room temperature, but up to 1170% at 870 °C and a loading rate of 1.3 × 10<sup>−4</sup> s<sup>−1</sup>. Three conditions must hold at once:</p>
+    <ul>
+      <li>very fine grains, 5–10 µm;</li>
+      <li>temperature above 0.5 T<sub>m</sub>;</li>
+      <li>a slow strain rate, 0.01 to 0.0001 s<sup>−1</sup>.</li>
+    </ul>
+    <p>What changes is the mechanism. There is very little dislocation activity. Instead the grains slide past one another along their boundaries, rotate, and are reshaped by diffusion along the boundaries, so they stay small and equiaxed while the specimen as a whole gets enormously longer. Fine grains provide plenty of boundary, heat makes boundary diffusion fast, and a slow rate gives it time to keep up. Industry uses this for blow forming car hoods.</p>
+    <p>Strain rate affects ductility well beyond superplasticity, often non-linearly, and the trend depends on the material, the temperature and the mechanism. Metals are generally more ductile at a low rate and less ductile at a high rate; polymers turn brittle when pulled fast; ceramics stay brittle either way, slightly more ductile when slow and slightly tougher when fast.</p>
+  </div>
+  <div class="lab wide">
+    <div class="stage-col">
+      <div class="plot" id="sp-plot"><canvas id="sp-cv" role="img" aria-label="A specimen with its grains, before and after stretching, under the chosen conditions" data-ta="161"></canvas></div>
+      <div class="legend" data-t="123">        <span><i class="sq" style="background:var(--c-corner)"></i>Grains</span>
+        <span><i class="sq" style="background:var(--c-plane)"></i>Grain boundaries</span>
+        <span><i class="sq" style="background:var(--hi)"></i>Neck and fracture</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <span class="ctl-label" data-t="124">Grain size</span>
+        <div class="seg" id="sp-g">
+          <button type="button" data-v="1" aria-pressed="true" data-t="125">5–10 µm</button>
+          <button type="button" data-v="0" data-t="126">Coarse</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="127">Temperature</span>
+        <div class="seg" id="sp-t">
+          <button type="button" data-v="1" aria-pressed="true" data-t="128">870 °C (&gt; 0.5 T<sub>m</sub>)</button>
+          <button type="button" data-v="0" data-t="129">Room temperature</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" data-t="130">Strain rate</span>
+        <div class="seg" id="sp-r">
+          <button type="button" data-v="1" aria-pressed="true" data-t="131">1.3 × 10<sup>−4</sup> s<sup>−1</sup></button>
+          <button type="button" data-v="0" data-t="132">Fast</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label"><span data-t="133">Stretch</span> · <b id="sp-s-v"></b></span>
+        <input type="range" id="sp-s" min="0" max="100" step="1" value="100" aria-label="Stretch progress" data-ta="162">
+      </div>
+      <div class="readout" id="sp-info"></div>
+    </div>
+  </div>
+  <div class="key" data-t="134"><span class="key-tag">KEY POINTS</span>
+    <ul>
+      <li>Superplasticity needs fine grains, T &gt; 0.5 T<sub>m</sub> and a slow strain rate, all at once.</li>
+      <li>It works by grain boundary sliding, grain rotation and boundary diffusion, not by dislocation slip; the grains stay equiaxed.</li>
+      <li>The same switch to boundary sliding is what makes nanocrystalline metals soften below ~20 nm (inverse Hall–Petch).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 10 ======================= -->
+<section class="unit" id="s10">
+  <header class="unit-head" data-t="135"><p class="unit-no">10</p><h2>Quiz</h2><p class="unit-tag">11 questions</p></header>
+  <p class="quiz-intro" data-t="136">You can answer each question only once. An explanation appears after you choose.</p>
+  <p class="score" id="quiz-score"></p>
+  <div class="quiz" id="quiz"></div>
+</section>
+
+</main>
+
+<footer class="wrap" data-t="137">  <span class="lbl">SOURCES</span>
+  <p>Lecture slides for Ch. 6 of Materials Science and Engineering I, National Tsing Hua University (115 academic year); W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering</i>, 6th ed., McGraw-Hill, 2019 (Table 6.1 from G. Dieter, <i>Mechanical Metallurgy</i>, 3rd ed., 1986; Figs. 6.45, 6.52). Rockwell scales and the hardness table are from the slides. Hall–Petch data for Mg and Mg–Zn: C. H. Caceres et al., <i>Metall. Mater. Trans. A</i> 42, 1950 (2011). Nanotwinned Cu: L. Lu et al., <i>Science</i> 304, 422 (2004); twin spacing: P. Uttam et al., <i>Mater. Des.</i> 192, 108752 (2020). Recrystallization temperatures: R. M. Brick, <i>Structure and Properties of Engineering Materials</i>, McGraw-Hill, 1977.</p>
+  <span class="lbl">MODELS</span>
+  <p>Stress–strain curves in Unit 3, the Hall–Petch lines and cold-work curves in Unit 7, and the brass annealing curves in Unit 8 are traced by eye from the figures on the slides, so read them to about ±5%; the elastic slope in Unit 3 is drawn with E from Table 6.1. The deformation in Unit 2 is drawn many times larger than it really is. The grain pictures in Units 1, 8 and 9 are schematic: the stage boundaries in Unit 8 (recovery below about 300 °C, recrystallization to about 450 °C) are read from where the brass curves bend, and Unit 9 shows only the two Ti-alloy cases on the slide (12% and 1170%), not elongations in between.</p></footer>
+
+<script>
+/* Traditional Chinese text for the static markup. Elements marked data-t / data-ta (aria-label) swap in place; the English stays in the markup. */
+window.XI18N=(function(){
+  var Z={"1":"材料科學與工程導論（一）",
+"2":"第 1 章・導論",
+"3":"第 2 章・原子與鍵結",
+"4":"第 3 章・晶體結構",
+"5":"第 4 章・凝固與缺陷",
+"6":"第 5 章・擴散",
+"7":"第 6 章・機械性質",
+"8":"      <h1>金屬的機械性質<br><span class=\"d\">3D<\/span>教室<\/h1>\n      <p class=\"lede\">拉一根金屬棒，它先像一根很硬的彈簧那樣伸長，接著撐不住開始流動，最後在某一處變細、斷掉。每個階段都對應一個工程師查得到的數字：模數、降伏強度、抗拉強度、伸長率、硬度。這一章先量出這些數字，再把「流動」追到差排在最密堆積面上的滑移，最後看軋延、合金、細晶粒和退火怎麼改變每一個數字。<\/p>\n      <p class=\"lede\">電腦上用滑鼠拖曳模型；手機上先點一下模型，再用手指轉。<\/p>\n      <ul class=\"palette\" aria-label=\"本章顏色約定\">\n        <li class=\"palette-h\">這一章的顏色都照這個約定<\/li>\n        <li><i style=\"background:var(--c-corner)\"><\/i><span><b>藍<\/b>　金屬・原子・試片<\/span><\/li>\n        <li><i style=\"background:var(--c-body)\"><\/i><span><b>橘<\/b>　外加負載・應力<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i><span><b>紫<\/b>　滑移面・晶界<\/span><\/li>\n        <li><i class=\"sq\" style=\"background:var(--hi)\"><\/i><span><b>紅<\/b>　滑移方向、頸縮、要注意看的東西<\/span><\/li>\n      <\/ul>\n    ",
+"9":"拉伸試片<br>斷裂之前",
+"10":"一根圓形拉伸試片，已經拉過最大負載。標距段先是均勻伸長，接著某一處（紅）開始頸縮。從這裡開始，試片撐得住的負載往下掉，最後在頸縮處斷裂。",
+"11":"<span>01<\/span>金屬成形",
+"12":"<span>02<\/span>應力與應變",
+"13":"<span>03<\/span>拉伸試驗",
+"14":"<span>04<\/span>硬度",
+"15":"<span>05<\/span>滑移系統",
+"16":"<span>06<\/span>Schmid’s law",
+"17":"<span>07<\/span>強化機制",
+"18":"<span>08<\/span>退火",
+"19":"<span>09<\/span>超塑性",
+"20":"<span>10<\/span>小測驗",
+"21":"<p class=\"unit-no\">01<\/p><h2>金屬成形：熱加工與冷加工<\/h2><p class=\"unit-tag\">減薄率 = (t<sub>0<\/sub> − t) / t<sub>0<\/sub>・熱加工：T &gt; T<sub>再結晶<\/sub><\/p>",
+"22":"    <p>金屬零件的形狀有兩種得來的方式。<span class=\"term\">鑄造<\/span>把熔融金屬倒進最終形狀的模具，適合活塞這類複雜零件。其他方法則是推擠固態金屬：<span class=\"term\">軋延<\/span>把板胚夾在滾輪之間壓成更薄、厚度均勻的板材；<span class=\"term\">擠製<\/span>把胚料從模孔擠出去，得到固定的截面形狀；<span class=\"term\">鍛造<\/span>用壓或錘的方式讓工件成形，同時壓合孔隙，讓金屬更均勻。<\/p>\n    <p>每一種成形都可以熱做或冷做，分界是<span class=\"term\">再結晶溫度<\/span>。高於它（熱軋、在 0.5–0.75 T<sub>m<\/sub> 熱擠製），變形的晶粒一邊被壓扁、一邊被新晶粒取代，所以可以一次減薄很多，代價是表面會氧化。低於它（冷軋、約室溫的冷擠製），晶粒維持壓扁的樣子，金屬變強但變得不易延展，所以只能減薄有限的量，之後就得退火（第 8 單元）。<\/p>\n    <p>選一種製程看它怎麼進行。動畫是剖面示意圖。軋延時體積守恆，所以板子薄了 50%，出來就長了一倍。<\/p>",
+"23":"製程",
+"24":"鑄造",
+"25":"軋延",
+"26":"擠製",
+"27":"鍛造",
+"28":"種類",
+"29":"溫度",
+"30":"熱加工",
+"31":"冷加工",
+"32":"減薄率",
+"33":"動畫",
+"34":"<span class=\"h3-no\">1-1<\/span><span>各種成形方法對照<\/span>",
+"35":"    <table>\n      <thead><tr><th>製程<\/th><th>形狀怎麼來<\/th><th>投影片上的種類<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>鑄造<\/td><td>熔融金屬在模具裡凝固<\/td><td>壓鑄：高壓把熔融金屬射進模具。砂模鑄造：用壓實的砂做模。脫蠟鑄造：在蠟模外面做一層陶瓷殼，表面非常均勻、光滑。<\/td><\/tr>\n        <tr><td>軋延<\/td><td>料材通過一對或多對滾輪，變薄且厚度均勻<\/td><td>熱軋，T &gt; T<sub>再結晶<\/sub>：表面會氧化。冷軋，T &lt; T<sub>再結晶<\/sub>：減薄量有限。<\/td><\/tr>\n        <tr><td>擠製<\/td><td>把胚料擠過模孔，得到固定截面<\/td><td>熱擠製：0.5–0.75 T<sub>m<\/sub>，30–700 MPa。冷擠製：約室溫，3000 MPa。直接擠製：模具裝在容器上，胚料和容器互相滑動，摩擦大、衝桿力大，不適合脆性金屬。間接擠製：模具裝在衝桿上，沒有相對滑動，摩擦小、力小，但形狀和尺寸受限。<\/td><\/tr>\n        <tr><td>鍛造<\/td><td>壓或錘；去除孔隙，讓金屬更均勻<\/td><td>閉模、開模，以及鐓粗鍛造：把棒材一端打粗，用來做釘子、螺絲、螺帽和螺栓。<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"36":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>鑄造是讓液態金屬成形；軋延、擠製、鍛造則是靠塑性變形讓固態金屬成形。<\/li>\n      <li>熱加工或冷加工看的是再結晶溫度，不是摸起來燙不燙。高於它晶粒會自我更新，低於它晶粒維持變形。<\/li>\n      <li>冷加工讓金屬變強、但犧牲延性，所以大量冷加工中間要穿插退火。<\/li>\n    <\/ul>\n  ",
+"37":"<p class=\"unit-no\">02<\/p><h2>應力、應變與彈性常數<\/h2><p class=\"unit-tag\">σ = Eε・τ = Gγ・ν = −ε<sub>橫向<\/sub>/ε<sub>軸向<\/sub>・G = E / 2(1 + ν)<\/p>",
+"38":"    <p>卸除負載後金屬回到原本的尺寸，這種變形叫<span class=\"term\">彈性變形<\/span>；回不去的叫<span class=\"term\">塑性變形<\/span>。為了比較不同尺寸的試片，把力除以原始截面積、伸長量除以原始長度：<\/p>\n    <p class=\"eq big\">σ = F / A<sub>0<\/sub>　ε = (ℓ − ℓ<sub>0<\/sub>) / ℓ<sub>0<\/sub> = Δℓ / ℓ<sub>0<\/sub><\/p>\n    <p>這就是<span class=\"term\">工程應力<\/span>（Pa = N/m²，或 psi；1 psi = 6.89 × 10<sup>3<\/sup> Pa）和<span class=\"term\">工程應變<\/span>（m/m，或百分比）。在彈性範圍內兩者成正比，σ = Eε，E 是<span class=\"term\">Young’s modulus<\/span>（楊氏模數）。棒子被拉長的同時也會變細，兩個應變的比值是<span class=\"term\">Poisson’s ratio<\/span>（蒲松比），ν = −ε<sub>橫向<\/sub>/ε<sub>軸向<\/sub>，金屬介於 0.25 到 0.4。<\/p>\n    <p>為什麼不會超過 0.5？把 L × L × L 的立方體拉長 ε<sub>x<\/sub>，另外兩邊各縮 ε<sub>y<\/sub> = ε<sub>z<\/sub> = −νε<sub>x<\/sub>。只取一階項，新體積是 L<sup>3<\/sup>(1 + ε<sub>x<\/sub> + ε<sub>y<\/sub> + ε<sub>z<\/sub>)，所以<\/p>\n    <p class=\"eq\">ΔV / V = ε<sub>x<\/sub> + ε<sub>y<\/sub> + ε<sub>z<\/sub> = ε<sub>x<\/sub>(1 − 2ν)<\/p>\n    <p><span class=\"term\">不可壓縮<\/span>的材料體積不變，ΔV = 0，於是 ν = 0.5。金屬的 ν 約 0.3，彈性拉伸時體積會稍微變大。<\/p>\n    <p>平行於表面的力產生<span class=\"term\">剪應力<\/span> τ = S/A 和<span class=\"term\">剪應變<\/span> γ = a/h = tan θ，兩者以<span class=\"term\">剪力模數<\/span>連結：τ = Gγ。對等向性材料，這三個常數不是各自獨立的：G = E / 2(1 + ν)。選一種金屬，用這條關係對照實際量到的 G。",
+"39":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>受力後的方塊<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>原本的形狀<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>外加的力<\/span>\n      ",
+"40":"受力方式",
+"41":"拉伸",
+"42":"剪切",
+"43":"金屬（表 6.1）",
+"44":"鋁合金",
+"45":"銅",
+"46":"鋼",
+"47":"不鏽鋼",
+"48":"鈦",
+"49":"鎢",
+"50":"應力",
+"51":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>工程應力與工程應變用的是原始面積和原始長度：σ = F/A<sub>0<\/sub>，ε = Δℓ/ℓ<sub>0<\/sub>。<\/li>\n      <li>金屬的彈性應變非常小，最多零點幾個百分比。越硬的金屬（E 越大），同樣的應力下應變越小。<\/li>\n      <li>拉長時棒子會變細，橫向應變是軸向應變的 ν 倍；等向性金屬 G = E / 2(1 + ν)，所以 G 大約是 0.38 E。<\/li>\n      <li>ΔV/V = ε(1 − 2ν)。不可壓縮材料的 ν = 0.5；金屬 ν 約 0.3，拉伸時體積會稍微變大。<\/li>\n    <\/ul>\n  ",
+"52":"<p class=\"unit-no\">03<\/p><h2>拉伸試驗：讀懂應力–應變曲線<\/h2><p class=\"unit-tag\">E・0.2% 偏移降伏強度・UTS・伸長率・σ<sub>t<\/sub> = σ(1 + ε)，ε<sub>t<\/sub> = ln(1 + ε)<\/p>",
+"53":"    <p><span class=\"term\">拉伸試驗<\/span>把標準試片一路拉到斷。荷重元記錄力，伸長計記錄伸長量，兩者合成一條應力–應變曲線。從曲線上可以讀出四個數字：<\/p>\n    <dl class=\"defs\">\n      <dt>模數 E<\/dt><dd>一開始那段直線的斜率。<\/dd>\n      <dt>降伏強度 σ<sub>y<\/sub><\/dt><dd>開始出現明顯塑性變形的應力。曲線是慢慢彎過去的，所以慣例上用<span class=\"term\">0.2% 偏移降伏強度<\/span>：從 0.2% 應變處畫一條平行於彈性段的直線，看它和曲線交在哪裡。<\/dd>\n      <dt>抗拉強度（UTS）<\/dt><dd>工程曲線的最高點。過了它試片開始<span class=\"term\">頸縮<\/span>：變形集中在一處，那裡的截面積迅速變小，負載一路下降直到斷裂。<\/dd>\n      <dt>延性<\/dt><dd>伸長率 = (最終長度 − 原始長度)/原始長度，把斷成兩截的試片拼回去量；或用斷面縮率 = (原始面積 − 最終面積)/原始面積。孔隙越多，延性越差。<\/dd>\n    <\/dl>\n    <p>工程曲線除的是原始面積，所以過了 UTS 就往下垂，即使頸縮處的金屬其實越來越強。<span class=\"term\">真應力與真應變<\/span>用的是當下的面積和長度。頸縮之前體積守恆，σ<sub>t<\/sub> = F/A<sub>i<\/sub> = σ(ℓ<sub>i<\/sub>/ℓ<sub>0<\/sub>) = σ(1 + ε)，ε<sub>t<\/sub> = ∫dℓ/ℓ = ln(ℓ<sub>i<\/sub>/ℓ<sub>0<\/sub>) = ln(1 + ε)。",
+"54":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>工程曲線<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>真應力曲線（到頸縮為止）<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>0.2% 偏移線<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>試驗目前進行到的位置<\/span>\n      ",
+"55":"試片",
+"56":"Al 2024 調質",
+"57":"Al 2024 退火",
+"58":"1018 冷軋",
+"59":"1018 退火",
+"60":"目前應變",
+"61":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>降伏強度用 0.2% 偏移法讀；UTS 是工程曲線的最高點；伸長率是斷裂時的應變。<\/li>\n      <li>頸縮從 UTS 開始。之後工程應力下降是因為截面變小，不是金屬變弱。<\/li>\n      <li>調質或冷軋讓 σ<sub>y<\/sub> 和 UTS 上升、伸長率下降：強度和延性此消彼長。<\/li>\n    <\/ul>\n  ",
+"62":"<p class=\"unit-no\">04<\/p><h2>硬度：抵抗永久凹痕的能力<\/h2><p class=\"unit-tag\">HR = E − e・e = Δd / 0.002 mm<\/p>",
+"63":"    <p><span class=\"term\">硬度<\/span>衡量材料抵抗塑性變形的能力，做法是把很硬的壓頭壓進去。它快速、幾乎不破壞試片，而且和降伏強度同步變化。各種試驗量的東西不同：<span class=\"term\">Brinell<\/span>（10 mm 鋼球或碳化鎢球）、<span class=\"term\">Vickers<\/span>（136° 鑽石角錐，VHN = 1.854P/d<sub>1<\/sub>²）和 <span class=\"term\">Knoop<\/span>（細長鑽石角錐，KHN = 14.2P/l²）量的都是壓痕大小；<span class=\"term\">Rockwell<\/span> 量的是壓痕深度。<\/p>\n    <p>Rockwell 試驗先加 F<sub>0<\/sub> = 10 kgf 的初負載，讓壓頭坐穩、定出零點。接著加上主負載 F<sub>1<\/sub>，再把它卸掉，壓頭會稍微彈回來。永久多出來的深度 Δd 除以 0.002 mm 得到格數 e = Δd / 0.002 mm，再從常數 E 扣掉：<\/p>\n    <p class=\"eq big\">HR = E − e　E = 100（鑽石圓錐）或 130（鋼球）<\/p>\n    <p>壓得越深數字越小，所以越硬的材料讀數越高。投影片的例子：A 尺度深 0.076 mm，得到 100 − 38 = HRA 62；B 尺度深 0.06 mm，得到 130 − 30 = HRB 100。",
+"64":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>試片<\/span>\n        <span><i class=\"sq\" style=\"background:var(--edge3d)\"><\/i>壓頭<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>負載<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>永久深度 Δd<\/span>\n      ",
+"65":"Rockwell 尺度",
+"66":"永久深度 Δd",
+"67":"<span class=\"h3-no\">4-1<\/span><span>各種材料的硬度<\/span>",
+"68":"    <p>投影片上的 Vickers 硬度，畫在同一條對數軸上。軟的錫和高分子在 10 附近，金屬依合金和熱處理不同橫跨兩個數量級，氧化鋁和碳化鎢這類陶瓷則到 2500。",
+"69":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>金屬<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-face)\"><\/i>陶瓷與礦物<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>高分子<\/span>\n      ",
+"70":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>Brinell、Vickers、Knoop 量壓痕大小；Rockwell 量壓痕深度。<\/li>\n      <li>Rockwell：HR = E − e，其中 e = Δd / 0.002 mm。壓得越深，數字越小，材料越軟。<\/li>\n      <li>一定要寫出尺度（HRA、HRB、HRC……）。不同尺度的數字不能直接比較。<\/li>\n    <\/ul>\n  ",
+"71":"<p class=\"unit-no\">05<\/p><h2>滑移系統：差排在哪裡滑動<\/h2><p class=\"unit-tag\">FCC {111}⟨1̄10⟩ 4 × 3 = 12・BCC {110}⟨1̄11⟩ 6 × 2 = 12・HCP {0001}⟨112̄0⟩ 1 × 3 = 3<\/p>",
+"72":"    <p>把一顆單晶拋光後拉伸，表面會出現細細的台階，叫<span class=\"term\">滑移帶<\/span>。每一道台階，都是許多差排（第 4 章）沿著同一個晶面滑出表面的地方；這個晶面叫<span class=\"term\">滑移面<\/span>，上方的晶塊沿<span class=\"term\">滑移方向<\/span>移動整數個原子間距。<\/p>\n    <p>剪切晶體的方式不只滑移一種。<span class=\"term\">雙晶變形<\/span>（twinning）是讓一段晶體剪切成另一側的鏡像，鏡面叫<span class=\"term\">雙晶面<\/span>（FCC 也是 {111}）。滑移讓整塊晶體移動整數個原子間距，晶格方向不變；雙晶則讓帶內每一層移動不到一個原子間距，移動量和它到雙晶面的距離成正比，帶內的晶格因此轉了方向。<\/p>\n    <p>滑移偏好最密的面和最密的方向：最密堆積面上的原子離下一層最遠，只需要最小的剪應力就能彼此滑過。一個滑移面加上面上的一個滑移方向，就是一個<span class=\"term\">滑移系統<\/span>。<\/p>\n    <dl class=\"defs\">\n      <dt>FCC（Cu、Al、Ni、Pb、Au、Ag、γFe）<\/dt><dd>四個 {111} 八面體面，每個面有三個 ⟨1̄10⟩ 方向：4 × 3 = 12 個系統，而且是真正的最密堆積面。FCC 金屬延性好。<\/dd>\n      <dt>BCC（αFe、W、Mo、β 黃銅）<\/dt><dd>沒有最密堆積面。滑移發生在最密的面，也就是六個 {110}，每個面有兩個 ⟨1̄11⟩ 方向：6 × 2 = 12。αFe、Mo、W、Na 也能在 {211} 滑移（12 個），αFe、K 還有 {321}（24 個）。<\/dd>\n      <dt>HCP（Cd、Zn、Mg、Ti、Be）<\/dt><dd>c/a 比高時，滑移只能在唯一的底面 {0001}，有三個 ⟨112̄0⟩ 方向：1 × 3 = 3 個系統，所以這類金屬延性較差。c/a 比低的 Ti 還能在柱面 {101̄0}（3 個）滑移，Ti 和 Mg 也能在錐面 {101̄1}（6 個）滑移。<\/dd>\n    <\/dl>",
+"73":"        <span><i style=\"background:var(--c-corner)\"><\/i>滑移面上的原子<\/span>\n        <span><i style=\"background:var(--c-body)\"><\/i>滑移側原子<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>滑移面<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>面上的滑移方向<\/span>\n      ",
+"74":"結構",
+"75":"BCC 滑移面家族",
+"76":"滑移面",
+"77":"滑移演示",
+"78":"<span class=\"h3-no\">5-1<\/span><span>差排怎麼移動：刃差排與螺旋差排<\/span>",
+"79":"    <p>整面原子不會同時錯開，因為那樣得一口氣打斷整個平面上的所有鍵結。取而代之，差排沿晶體一排一排滑過去，任何時刻都只打斷並重接單一排鍵結。<\/p>\n    <p>在相同的剪應力 τ（與相同的柏格斯向量 <b>b<\/b>）下，刃差排的差排線垂直於 <b>b<\/b>，沿著平行 τ 與 <b>b<\/b> 的方向滑移；螺旋差排的差排線平行於 <b>b<\/b>，沿著垂直兩者的方向滑移。無論哪一種，差排走出晶體後，上半部留下的滑移台階都剛好是一個原子間距。<\/p>\n  ",
+"80":"差排種類",
+"81":"刃差排",
+"82":"螺旋差排",
+"83":"動畫",
+"84":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>滑移走最密的面和面上最密的方向，因為那樣需要的剪應力最小。<\/li>\n      <li>滑移系統數 = 面數 × 每個面的方向數：FCC 12 個，BCC 在 {110} 上 12 個，HCP 只有底面時 3 個。<\/li>\n      <li>獨立的滑移系統越多，尤其是在真正的最密堆積面上，金屬越有延性：FCC 的 Cu、Al 很好彎，HCP 的 Zn、Mg 比較早裂。<\/li>\n    <\/ul>\n  ",
+"85":"<p class=\"unit-no\">06<\/p><h2>Schmid’s law：拉力有多少傳到滑移面<\/h2><p class=\"unit-tag\">τ<sub>r<\/sub> = σ cos λ cos Φ・τ<sub>r<\/sub> &gt; CRSS 就滑移<\/p>",
+"86":"    <p>沿著軸向用力 F 拉一根單晶棒。滑移面的法線和軸夾角 Φ，它的面積比截面大，A<sub>1<\/sub> = A<sub>0<\/sub>/cos Φ。力只有一部分落在滑移方向上，滑移方向和軸夾角 λ：F<sub>r<\/sub> = F cos λ。真正推動滑移的剪應力叫<span class=\"term\">分解剪應力<\/span>：<\/p>\n    <p class=\"eq big\">τ<sub>r<\/sub> = F<sub>r<\/sub> / A<sub>1<\/sub> = (F cos λ) / (A<sub>0<\/sub>/cos Φ) = σ cos λ cos Φ<\/p>\n    <p>當 τ<sub>r<\/sub> 達到<span class=\"term\">臨界分解剪應力<\/span>（CRSS），晶體就降伏。CRSS 是金屬本身的性質，取決於晶體結構、鍵結、溫度和純度。乘積 cos λ cos Φ 叫 <span class=\"term\">Schmid 因子<\/span>，最大是 0.5，發生在 Φ = λ = 45°。滑移面平行或垂直於拉力時因子是零，不管拉多用力，晶體都無法在這個系統上滑移。",
+"87":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>單晶棒<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>滑移面與它的法線<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>滑移方向<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>拉力 F<\/span>\n      ",
+"88":"滑移面傾角 Φ",
+"89":"面內的滑移方向",
+"90":"金屬，CRSS",
+"91":"Ti 99.99",
+"92":"Ti 99.9",
+"93":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>只有滑移面上、沿滑移方向的剪應力會推動差排：τ<sub>r<\/sub> = σ cos λ cos Φ。<\/li>\n      <li>Schmid 因子 cos λ cos Φ 最大 0.5。所以單晶在 σ<sub>y<\/sub> = CRSS / (cos λ cos Φ) 降伏，不可能低於 2 × CRSS。<\/li>\n      <li>純金屬的 CRSS 很小（Cu 0.94 MPa），雜質一多就快速上升（Ti 從 99.99% 到 99.9% 純度，13.7 → 90.1 MPa）。<\/li>\n    <\/ul>\n  ",
+"94":"<p class=\"unit-no\">07<\/p><h2>強化機制：在差排的路上設障礙<\/h2><p class=\"unit-tag\">Hall–Petch：σ<sub>y<\/sub> = σ<sub>0<\/sub> + k / √d<\/p>",
+"95":"    <p>金屬降伏，是因為差排在滑動。每一種強化機制都是在路上放東西，讓滑動變難：<\/p>\n    <dl class=\"defs\">\n      <dt>應變（加工）硬化<\/dt><dd>塑性變形讓差排大量增殖，彼此糾纏、互相擋路。差排密度隨變形量增加；冷軋的 1018 鋼比退火的 1018 鋼強很多，延性也差很多。<\/dd>\n      <dt>固溶強化<\/dt><dd>大小不同的溶質原子讓周圍晶格變形，把經過的差排釘住。<\/dd>\n      <dt>析出強化<\/dt><dd>細小的第二相顆粒擋住滑動。Al–4%Cu 在 130–190 °C 時效：銅先聚成 10–100 nm 的 GP 區，接著亞穩的 θ′ 在差排上成核，最後形成平衡相 θ（CuAl<sub>2<\/sub>）。<\/dd>\n      <dt>晶界強化<\/dt><dd>差排無法直接穿進方位不同的晶粒，只能堆在晶界前。晶粒越小、晶界越多，降伏強度越高，符合 <span class=\"term\">Hall–Petch<\/span> 經驗式 σ<sub>y<\/sub> = σ<sub>0<\/sub> + k / √d。<\/dd>\n      <dt>奈米雙晶強化<\/dt><dd>雙晶界像晶界一樣擋差排，但幾乎不散射電子。晶粒內的雙晶界相隔 λ，切短了差排能滑的距離；λ 遠小於晶粒尺寸 d 時，Hall–Petch 裡扮演 d 的就變成 λ。晶粒約 400 nm、內部被約 15 nm 雙晶切開的銅，又強又導電，很適合做獨立的銅導線（L. Lu, <i>Science<\/i> 304, 422, 2004）。<\/dd>\n    <\/dl>\n    <p>圖上是投影片中鎂和三種 Mg–Zn 合金的 Hall–Petch 直線。把晶粒尺寸往小拉，看 σ<sub>y<\/sub> 上升。從這些合金也看得到固溶強化：鋅越多，直線越陡。",
+"96":"顯示",
+"97":"晶粒尺寸",
+"98":"冷加工",
+"99":"晶粒尺寸 d",
+"100":"冷加工量",
+"101":"<span class=\"h3-no\">7-1<\/span><span>固溶強化：差排與溶質原子的應力場交互作用<\/span>",
+"102":"    <p>刃差排（⊥）上方多出半個原子面，形成壓縮應力區；下方晶格較寬鬆，形成拉伸應力區。較大的溶質原子周圍也帶著壓縮應力場：(a) 溶質在差排上方時，壓縮場遇上壓縮場而互相排斥；(b) 溶質在差排下方時，正好塞進拉伸空隙抵消晶格畸變，產生吸引力把差排「釘住」。不論排斥還是吸引，溶質原子的局部晶格畸變都會增加差排滑移的阻力，讓材料變強。<\/p>\n  ",
+"103":"溶質位置",
+"104":"(a) 差排上方",
+"105":"(b) 差排下方",
+"106":"溶質大小",
+"107":"較大溶質原子",
+"108":"較小溶質原子",
+"109":"動畫",
+"110":"<span class=\"h3-no\">7-2<\/span><span>小過頭：反 Hall–Petch 效應<\/span>",
+"111":"    <p>Hall–Petch 不能一直延續下去。奈米晶金屬通常非常強（也很硬），但延性不好；晶粒小於臨界尺寸（大約 20 nm）時，趨勢會反轉。晶粒小到容不下差排堆積，變形方式從差排滑移換成<span class=\"term\">晶界滑移<\/span>，於是 d 再變小，降伏強度反而下降。靠細化晶粒能達到的最高強度，就在這個轉折點。",
+"112":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>強化金屬的五種方法：應變硬化、固溶、析出、晶界、奈米雙晶。全都是在阻礙差排滑動。<\/li>\n      <li>Hall–Petch：σ<sub>y<\/sub> 和 d<sup>−1/2<\/sup> 成線性關係。晶粒減半不會讓強度加倍；要讓 k/√d 這一項加倍，d 得縮小成四分之一。<\/li>\n      <li>冷加工讓降伏強度上升得比抗拉強度快，伸長率則下降，直到金屬必須退火。<\/li>\n    <\/ul>\n  ",
+"113":"<p class=\"unit-no\">08<\/p><h2>退火：回復、再結晶、晶粒成長<\/h2><p class=\"unit-tag\">製程 → 微結構 → 性質<\/p>",
+"114":"    <p>冷加工過的金屬很強但很脆，差排裡存了大量能量。加熱時它分三個階段變軟。把冷加工金屬重新加熱使它軟化，叫做<span class=\"term\">退火<\/span>。<\/p>\n    <dl class=\"defs\">\n      <dt>回復<\/dt><dd>在中等溫度（T<sub>回復<\/sub> &lt; T<sub>再結晶<\/sub>），差排重新排成能量較低的牆，把每顆晶粒切成次晶粒，叫<span class=\"term\">多邊形化<\/span>；退火久一點，相鄰的次晶粒會合併成較大的次晶粒。內部殘留應力下降，但晶粒仍維持變形後的形狀，強度幾乎不變。<\/dd>\n      <dt>再結晶<\/dt><dd>溫度夠高時，沒有應變的新晶粒成核並長大：可能是變形晶粒內部的一個晶核向外擴張，也可能是原本的大角度晶界往變形更嚴重的區域移動。強度大幅下降，延性恢復。<\/dd>\n      <dt>晶粒成長<\/dt><dd>變形的晶粒被吃完之後，新晶粒為了減少晶界總面積繼續長大。強度緩慢下降。<\/dd>\n    <\/dl>\n    <p>圖用的是投影片上 85%Cu–15%Zn 黃銅、冷加工 50% 的數據。移動退火溫度，看結構和性質一起變化。",
+"115":"        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>晶界・次晶界<\/span>\n        <span><i style=\"background:var(--hi)\"><\/i>差排<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>抗拉強度<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-body)\"><\/i>伸長率<\/span>\n      ",
+"116":"退火溫度",
+"117":"<span class=\"h3-no\">8-1<\/span><span>再結晶溫度由什麼決定<\/span>",
+"118":"    <p>再結晶的驅動力是冷加工存下的應變能，需要讓新晶粒成核的位置，也需要足夠的熱能和時間。所以：<\/p>\n    <ul>\n      <li>先前變形量越大 → T<sub>再結晶<\/sub> 越低，新晶粒越細。<\/li>\n      <li>溫度越高 → 需要的時間越短。時間和溫度沿著一條 Arrhenius 直線互換，和第 5 章一樣。<\/li>\n      <li>起始晶粒越大 → 要在同一溫度再結晶，需要更多變形量。<\/li>\n      <li>純度越高 → T<sub>再結晶<\/sub> 越低；溶質原子會釘住移動中的晶界。<\/li>\n    <\/ul>\n    <p>經驗法則：換成 K 之後，純金屬的 T<sub>再結晶<\/sub> 約為 0.3–0.4 T<sub>m<\/sub>，合金約為 0.5 T<sub>m<\/sub>。表格最後一欄拿表上的數據來驗證：落在 0.35–0.51，等於或略高於純金屬的範圍，因為表上是工業用金屬，不是高純度金屬。所以鉛在室溫以下就會再結晶，室溫下根本無法加工硬化；鎢卻要到 1200 °C。",
+"119":"    <table>\n      <thead><tr><th>金屬<\/th><th>再結晶溫度<\/th><th>熔點<\/th><th>T<sub>再結晶<\/sub> / T<sub>m<\/sub>（K / K）<\/th><\/tr><\/thead>\n      <tbody>\n        <tr><td>鉛<\/td><td class=\"num\">−4 °C<\/td><td class=\"num\">327 °C<\/td><td class=\"num\">0.45<\/td><\/tr>\n        <tr><td>鋁<\/td><td class=\"num\">150 °C<\/td><td class=\"num\">660 °C<\/td><td class=\"num\">0.45<\/td><\/tr>\n        <tr><td>鎂<\/td><td class=\"num\">200 °C<\/td><td class=\"num\">650 °C<\/td><td class=\"num\">0.51<\/td><\/tr>\n        <tr><td>銅<\/td><td class=\"num\">200 °C<\/td><td class=\"num\">1085 °C<\/td><td class=\"num\">0.35<\/td><\/tr>\n        <tr><td>鐵<\/td><td class=\"num\">450 °C<\/td><td class=\"num\">1538 °C<\/td><td class=\"num\">0.40<\/td><\/tr>\n        <tr><td>鎢<\/td><td class=\"num\">1200 °C<\/td><td class=\"num\">3410 °C<\/td><td class=\"num\">0.40<\/td><\/tr>\n      <\/tbody>\n    <\/table>\n  ",
+"120":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>回復把差排重新排成牆，消除殘留應力；晶粒形狀和強度幾乎不變。<\/li>\n      <li>再結晶用沒有應變的新晶粒取代變形晶粒；強度驟降、延性恢復就發生在這一段。<\/li>\n      <li>T<sub>再結晶<\/sub> 不是固定的性質：冷加工越多、時間越長、純度越高，它都越低。<\/li>\n    <\/ul>\n  ",
+"121":"<p class=\"unit-no\">09<\/p><h2>超塑性：把金屬拉長 1000%<\/h2><p class=\"unit-tag\">晶粒 5–10 µm・T &gt; 0.5 T<sub>m<\/sub>・應變速率 10<sup>−2<\/sup>–10<sup>−4<\/sup> s<sup>−1<\/sup><\/p>",
+"122":"    <p>在高溫、慢速負載下，有些合金可以拉長 2000% 而不斷。退火的鈦合金在室溫只能伸長 12%，但在 870 °C、負載速率 1.3 × 10<sup>−4<\/sup> s<sup>−1<\/sup> 時可以伸長到 1170%。三個條件必須同時成立：<\/p>\n    <ul>\n      <li>非常細的晶粒，5–10 µm；<\/li>\n      <li>溫度高於 0.5 T<sub>m<\/sub>；<\/li>\n      <li>慢的應變速率，0.01 到 0.0001 s<sup>−1<\/sup>。<\/li>\n    <\/ul>\n    <p>改變的是機制。差排幾乎不動，改成晶粒沿著晶界彼此滑過、轉動，再靠晶界擴散調整形狀，所以晶粒一直維持細小、等軸，整根試片卻被拉得非常長。細晶粒提供大量晶界，高溫讓晶界擴散變快，慢速則讓擴散來得及跟上。業界用它來吹塑成形汽車引擎蓋。<\/p>\n    <p>應變速率對延性的影響不只出現在超塑性，而且常常不是線性的，趨勢取決於材料種類、溫度和變形機制。金屬大致是低速時延性較好、高速時較差；高分子拉得快就變脆；陶瓷不論快慢都脆，只是慢的時候稍微有延性一點，快的時候稍微韌一點。",
+"123":"        <span><i class=\"sq\" style=\"background:var(--c-corner)\"><\/i>晶粒<\/span>\n        <span><i class=\"sq\" style=\"background:var(--c-plane)\"><\/i>晶界<\/span>\n        <span><i class=\"sq\" style=\"background:var(--hi)\"><\/i>頸縮與斷裂<\/span>\n      ",
+"124":"晶粒尺寸",
+"125":"5–10 µm",
+"126":"粗大",
+"127":"溫度",
+"128":"870 °C（&gt; 0.5 T<sub>m<\/sub>）",
+"129":"室溫",
+"130":"應變速率",
+"131":"1.3 × 10<sup>−4<\/sup> s<sup>−1<\/sup>",
+"132":"快速",
+"133":"拉伸進度",
+"134":" <span class=\"key-tag\">重點<\/span>\n    <ul>\n      <li>超塑性需要細晶粒、T &gt; 0.5 T<sub>m<\/sub>、慢的應變速率，三者同時成立。<\/li>\n      <li>它靠的是晶界滑移、晶粒轉動和晶界擴散，不是差排滑移；晶粒一直維持等軸。<\/li>\n      <li>奈米晶金屬在約 20 nm 以下變軟（反 Hall–Petch），也是因為同樣換成了晶界滑移。<\/li>\n    <\/ul>\n  ",
+"135":"<p class=\"unit-no\">10<\/p><h2>小測驗<\/h2><p class=\"unit-tag\">11 題<\/p>",
+"136":"每題只能作答一次，選完會顯示解說。",
+"137":"  <span class=\"lbl\">資料來源<\/span>\n  <p>國立清華大學「材料科學與工程導論（一）」第 6 章投影片（115 學年）；W. F. Smith &amp; J. Hashemi, <i>Foundations of Materials Science and Engineering<\/i>, 6th ed., McGraw-Hill, 2019（表 6.1 引自 G. Dieter, <i>Mechanical Metallurgy<\/i>, 3rd ed., 1986；圖 6.45、6.52）。Rockwell 尺度與硬度表取自投影片。Mg 與 Mg–Zn 的 Hall–Petch 數據：C. H. Caceres et al., <i>Metall. Mater. Trans. A<\/i> 42, 1950 (2011)。奈米雙晶銅：L. Lu et al., <i>Science<\/i> 304, 422 (2004)；雙晶間距：P. Uttam et al., <i>Mater. Des.<\/i> 192, 108752 (2020)。再結晶溫度：R. M. Brick, <i>Structure and Properties of Engineering Materials<\/i>, McGraw-Hill, 1977。<\/p>\n  <span class=\"lbl\">關於模型<\/span>\n  <p>第 3 單元的應力–應變曲線、第 7 單元的 Hall–Petch 直線和冷加工曲線、第 8 單元的黃銅退火曲線，都是從投影片的圖用目測描下來的，讀數約有 ±5% 的誤差；第 3 單元的彈性段斜率用表 6.1 的 E 畫。第 2 單元的變形放大了很多倍。第 1、8、9 單元的晶粒圖是示意：第 8 單元各階段的分界（約 300 °C 以下為回復、到約 450 °C 為再結晶）是從黃銅曲線轉彎的位置讀出來的；第 9 單元只呈現投影片上鈦合金的兩個情形（12% 和 1170%），不推算中間的伸長率。<\/p>",
+"138":"章節",
+"139":"單元",
+"140":"語言",
+"141":"深色模式",
+"142":"減薄率",
+"143":"動畫時間軸",
+"144":"應力",
+"145":"拉伸試片示意動畫與工程應力–應變曲線，標出 0.2% 偏移線、抗拉強度，以及跟著試驗走的標記",
+"146":"應變",
+"147":"Rockwell 壓痕在試驗三個步驟的剖面，標出永久深度 Δd",
+"148":"永久深度",
+"149":"金屬、陶瓷和高分子的 Vickers 硬度，對數尺度",
+"150":"滑移面",
+"151":"動畫時間軸",
+"152":"滑移面法線與軸的夾角",
+"153":"面內的滑移方向",
+"154":"鎂與鎂鋅合金的 Hall–Petch 圖：降伏強度對晶粒尺寸平方根倒數",
+"155":"晶粒尺寸",
+"156":"冷加工量",
+"157":"刃差排與溶質原子應力場交互作用的 2D 晶格動畫",
+"158":"動畫時間軸",
+"159":"所選退火溫度下冷加工黃銅的晶粒結構，下方是抗拉強度與伸長率對溫度的曲線",
+"160":"退火溫度",
+"161":"在所選條件下，試片和其中的晶粒在拉伸前後的樣子",
+"162":"拉伸進度"}, KEY='xtal-lang';
+  function stored(){try{return localStorage.getItem(KEY)==='zh'?'zh':'en'}catch(e){return 'en'}}
+  function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+  function apply(l){
+    var zh=l==='zh',i,e,els=document.querySelectorAll('[data-t]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._en===undefined){if(!zh)continue;e._en=e.innerHTML}e.innerHTML=zh?Z[e.getAttribute('data-t')]:e._en}
+    els=document.querySelectorAll('[data-ta]');
+    for(i=0;i<els.length;i++){e=els[i];if(e._ena===undefined){if(!zh)continue;e._ena=e.getAttribute('aria-label')}e.setAttribute('aria-label',zh?Z[e.getAttribute('data-ta')]:e._ena)}
+  }
+  var l=stored();document.documentElement.lang=l==='zh'?'zh-Hant':'en';
+  if(l==='zh'){apply(l);document.title="金屬的機械性質 3D 教室";var b=document.getElementById('lang-zh');if(b){b.setAttribute('aria-pressed','true');document.getElementById('lang-en').setAttribute('aria-pressed','false')}}
+  return {stored:stored,save:save,apply:apply};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="ch6.js?v=11"></script>
+
+</body></html>
